@@ -145,6 +145,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if (canvas != null) {
             grid.draw(canvas);  //draws the grid first, because that is the bottom layer.
 
+            movableLocation pointers = new movableLocation(theContext, 0);
+            movableLocation pointers2 = new movableLocation(theContext, 1);
+            movableLocation pointers3 = new movableLocation(theContext, 2);
+            pointers.draw(canvas,1,7);
+            pointers.draw(canvas,13,1);
+            pointers2.draw(canvas,6,1);
+            pointers3.draw(canvas,8,7);
+
             for (int i = 0; i < resources.length; i++) {
                 resources[i].draw(canvas); //draws the units from units array found in GameView class.
             }
@@ -182,6 +190,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     }
                 }
             }
+
+
             //display info about player's selected unit
             if (GameEngine.theUnit != null) {
                 GameEngine.theUnit.draw(canvas, 1950, 1040);
