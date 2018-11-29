@@ -22,6 +22,8 @@ public class GameEngine {
     public static Player playing = null; //player that makes moves
     public static Resources[][] BoardResources = new Resources[15][9];
 
+    public static int[] lastAddedResounces = new int[3]; //memorizes last added resources, to display next to storage
+
     //Constructor that creates the unit and it's image, doesn't set it's coordinates. Mostly used by onDraw function in GameView
     public GameEngine(Bitmap bmp) {
         image = bmp;
@@ -88,7 +90,7 @@ public class GameEngine {
             return;
         }
 
-        //If user taps on his unit, select it, or display info on enemy unit.
+        //If user taps on a unit, select it, or display info on enemy unit.
         if (BoardSprites[x / 128][y / 128] != null
                 && ((BoardSprites[x / 128][y / 128].hasMove == true || BoardSprites[x / 128][y / 128].hasAttack == true) || (BoardSprites[x / 128][y / 128].owner != playing))) {
             if (BoardSprites[x / 128][y / 128].owner == playing) {
@@ -100,8 +102,8 @@ public class GameEngine {
                 enemyTappedUnit = BoardSprites[x / 128][y / 128];
                 enemySelected = new SelectedUnit(GameView.theContext, x, y, BoardSprites[x / 128][y / 128].owner, BoardSprites[x / 128][y / 128].unitType);
             }
-
         }
+
         //if user taps with unit selected on an empty square, move it TODO : make sure unit cannot move over another unit
         if (theUnit != null && BoardSprites[x / 128][y / 128] == null &&
                 (theUnit.movement >= getSquareDistance           //also check if unit is in range.
@@ -200,11 +202,12 @@ public class GameEngine {
         BoardSprites[x][y] = u;
         selected = new SelectedUnit(GameView.theContext, x * 128, y * 128, theUnit.owner, theUnit.unitType);
         BoardSprites[a][b] = null;
+        estimateResources();
     }
 
     //damages the unit at given coordinates
     public static void DamageUnit(int damage, Units u, int x, int y) {
-        BoardSprites[x][y].HP -= (damage - BoardSprites[x][y].defence);
+        BoardSprites[x][y].HP -= (damage - BoardSprites[x][y].defence); //TODO : if damage given is smaller than 0, don't do any damage.
         //if unit has less than 1HP, remove it
         if (BoardSprites[x][y].HP <= 0) {
             BoardSprites[x][y] = null;
@@ -264,12 +267,47 @@ public class GameEngine {
         for (int i = 0; i < BoardResources.length; i++) {
             for (int j = 0; j < BoardResources[i].length; j++) {
                 //this long if statement checks if BoardResource[i][j] should yield a resource to the player.
-                if (BoardResources[i][j]!= null && BoardSprites[BoardResources[i][j].collectorCoordinates[0]][BoardResources[i][j].collectorCoordinates[1]].owner == playing) {
+                if (BoardResources[i][j]!= null &&
+                        BoardSprites[BoardResources[i][j].collectorCoordinates[0]][BoardResources[i][j].collectorCoordinates[1]] != null &&
+                        BoardSprites[BoardResources[i][j].collectorCoordinates[0]][BoardResources[i][j].collectorCoordinates[1]].owner == playing) {
                     if (BoardResources[i][j].resourceType.equals("oil")) {
                         playing.oilStorage++;
+                    }
+                    if (BoardResources[i][j].resourceType.equals("iron")) {
+                        playing.ironStorage++;
+                    }
+                    if (BoardResources[i][j].resourceType.equals("food")) {
+                        playing.foodStorage++;
                     }
                 }
             }
         }
+        GameEngine.estimateResources();
+    }
+    public static void estimateResources() {
+        int addediron = 0;
+        int addedfood = 0;
+        int addedoil = 0;
+        for (int i = 0; i < BoardResources.length; i++) {
+            for (int j = 0; j < BoardResources[i].length; j++) {
+                //this long if statement checks if BoardResource[i][j] should yield a resource to the player.
+                if (BoardResources[i][j]!= null &&
+                        BoardSprites[BoardResources[i][j].collectorCoordinates[0]][BoardResources[i][j].collectorCoordinates[1]] != null &&
+                        BoardSprites[BoardResources[i][j].collectorCoordinates[0]][BoardResources[i][j].collectorCoordinates[1]].owner == playing) {
+                    if (BoardResources[i][j].resourceType.equals("oil")) {
+                        addedoil++;
+                    }
+                    if (BoardResources[i][j].resourceType.equals("iron")) {
+                        addediron++;
+                    }
+                    if (BoardResources[i][j].resourceType.equals("food")) {
+                        addedfood++;
+                    }
+                }
+            }
+        }
+        GameEngine.lastAddedResounces[0] = addedfood;
+        GameEngine.lastAddedResounces[1] = addediron;
+        GameEngine.lastAddedResounces[2] = addedoil;
     }
 }

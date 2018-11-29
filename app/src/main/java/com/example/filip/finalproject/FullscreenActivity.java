@@ -39,8 +39,6 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         GameView myGameView = new GameView(this); //creates context
         myGameView.setOnTouchListener(this); //sets listener
         setContentView(myGameView); //sets context
-
-
     }
 
     /*

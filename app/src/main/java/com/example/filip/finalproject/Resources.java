@@ -12,7 +12,7 @@ public class Resources {
     /* When creating a new resource type :
     1. create a new class, and create (or copy) stats and constructor
     2. Create an image of your resource and add it as icon in resource class (and in resource's constructor)
-    3. Make it yield resources to player class
+    3. Make storage in player class and make it yield resources in GameEngine.switchPlayer
 */
 
     public String resourceType;
@@ -21,14 +21,24 @@ public class Resources {
 
     private Bitmap icon; // resource's icon
 
-        public Resources(Context context, int x, int y, int collectorX, int collectorY, String resourceType) {
-            if (resourceType.equals("oil")) {
+        public Resources(Context context, int x, int y, int collectorX, int collectorY, String resourcetype) {
+            if (resourcetype.equals("oil")) {
                 BitmapFactory.Options o = new Options();
                 o.inScaled = false;
                 icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.oil_drill, o);
             }
+            if (resourcetype.equals("iron")) {
+                BitmapFactory.Options o = new Options();
+                o.inScaled = false;
+                icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.iron_mine, o);
+            }
+            if (resourcetype.equals("food")) {
+                BitmapFactory.Options o = new Options();
+                o.inScaled = false;
+                icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.food_farm, o);
+            }
             Resources[] toReturn = new Resources[GameView.resources.length + 1];
-            for (int k = 0; k < GameView.units.length; k++) {
+            for (int k = 0; k < GameView.resources.length; k++) {
                 toReturn[k] = GameView.resources[k];
             }
             toReturn[toReturn.length - 1] = this;
@@ -40,7 +50,7 @@ public class Resources {
             coordinates[1] = y;
             collectorCoordinates[0] = collectorX;
             collectorCoordinates[1] = collectorY;
-            this.resourceType = resourceType;
+            this.resourceType = resourcetype;
         }
 
     public void draw(Canvas canvas) {

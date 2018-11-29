@@ -53,35 +53,68 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         grid = new GameEngine(BitmapFactory.decodeResource(this.getResources(), R.mipmap.grid, o)); // these lines create the board.
         theContext = this.getContext(); // Stores the context, see the variable comment above
 
-        // These for loops create starting units.
 
-        new oil(theContext,13, 8, 13, 7);
+        // next lines generate green's "natural resources" (the resources which are expected to be controlled by green player).
+        new Food(theContext,1,0,1,1);
+        new Food(theContext,2,1,1,1);
+        new Food(theContext,1,2,1,1);
+        new Food(theContext,2,7,1,7);
+        new Food(theContext,1,8,1,7);
+        new Food(theContext,5,1,6,1);
+
+        new oil(theContext, 6, 0, 6, 1);
+        new oil(theContext, 1, 6, 1, 7);
+        new oil(theContext, 0, 1, 1, 1);
+
+        new Iron(theContext, 0, 7, 1, 7);
+        new Iron(theContext, 6, 2, 6, 1);
+
+        // next lines generate red's "natural resources" (the resources which are expected to be controlled by red player).
+        new Food(theContext,13,8,13,7);
+        new Food(theContext,12,7,13,7);
+        new Food(theContext,13,6,13,7);
+        new Food(theContext,12,1,13,1);
+        new Food(theContext,13,0,13,1);
+        new Food(theContext,9,7,8,7);
+
+        new oil(theContext, 8, 8, 8, 7);
+        new oil(theContext, 13, 2, 13, 1);
+        new oil(theContext, 14, 7, 13, 7);
+
+        new Iron(theContext, 14, 1, 13, 1);
+        new Iron(theContext, 8, 6, 8, 7);
+
+
+
         new Headquaters(theContext, 1, 1, GameEngine.green);
         new Headquaters(theContext, 13, 7, GameEngine.red);
-        for (int i = 0; i < 3; i++) {
-            new Infantry(theContext, 2, i * 2, GameEngine.green);
+
+        // These for loops create starting units.
+        for (int i = 0; i < 1; i++) {
+            new Infantry(theContext, 2, 2, GameEngine.green);
         }
 
-        for (int i = 0; i < 3; i++) {
-            new Infantry(theContext, 11, i * 2, GameEngine.red);
+        for (int i = 0; i < 1; i++) {
+            new Infantry(theContext, 12, 6, GameEngine.red);
         }
 
-        for (int i = 1; i < 3; i++) {
+        for (int i = 1; i < 1; i++) {
             new Cavalry(theContext, 1, i * 2, GameEngine.green);
         }
-        for (int i = 1; i < 3; i++) {
+        for (int i = 1; i < 1; i++) {
             new Cavalry(theContext, 12, i * 2, GameEngine.red);
         }
 
-        for (int i = 5; i < 6; i++) {
+        for (int i = 5; i < 5; i++) {
             new Artillery(theContext, 0, i, GameEngine.green);
         }
-        for (int i = 5; i < 6; i++) {
+        for (int i = 5; i < 5; i++) {
             new Artillery(theContext, 13, i, GameEngine.red);
         }
         selected = new SelectedUnit(theContext); // adds selected unit to the board, but doesn't show it until it has to.
         enemySelected = new SelectedUnit(theContext);
         GameEngine.playing = GameEngine.green;
+        GameEngine.estimateResources();
         thread.start(); // starts the tread
 
     }
@@ -137,7 +170,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             //draws yellow squares where selected unit can move.
             if (GameEngine.theUnit != null && GameEngine.theUnit.hasMove == true) {
-                for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                for (int i = 0; i < GameEngine.BoardSprites.length; i++) { // TODO : optimize this
                     for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
                         if (GameEngine.BoardSprites[i][j] == null &&
                                 (GameEngine.theUnit.movement >= GameEngine.getSquareDistance           //also check if unit is in range.
@@ -233,11 +266,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 canvas.drawText( "This unit " + canMoveAndAttack[1], 2000, 1020, paint);
             }
         }
+
         Paint paint = new Paint();
         paint.setTextSize(60);
-        paint.setColor(Color.GRAY);
-        canvas.drawText( "Oil : " + GameEngine.playing.oilStorage, 50, 1200, paint);
+        paint.setColor(Color.YELLOW);
+        canvas.drawText( "Food storage : " + GameEngine.playing.foodStorage + " + " + GameEngine.lastAddedResounces[0], 50, 1360, paint);
 
+
+        paint = new Paint();
+        paint.setTextSize(60);
+        paint.setColor(Color.argb(255,204,102,0));
+        canvas.drawText( "Iron storage : " + GameEngine.playing.ironStorage + " + " + GameEngine.lastAddedResounces[1], 50, 1280, paint);
+
+        paint = new Paint();
+        paint.setTextSize(60);
+        paint.setColor(Color.GRAY);
+        canvas.drawText( "Oil storage : " + GameEngine.playing.oilStorage + " + " + GameEngine.lastAddedResounces[2], 50, 1200, paint);
 
     }
 
