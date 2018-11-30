@@ -331,8 +331,9 @@ public class GameEngine {
                     enemyTappedUnit = null;
                     enemySelected = null;
                     message = u.unitType + " at "+ x + ", " + y + " is dead";
-                    if (u.unitType.equals("Headquaters")) {
-                        message = "Headquaters have been destroyed. " + playing.color + " player wins!";
+                    if (u.unitType.equals("Headquarters")) {
+                        message = "Headquarters have been destroyed, " + playing.color + " player wins!";
+                        showMarket = false;
                     }
                     return;
                 }

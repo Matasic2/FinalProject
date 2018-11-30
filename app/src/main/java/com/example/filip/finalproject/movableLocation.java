@@ -117,6 +117,13 @@ public class movableLocation {
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.heal, o);
         }
+        if (number == 15) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.target, o);
+            icon = replaceColor(icon);
+            displacement = 14;
+        }
     }
     //draw yellow circles at given coordinates, +37 centers the image
     public void draw(Canvas canvas, int x, int y) {

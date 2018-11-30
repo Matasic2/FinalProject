@@ -23,7 +23,7 @@ public class Headquaters extends Units{
     public static int RedMovement = 0; // Movement value of Red's Cavalry, this value can be changed
 
     Headquaters(Context context, int x, int y, Player player) {
-        super(context, x, y, player, "Headquaters");
+        super(context, x, y, player, "Headquarters");
         if (player.color.equals("green")) {
             this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement);
         } else {

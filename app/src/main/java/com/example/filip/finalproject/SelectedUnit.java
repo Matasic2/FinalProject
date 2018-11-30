@@ -62,14 +62,14 @@ public class SelectedUnit {
             return;
         }
 
-        if (GameEngine.BoardSprites[x/128][y/128] instanceof Units && player == GameEngine.green && unitType.equals("Headquaters")) { //if selected unit is Green Cavalry, use cavgs (CAValry Green Selected) texture
+        if (GameEngine.BoardSprites[x/128][y/128] instanceof Units && player == GameEngine.green && unitType.equals("Headquarters")) { //if selected unit is Green Cavalry, use cavgs (CAValry Green Selected) texture
             BitmapFactory.Options o = new BitmapFactory.Options();
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.hqgs, o);
             return;
         }
 
-        if (GameEngine.BoardSprites[x/128][y/128] instanceof Units && player == GameEngine.red &&  unitType.equals("Headquaters")) { //if selected unit is Red Cavalry, use cavrs (CAValry Red Selected) texture
+        if (GameEngine.BoardSprites[x/128][y/128] instanceof Units && player == GameEngine.red &&  unitType.equals("Headquarters")) { //if selected unit is Red Cavalry, use cavrs (CAValry Red Selected) texture
             BitmapFactory.Options o = new BitmapFactory.Options();
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.hqrs, o);

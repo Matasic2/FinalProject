@@ -105,12 +105,12 @@ public class Units {
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.artr2, o);
         }
-        if (owner == GameEngine.green && unitType.equals("Headquaters")) {
+        if (owner == GameEngine.green && unitType.equals("Headquarters")) {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.hqg, o);
         }
-        if (owner == GameEngine.red && unitType.equals("Headquaters")) {
+        if (owner == GameEngine.red && unitType.equals("Headquarters")) {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.hqr, o);

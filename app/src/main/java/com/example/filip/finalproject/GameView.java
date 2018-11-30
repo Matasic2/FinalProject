@@ -256,6 +256,21 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
 
+            //draws yellow squares where selected unit can move.
+            if (GameEngine.theUnit != null && GameEngine.theUnit.hasMove == true) {
+                for (int i = 0; i < GameEngine.BoardSprites.length; i++) { // TODO : optimize this
+                    for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
+                        if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != GameEngine.playing &&
+                                (GameEngine.theUnit.attack2Range >= GameEngine.getSquareDistance           //also check if unit is in range.
+                                        (GameEngine.getCoordinates(GameEngine.theUnit)[0], i,
+                                                GameEngine.getCoordinates(GameEngine.theUnit)[1], j))) {
+                            movableLocation temp = new movableLocation(theContext, 15);
+                            temp.draw(canvas, i, j);
+                        }
+                    }
+                }
+            }
+
 
             //display info about player's selected unit
             if (GameEngine.theUnit != null) {
