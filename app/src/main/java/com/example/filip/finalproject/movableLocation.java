@@ -38,6 +38,61 @@ public class movableLocation {
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.harvesternoleft, o);
         }
+        if (number == 3) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.unselect, o);
+        }
+        if (number == 4) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.nextplayer, o);
+        }
+        if (number == 5) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.buy, o);
+        }
+        if (number == 6) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.infg, o);
+        }
+        if (number == 7) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.cavg, o);
+        }
+        if (number == 8) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.artg, o);
+        }
+        if (number == 9) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.infr, o);
+        }
+        if (number == 10) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.cavr, o);
+        }
+        if (number == 11) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.artr, o);
+        }
+        if (number == 12) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armg, o);
+        }
+        if (number == 13) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armr, o);
+        }
     }
     //draw yellow circles at given coordinates, +37 centers the image
     public void draw(Canvas canvas, int x, int y) {

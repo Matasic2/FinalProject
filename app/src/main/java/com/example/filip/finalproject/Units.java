@@ -31,17 +31,17 @@ public class Units {
 
 
     //Two methods below are from previous versions of the code, I might need them again later.
-    /*public Units(Bitmap bmp) {
-        icon = bmp;
+     /*public Units(Bitmap bmp) {
+         icon = bmp;
 
-        // modifies GaveView's units array to add the unit.
-        Units[] toReturn = new Units[GameView.units.length + 1];
-        for (int cv = 0; cv < GameView.units.length; cv++) {
-            toReturn[cv] = GameView.units[cv];
-        }
-        toReturn[toReturn.length - 1] = this;
-        GameView.units = toReturn;
-    }*/
+         // modifies GaveView's units array to add the unit.
+         Units[] toReturn = new Units[GameView.units.length + 1];
+         for (int cv = 0; cv < GameView.units.length; cv++) {
+             toReturn[cv] = GameView.units[cv];
+         }
+         toReturn[toReturn.length - 1] = this;
+         GameView.units = toReturn;
+     }*/
 
     /*public Units(Context context) {
 
@@ -53,24 +53,26 @@ public class Units {
             toReturn[k] = GameView.units[k];
         }
         toReturn[toReturn.length - 1] = this;
-        GameView.units = toReturn;
-        GameEngine.BoardSprites[coordinates[0]][coordinates[1]] = this;
-    }*/
-
-    //creates a new unit, initialize icon to it's unit type, attribute attack, defence and HP values, and set the owner. It also adds it to GaveView's units array and to GameEngine's Object[][] array.
-    public Units(Context context, int x, int y, Player player, String unitType, int atc1, int atc2, int atc1r, int atc2r,int def, int hp, int maxhp, int mov) {
-
+       GameView.units = toReturn;
+       GameEngine.BoardSprites[coordinates[0]][coordinates[1]] = this;
+   }*/
         //see above for meaning of these values
-        this.attack1 = atc1;
-        this.attack2 = atc2;
-        this.attack1Range = atc1r;
-        this.attack2Range = atc2r;
-        this.defence = def;
-        this.HP = hp;
-        this.maxHP = maxhp;
-        this.movement = mov;
-        this.unitType = unitType;
-        this.owner = player;
+        public void setParameters(int atc1, int atc2, int atc1r, int atc2r,int def, int hp, int maxhp, int mov) {
+            this.attack1 = atc1;
+            this.attack2 = atc2;
+            this.attack1Range = atc1r;
+            this.attack2Range = atc2r;
+            this.defence = def;
+            this.HP = hp;
+            this.maxHP = maxhp;
+            this.movement = mov;
+        }
+        //creates a new unit, initialize icon to it's unit type, attribute attack, defence and HP values, and set the owner. It also adds it to GaveView's units array and to GameEngine's Object[][] array.
+    public Units(Context context, int x, int y, Player player, String unitType) {
+            //see above for meaning of these values
+            this.unitType = unitType;
+            this.owner = player;
+
 
         //these if statements get the icon of constructed unit
         if (owner == GameEngine.green && unitType.equals("Infantry")) {
@@ -112,6 +114,16 @@ public class Units {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.hqr, o);
+        }
+        if (owner == GameEngine.green && unitType.equals("Armor")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armg2, o);
+        }
+        if (owner == GameEngine.red && unitType.equals("Armor")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armr2, o);
         }
 
         //sets the starting coordinates of the unit

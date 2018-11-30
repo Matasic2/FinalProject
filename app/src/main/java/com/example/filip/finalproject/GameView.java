@@ -90,8 +90,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         new Headquaters(theContext, 13, 7, GameEngine.red);
 
         // These for loops create starting units.
-        for (int i = 0; i < 1; i++) {
-            new Infantry(theContext, 2, 2, GameEngine.green);
+        for (int i = 0; i < 2; i++) {
+            new Infantry(theContext, 2,  1 + i, GameEngine.green);
         }
 
         for (int i = 0; i < 1; i++) {
@@ -146,12 +146,70 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             grid.draw(canvas);  //draws the grid first, because that is the bottom layer.
 
             movableLocation pointers = new movableLocation(theContext, 0);
-            movableLocation pointers2 = new movableLocation(theContext, 1);
-            movableLocation pointers3 = new movableLocation(theContext, 2);
+            movableLocation pointers1 = new movableLocation(theContext, 1);
+            movableLocation pointers2 = new movableLocation(theContext, 2);
+            movableLocation pointers3 = new movableLocation(theContext, 3);
+            movableLocation pointers4 = new movableLocation(theContext, 4);
+            movableLocation pointers5 = new movableLocation(theContext, 5);
             pointers.draw(canvas,1,7);
             pointers.draw(canvas,13,1);
-            pointers2.draw(canvas,6,1);
-            pointers3.draw(canvas,8,7);
+            pointers1.draw(canvas,6,1);
+            pointers2.draw(canvas,8,7);
+            pointers3.draw(canvas,16,1);
+            pointers4.draw(canvas,16,3);
+            pointers5.draw(canvas,5,10);
+
+            if (GameEngine.showMarket) {
+                if (GameEngine.playing == GameEngine.green) {
+                    movableLocation inf = new movableLocation(theContext, 6);
+                    movableLocation cav = new movableLocation(theContext, 7);
+                    movableLocation art = new movableLocation(theContext, 8);
+                    movableLocation arm = new movableLocation(theContext, 12);
+                    inf.draw(canvas, 7, 10);
+                    cav.draw(canvas, 9, 10);
+                    art.draw(canvas, 11, 10);
+                    arm.draw(canvas, 13, 10);
+                }
+                if (GameEngine.playing == GameEngine.red) {
+                    movableLocation inf = new movableLocation(theContext, 9);
+                    movableLocation cav = new movableLocation(theContext, 10);
+                    movableLocation art = new movableLocation(theContext, 11);
+                    movableLocation arm = new movableLocation(theContext, 13);
+                    inf.draw(canvas, 7, 10);
+                    cav.draw(canvas, 9, 10);
+                    art.draw(canvas, 11, 10);
+                    arm.draw(canvas, 13, 10);
+                }
+                Paint thePaint = new Paint();
+                thePaint.setTextSize(40);
+                thePaint.setColor(Color.YELLOW);
+                canvas.drawText("2", 1000,1260,thePaint);
+                canvas.drawText("3", 1255,1260,thePaint);
+                canvas.drawText("5", 1515,1260,thePaint);
+                canvas.drawText("2", 1768,1260,thePaint);
+                thePaint.setColor(Color.argb(255,204,102,0));
+                canvas.drawText("0", 950,1260,thePaint);
+                canvas.drawText("0", 1205,1260,thePaint);
+                canvas.drawText("4", 1465,1260,thePaint);
+                canvas.drawText("4", 1718,1260,thePaint);
+                thePaint.setColor(Color.GRAY);
+                canvas.drawText("0", 905,1260,thePaint);
+                canvas.drawText("0", 1160,1260,thePaint);
+                canvas.drawText("0", 1420,1260,thePaint);
+                canvas.drawText("20", 1660,1260,thePaint);
+
+
+            } else {
+                Paint thePaint = new Paint();
+                thePaint.setTextSize(70);
+                if (GameEngine.playing == GameEngine.green) {
+                    thePaint.setColor(Color.GREEN);
+                }
+                if (GameEngine.playing == GameEngine.red) {
+                    thePaint.setColor(Color.RED);
+                }
+                canvas.drawText(GameEngine.message, 850, 1330, thePaint);
+            }
 
             for (int i = 0; i < resources.length; i++) {
                 resources[i].draw(canvas); //draws the units from units array found in GameView class.
@@ -172,7 +230,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             //bottom five lines draw the text that displays the tap coordinates, should be removed in final version.
             Paint paint = new Paint();
             paint.setTextSize(60);
-            paint.setColor(Color.RED);
+            if (GameEngine.playing == GameEngine.green) {
+                paint.setColor(Color.GREEN);
+            }
+            if (GameEngine.playing == GameEngine.red) {
+                paint.setColor(Color.RED);
+            }
             int[] tapCoord = GameEngine.getSquareCoordinates(GameEngine.lastTap[0], GameEngine.lastTap[1]);
             canvas.drawText( tapCoord[0]+ " " + tapCoord[1] + " " + Player.print(GameEngine.playing) + " " , 2000, 70, paint);
 
