@@ -52,7 +52,7 @@ public class GameEngine {
             return;
         }
 
-        //un-selects the unit if the button is pressed TODO : make the button visible
+        //un-selects the unit if the button is pressed
         if (x / 128 == 16 && y / 128 == 1 && (selected != null || enemySelected  != null)) {
             selected = null;
             theUnit = null;
@@ -63,7 +63,28 @@ public class GameEngine {
             return;
         }
 
-        //switches active player if the button is pressed. TODO : make the button visible.
+        //heal the unit if the button is pressed
+        if (x / 128 == 18 && y / 128 == 1 && selected != null) {
+            if (theUnit.HP != theUnit.maxHP) {
+                if (theUnit.hasAttack) {
+                    theUnit.HP++;
+                    theUnit.hasAttack = false;
+                }
+                if (theUnit.hasMove) {
+                    theUnit.HP++;
+                    theUnit.hasMove = false;
+                }
+                if (theUnit.HP > theUnit.maxHP) {
+                    theUnit.HP = theUnit.maxHP;
+                }
+            }
+            lastTap[0] = x; //sets the lastTap coordinates
+            lastTap[1] = y;
+            selected = null;
+            theUnit = null;
+        }
+
+        //switches active player if the button is pressed.
         if (x / 128 == 16 && y / 128 == 3  && ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128))) {
             switchPlayer();
             selected = null;
@@ -75,7 +96,7 @@ public class GameEngine {
             return;
         }
 
-        //switches market visibility if the button is pressed. TODO : make the button visible.
+        //switches market visibility if the button is pressed.
         if (x / 128 == 5 && y / 128 == 10  && ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128))) {
             GameEngine.showMarket =  !GameEngine.showMarket;
             if (showSupport == true) {
@@ -85,7 +106,7 @@ public class GameEngine {
             lastTap[1] = y;
             return;
         }
-        //switches market visibility if the button is pressed. TODO : make the button visible.
+        //switches support visibility if the button is pressed. TODO : Add support abilities in game
         if (x / 128 == 12 && y / 128 == 10  && ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128))) {
             GameEngine.showMarket =  !GameEngine.showMarket;
             if (showSupport == true) {
@@ -100,23 +121,26 @@ public class GameEngine {
         if (x / 128 == 7 && y / 128 == 10 &&
                 ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128))) {
             if (playing.foodStorage > 1) {
-                if (playing == green) {
+                if (playing == green && BoardSprites[2][2] == null) {
                     new Infantry(GameView.theContext, 2, 2, playing);
                 }
-                if (playing == red) {
+                if (playing == red && BoardSprites[12][6] == null) {
                     new Infantry(GameView.theContext, 12, 6, playing);
                 }
                 playing.foodStorage -=2;
+            }
+            if (playing.foodStorage < 2) {
+                showMarket = false;
             }
         }
         //buys new cavalry for three food
         if (x / 128 == 9 && y / 128 == 10 &&
                 ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128))) {
             if (playing.foodStorage > 2) {
-                if (playing == green) {
+                if (playing == green && BoardSprites[2][2] == null) {
                     new Cavalry(GameView.theContext, 2, 2, playing);
                 }
-                if (playing == red) {
+                if ((playing == red && BoardSprites[12][6] == null)) {
                     new Cavalry(GameView.theContext, 12, 6, playing);
                 }
                 playing.foodStorage -=3;
@@ -126,10 +150,10 @@ public class GameEngine {
         if (x / 128 == 11 && y / 128 == 10 &&
                 ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128))) {
             if (playing.foodStorage > 4 && playing.ironStorage > 3) {
-                if (playing == green) {
+                if (playing == green && BoardSprites[2][2] == null) {
                     new Artillery(GameView.theContext, 2, 2, playing);
                 }
-                if (playing == red) {
+                if ((playing == red && BoardSprites[12][6] == null)) {
                     new Artillery(GameView.theContext, 12, 6, playing);
                 }
                 playing.foodStorage -=5;
@@ -141,10 +165,10 @@ public class GameEngine {
         if (x / 128 == 13 && y / 128 == 10 &&
                 ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128))) {
             if (playing.foodStorage > 1 && playing.ironStorage > 3 && playing.oilStorage > 19) {
-                if (playing == green) {
+                if (playing == green && BoardSprites[2][2] == null) {
                     new Armor(GameView.theContext, 2, 2, playing);
                 }
-                if (playing == red) {
+                if ((playing == red && BoardSprites[12][6] == null)) {
                     new Armor(GameView.theContext, 12, 6, playing);
                 }
                 playing.foodStorage -=2;
@@ -213,6 +237,8 @@ public class GameEngine {
             //if unit has a move, don't un-select it yet.
             if (theUnit.hasMove) {
                 theUnit.hasAttack = false;
+                lastTap[0] = x; //sets the lastTap coordinates
+                lastTap[1] = y;
                 return;
             }
             //if units doesn't have a move, un-select it
@@ -220,6 +246,8 @@ public class GameEngine {
                 theUnit.hasAttack = false;
                 selected = null;
                 theUnit = null;
+                lastTap[0] = x; //sets the lastTap coordinates
+                lastTap[1] = y;
                 return;
             }
         }
@@ -234,12 +262,16 @@ public class GameEngine {
             DamageUnit(theUnit.attack2, BoardSprites[x / 128][y / 128], x / 128, y / 128);
             if (theUnit.hasMove) {
                 theUnit.hasAttack = false;
+                lastTap[0] = x; //sets the lastTap coordinates
+                lastTap[1] = y;
                 return;
             }
             if (!theUnit.hasMove) {
                 theUnit.hasAttack = false;
                 selected = null;
                 theUnit = null;
+                lastTap[0] = x; //sets the lastTap coordinates
+                lastTap[1] = y;
                 return;
             }
         }
@@ -285,6 +317,9 @@ public class GameEngine {
 
     //damages the unit at given coordinates
     public static void DamageUnit(int damage, Units u, int x, int y) {
+        if (BoardSprites[x][y].defence >= damage) {
+            message = u.unitType + " at "+ x + ", " + y + " was not damaged";
+        }
         BoardSprites[x][y].HP = BoardSprites[x][y].HP - (damage - BoardSprites[x][y].defence); //TODO : if damage given is smaller than 0, don't do any damage.
         //if unit has less than 1HP, remove it
         message = u.unitType + " at "+ x + ", " + y + " damaged by " + (damage - BoardSprites[x][y].defence);

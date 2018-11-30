@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory.Options;
 import android.util.EventLog;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 
 public class movableLocation {
 
@@ -16,8 +17,26 @@ public class movableLocation {
 
         BitmapFactory.Options o = new Options(); //get resource
         o.inScaled = false;
-        icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.yellow, o);
+        icon = BitmapFactory.decodeResource(context.getResources(),R.drawable.yellow, o);
+        icon = replaceColor(icon);
         displacement = 37;
+    }
+
+
+    public Bitmap replaceColor(Bitmap src){
+        if(src == null)
+            return null;
+        int width = src.getWidth();
+        int height = src.getHeight();
+        int[] pixels = new int[width * height];
+        src.getPixels(pixels, 0, width, 0, 0, width, height);
+        for(int x = 0;x < pixels.length;++x){
+            if(pixels[x] == Color.WHITE){
+                pixels[x] = ~(pixels[x] << 8 & 0xFF000000) & Color.BLACK;
+            }
+        }
+        Bitmap result = Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888);
+        return result;
     }
 
 
@@ -92,6 +111,11 @@ public class movableLocation {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armr, o);
+        }
+        if (number == 14) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.heal, o);
         }
     }
     //draw yellow circles at given coordinates, +37 centers the image
