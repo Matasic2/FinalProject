@@ -172,7 +172,7 @@ public class GameEngine {
             if (BoardSprites[x / 128][y / 128].owner == playing) {
                 theUnit = BoardSprites[x / 128][y / 128];
                 selected = new SelectedUnit(GameView.theContext, x, y, theUnit.owner, theUnit.unitType);
-                message = "Infantry at " + x/128 + ", " + y/128;
+                message = theUnit.unitType + " at " + x/128 + ", " + y/128;
                 return;
             }
             else if (BoardSprites[x / 128][y / 128].owner != playing) {
@@ -209,7 +209,7 @@ public class GameEngine {
                         (getCoordinates(theUnit)[0], x / 128,
                                 getCoordinates(theUnit)[1], y / 128))
                 && theUnit.hasAttack == true) {
-            DamageUnit(BoardSprites[x / 128][y / 128].attack1, BoardSprites[x / 128][y / 128], x / 128, y / 128); //and then move the unit, and un-select it.
+            DamageUnit(theUnit.attack1, BoardSprites[x / 128][y / 128], x / 128, y / 128); //and then move the unit, and un-select it.
             //if unit has a move, don't un-select it yet.
             if (theUnit.hasMove) {
                 theUnit.hasAttack = false;
@@ -285,7 +285,7 @@ public class GameEngine {
 
     //damages the unit at given coordinates
     public static void DamageUnit(int damage, Units u, int x, int y) {
-        BoardSprites[x][y].HP -= (damage - BoardSprites[x][y].defence); //TODO : if damage given is smaller than 0, don't do any damage.
+        BoardSprites[x][y].HP = BoardSprites[x][y].HP - (damage - BoardSprites[x][y].defence); //TODO : if damage given is smaller than 0, don't do any damage.
         //if unit has less than 1HP, remove it
         message = u.unitType + " at "+ x + ", " + y + " damaged by " + (damage - BoardSprites[x][y].defence);
         if (BoardSprites[x][y].HP <= 0) {
@@ -296,6 +296,9 @@ public class GameEngine {
                     enemyTappedUnit = null;
                     enemySelected = null;
                     message = u.unitType + " at "+ x + ", " + y + " is dead";
+                    if (u.unitType.equals("Headquaters")) {
+                        message = "Headquaters have been destroyed. " + playing.color + " player wins!";
+                    }
                     return;
                 }
             }
