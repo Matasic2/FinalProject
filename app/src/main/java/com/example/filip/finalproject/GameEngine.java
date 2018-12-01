@@ -330,16 +330,19 @@ public class GameEngine {
         selected = new SelectedUnit(GameView.theContext, x * 128, y * 128, theUnit.owner, theUnit.unitType);
         BoardSprites[a][b] = null;
         estimateResources();
+        showMarket = false;
         message = u.unitType + " moved to " + x + ", " + y;
     }
 
     //damages the unit at given coordinates
     public static void DamageUnit(int damage, Units u, int x, int y) {
         if (BoardSprites[x][y].defence >= damage) {
+            showMarket = false;
             message = u.unitType + " at "+ x + ", " + y + " was not damaged";
         }   else {
             BoardSprites[x][y].HP = BoardSprites[x][y].HP - (damage - BoardSprites[x][y].defence); //TODO : if damage given is smaller than 0, don't do any damage.
             //if unit has less than 1HP, remove it
+            showMarket = false;
             message = u.unitType + " at " + x + ", " + y + " damaged by " + (damage - BoardSprites[x][y].defence);
             if (BoardSprites[x][y].HP <= 0) {
                 BoardSprites[x][y] = null;
@@ -348,6 +351,7 @@ public class GameEngine {
                         GameView.removeSprite(i);
                         enemyTappedUnit = null;
                         enemySelected = null;
+                        showMarket = false;
                         message = u.unitType + " at " + x + ", " + y + " is dead";
                         if (u.unitType.equals("Headquarters")) {
                             message = "Headquarters have been destroyed, " + playing.color + " player wins!";
