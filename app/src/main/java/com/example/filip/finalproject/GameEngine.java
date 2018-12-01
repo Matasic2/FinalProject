@@ -188,8 +188,7 @@ public class GameEngine {
         }
 
         //If user taps on a unit, select it, or display info on enemy unit.
-        if (BoardSprites[x / 128][y / 128] != null
-                && ((BoardSprites[x / 128][y / 128].hasMove == true || BoardSprites[x / 128][y / 128].hasAttack == true) || (BoardSprites[x / 128][y / 128].owner != playing))) {
+        if (BoardSprites[x / 128][y / 128] != null) {
             if (BoardSprites[x / 128][y / 128].owner == playing) {
                 theUnit = BoardSprites[x / 128][y / 128];
                 selected = new SelectedUnit(GameView.theContext, x, y, theUnit.owner, theUnit.unitType);
@@ -207,12 +206,12 @@ public class GameEngine {
         }
 
         //if user taps with unit selected on an empty square, move it TODO : make sure unit cannot move over another unit
-        if (theUnit != null && BoardSprites[x / 128][y / 128] == null &&
-                (theUnit.movement >= getSquareDistance           //also check if unit is in range.
+        if (theUnit != null && BoardSprites[x / 128][y / 128] == null
+                && (theUnit.movement >= getSquareDistance           //also check if unit is in range.
                         (getCoordinates(theUnit)[0], x / 128,
                                 getCoordinates(theUnit)[1], y / 128))
                 && theUnit.hasMove == true
-                && (lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128)) {
+                && ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128))) {
             moveTo(theUnit, x / 128, y / 128); //and then move the unit, and un-select it.
             //if unit has attack, don't un-select it yet. TODO : if no units are in range, un-select it because it cannot attack anyway
             if (theUnit.hasAttack) {
