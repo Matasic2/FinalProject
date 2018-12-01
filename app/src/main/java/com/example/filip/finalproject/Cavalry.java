@@ -5,7 +5,7 @@ import android.content.Context;
 public class Cavalry extends Units{
 
     // TODO : fix these comments
-    public static int GreenAttack1 = 9; // Green Cavalry's first attack value, this value can be changed
+    public static int GreenAttack1 = 10; // Green Cavalry's first attack value, this value can be changed
     public static int GreenAttack2 = 1; //  Green Cavalry's first attack value, this value can be changed
     public static int GreenFirstAttackRange = 1; //  Green Cavalry's first attack range, this value can be changed
     public static int GreenSecondAttackRange = 3; //  Green Cavalry's second attack value, this value can be changed
@@ -13,7 +13,7 @@ public class Cavalry extends Units{
     public static int GreenHP = 10; // HP value of Green's Cavalry, this value can be changed
     public static int GreenMovement = 3; // Movement value of Green's Cavalry, this value can be changed
 
-    public static int RedAttack1 = 9; // Red Cavalry's first attack value, this value can be changed
+    public static int RedAttack1 = 10; // Red Cavalry's first attack value, this value can be changed
     public static int RedAttack2 = 1; //  Red Cavalry's first attack value, this value can be changed
     public static int RedFirstAttackRange = 1; //  Red Cavalry's first attack range, this value can be changed
     public static int RedSecondAttackRange = 3; //  Red Cavalry's second attack value, this value can be changed

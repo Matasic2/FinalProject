@@ -52,7 +52,7 @@ public class GameEngine {
             return;
         }
 
-        //un-selects the unit if the button is pressed
+        //un-selects the unit if the button is pressed.
         if (x / 128 == 16 && y / 128 == 1 && (selected != null || enemySelected  != null)) {
             selected = null;
             theUnit = null;
@@ -132,6 +132,8 @@ public class GameEngine {
             if (playing.foodStorage < 2) {
                 showMarket = false;
             }
+            lastTap[0] = x; //sets the lastTap coordinates
+            lastTap[1] = y;
         }
         //buys new cavalry for three food
         if (x / 128 == 9 && y / 128 == 10 &&
@@ -145,6 +147,8 @@ public class GameEngine {
                 }
                 playing.foodStorage -=3;
             }
+            lastTap[0] = x; //sets the lastTap coordinates
+            lastTap[1] = y;
         }
         //buys new artillery for five food and four iron
         if (x / 128 == 11 && y / 128 == 10 &&
@@ -159,6 +163,8 @@ public class GameEngine {
                 playing.foodStorage -=5;
                 playing.ironStorage -=4;
             }
+            lastTap[0] = x; //sets the lastTap coordinates
+            lastTap[1] = y;
         }
 
         //buys new armor for two food, four iron and twenty oil
@@ -175,6 +181,8 @@ public class GameEngine {
                 playing.ironStorage -=4;
                 playing.oilStorage -=20;
             }
+            lastTap[0] = x; //sets the lastTap coordinates
+            lastTap[1] = y;
         }
 
         // If tap is outside the grid, do nothing.
@@ -329,26 +337,26 @@ public class GameEngine {
     public static void DamageUnit(int damage, Units u, int x, int y) {
         if (BoardSprites[x][y].defence >= damage) {
             message = u.unitType + " at "+ x + ", " + y + " was not damaged";
-        }
-        BoardSprites[x][y].HP = BoardSprites[x][y].HP - (damage - BoardSprites[x][y].defence); //TODO : if damage given is smaller than 0, don't do any damage.
-        //if unit has less than 1HP, remove it
-        message = u.unitType + " at "+ x + ", " + y + " damaged by " + (damage - BoardSprites[x][y].defence);
-        if (BoardSprites[x][y].HP <= 0) {
-            BoardSprites[x][y] = null;
-            for (int i = 0; i < GameView.units.length; i++) {
-                if (GameView.units[i] == u) {
-                    GameView.removeSprite(i);
-                    enemyTappedUnit = null;
-                    enemySelected = null;
-                    message = u.unitType + " at "+ x + ", " + y + " is dead";
-                    if (u.unitType.equals("Headquarters")) {
-                        message = "Headquarters have been destroyed, " + playing.color + " player wins!";
-                        showMarket = false;
+        }   else {
+            BoardSprites[x][y].HP = BoardSprites[x][y].HP - (damage - BoardSprites[x][y].defence); //TODO : if damage given is smaller than 0, don't do any damage.
+            //if unit has less than 1HP, remove it
+            message = u.unitType + " at " + x + ", " + y + " damaged by " + (damage - BoardSprites[x][y].defence);
+            if (BoardSprites[x][y].HP <= 0) {
+                BoardSprites[x][y] = null;
+                for (int i = 0; i < GameView.units.length; i++) {
+                    if (GameView.units[i] == u) {
+                        GameView.removeSprite(i);
+                        enemyTappedUnit = null;
+                        enemySelected = null;
+                        message = u.unitType + " at " + x + ", " + y + " is dead";
+                        if (u.unitType.equals("Headquarters")) {
+                            message = "Headquarters have been destroyed, " + playing.color + " player wins!";
+                            showMarket = false;
+                        }
+                        return;
                     }
-                    return;
                 }
             }
-
         }
     }
 
