@@ -177,9 +177,6 @@ public class GameEngine {
             }
         }
 
-        lastTap[0] = x; //sets the lastTap coordinates
-        lastTap[1] = y;
-
         // If tap is outside the grid, do nothing.
         if (x / 128 >= 15 || y / 128 >= 9) {
             return;
@@ -197,11 +194,15 @@ public class GameEngine {
                 theUnit = BoardSprites[x / 128][y / 128];
                 selected = new SelectedUnit(GameView.theContext, x, y, theUnit.owner, theUnit.unitType);
                 message = theUnit.unitType + " at " + x/128 + ", " + y/128;
+                lastTap[0] = x; //sets the lastTap coordinates
+                lastTap[1] = y;
                 return;
             }
             else if (BoardSprites[x / 128][y / 128].owner != playing) {
                 enemyTappedUnit = BoardSprites[x / 128][y / 128];
                 enemySelected = new SelectedUnit(GameView.theContext, x, y, BoardSprites[x / 128][y / 128].owner, BoardSprites[x / 128][y / 128].unitType);
+                lastTap[0] = x; //sets the lastTap coordinates
+                lastTap[1] = y;
             }
         }
 
@@ -210,11 +211,14 @@ public class GameEngine {
                 (theUnit.movement >= getSquareDistance           //also check if unit is in range.
                         (getCoordinates(theUnit)[0], x / 128,
                                 getCoordinates(theUnit)[1], y / 128))
-                && theUnit.hasMove == true) {
+                && theUnit.hasMove == true
+                && (lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128)) {
             moveTo(theUnit, x / 128, y / 128); //and then move the unit, and un-select it.
             //if unit has attack, don't un-select it yet. TODO : if no units are in range, un-select it because it cannot attack anyway
             if (theUnit.hasAttack) {
                 theUnit.hasMove = false;
+                lastTap[0] = x; //sets the lastTap coordinates
+                lastTap[1] = y;
                 return;
             }
             //if units doesn't have an attack, un-select it
@@ -222,9 +226,16 @@ public class GameEngine {
                 theUnit.hasMove = false;
                 selected = null;
                 theUnit = null;
+                lastTap[0] = x; //sets the lastTap coordinates
+                lastTap[1] = y;
                 return;
             }
         }
+
+
+        lastTap[0] = x; //sets the lastTap coordinates
+        lastTap[1] = y;
+
 
         //if player taps with unit selected on an opponent's unit, attack it
         if (theUnit != null && BoardSprites[x / 128][y / 128] != null &&

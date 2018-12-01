@@ -91,7 +91,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         // These for loops create starting units.
         for (int i = 0; i < 2; i++) {
-            new Infantry(theContext, 2,  1 + i, GameEngine.green);
+            new Infantry(theContext, 2,  i * 2, GameEngine.green);
         }
 
         for (int i = 0; i < 1; i++) {
@@ -256,12 +256,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
 
-            //draws yellow squares where selected unit can move.
-            if (GameEngine.theUnit != null && GameEngine.theUnit.hasMove == true) {
+            //draws targets.
+            if (GameEngine.theUnit != null && GameEngine.theUnit.hasAttack == true) {
                 for (int i = 0; i < GameEngine.BoardSprites.length; i++) { // TODO : optimize this
                     for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
                         if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != GameEngine.playing &&
-                                (GameEngine.theUnit.attack2Range >= GameEngine.getSquareDistance           //also check if unit is in range.
+                                (GameEngine.theUnit.attack2Range >= GameEngine.getSquareDistance
                                         (GameEngine.getCoordinates(GameEngine.theUnit)[0], i,
                                                 GameEngine.getCoordinates(GameEngine.theUnit)[1], j))) {
                             movableLocation temp = new movableLocation(theContext, 15);
