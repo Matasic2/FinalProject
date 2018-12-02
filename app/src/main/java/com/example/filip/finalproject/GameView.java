@@ -202,7 +202,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 canvas.drawText("0", 905 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("0", 1160 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("0", 1420 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
-                canvas.drawText("25", 1660 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("20", 1660 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
 
 
             } else {

@@ -201,7 +201,7 @@ public class GameEngine {
         //buys new armor for two food, four iron and twenty five oil
         if (x / squareLength  == 13 && y / squareLength  == 10 && showMarket &&
                 ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
-            if (playing.foodStorage > 1 && playing.ironStorage > 3 && playing.oilStorage > 24) {
+            if (playing.foodStorage > 1 && playing.ironStorage > 3 && playing.oilStorage > 19) {
                 if (playing == green && BoardSprites[2][2] == null) {
                     new Armor(GameView.theContext, 2, 2, playing);
                     playing.foodStorage -=2;
@@ -212,7 +212,7 @@ public class GameEngine {
                     new Armor(GameView.theContext, 12, 6, playing);
                     playing.foodStorage -=2;
                     playing.ironStorage -=4;
-                    playing.oilStorage -=25;
+                    playing.oilStorage -=20;
                 }
 
             }
