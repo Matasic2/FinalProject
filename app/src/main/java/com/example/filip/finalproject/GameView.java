@@ -152,6 +152,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             movableLocation pointers35 = new movableLocation(theContext, 14);
             movableLocation pointers4 = new movableLocation(theContext, 4);
             movableLocation pointers5 = new movableLocation(theContext, 5);
+            movableLocation pointers6 = new movableLocation(theContext, 16);
             pointers.draw(canvas,1,7);
             pointers.draw(canvas,13,1);
             pointers1.draw(canvas,6,1);
@@ -160,6 +161,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             pointers35.draw(canvas,18,1);
             pointers4.draw(canvas,16,3);
             pointers5.draw(canvas,5,10);
+            pointers6.draw(canvas,18,3);
 
             if (GameEngine.showMarket) {
                 if (GameEngine.playing == GameEngine.green) {
@@ -198,7 +200,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 canvas.drawText("0", 905,1260,thePaint);
                 canvas.drawText("0", 1160,1260,thePaint);
                 canvas.drawText("0", 1420,1260,thePaint);
-                canvas.drawText("20", 1660,1260,thePaint);
+                canvas.drawText("25", 1660,1260,thePaint);
 
 
             } else {
@@ -360,18 +362,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         Paint paint = new Paint();
         paint.setTextSize(60);
         paint.setColor(Color.YELLOW);
-        canvas.drawText( "Food storage : " + GameEngine.playing.foodStorage + " + " + GameEngine.lastAddedResounces[0], 50, 1360, paint);
+        canvas.drawText( "Food storage : " + GameEngine.playing.foodStorage + " (+" + GameEngine.lastAddedResounces[0] + ")", 50, 1360, paint);
 
 
         paint = new Paint();
         paint.setTextSize(60);
         paint.setColor(Color.argb(255,204,102,0));
-        canvas.drawText( "Iron storage : " + GameEngine.playing.ironStorage + " + " + GameEngine.lastAddedResounces[1], 50, 1280, paint);
+        canvas.drawText( "Iron storage : " + GameEngine.playing.ironStorage + " (+" + GameEngine.lastAddedResounces[1] + ")", 50, 1280, paint);
 
         paint = new Paint();
         paint.setTextSize(60);
         paint.setColor(Color.GRAY);
-        canvas.drawText( "Oil storage : " + GameEngine.playing.oilStorage + " + " + GameEngine.lastAddedResounces[2], 50, 1200, paint);
+        canvas.drawText( "Oil storage : " + GameEngine.playing.oilStorage + " (+" + GameEngine.lastAddedResounces[2] + ")", 50, 1200, paint);
 
     }
 
