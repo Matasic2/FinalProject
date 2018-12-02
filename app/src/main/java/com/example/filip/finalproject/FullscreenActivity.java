@@ -48,7 +48,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         int width = displayMetrics.widthPixels;
         float scale;
 
-        if (height / 1440.0f < width / 2560.0f) {
+        if (height / 1440.0f > width / 2560.0f) {
             scale = width / 2560.0f;
         }   else {
             scale = height / 1440.0f;
