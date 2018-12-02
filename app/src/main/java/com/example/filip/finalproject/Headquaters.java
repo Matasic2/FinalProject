@@ -6,7 +6,7 @@ public class Headquaters extends Units{
 
     // TODO : fix these comments
     public static int GreenAttack1 = 50; //  Green infantry's first attack value, this value can be changed
-    public static int GreenAttack2 = 1; //  Green infantry's second attack value, this value can be changed
+    public static int GreenAttack2 = 5; //  Green infantry's second attack value, this value can be changed
     public static int GreenFirstAttackRange = 1; //  Green infantry's first attack range, this value can be changed
     public static int GreenSecondAttackRange = 4; //  Green infantry's second attack value, this value can be changed
     public static int GreenDefence = 2; // Defence value of Green's infantry, this value can be changed

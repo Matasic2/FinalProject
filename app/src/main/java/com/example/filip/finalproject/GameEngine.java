@@ -391,7 +391,7 @@ public class GameEngine {
             showMarket = false;
             message = u.unitType + " at "+ (x + c) + ", " + (y + c) + " was not damaged";
         }   else {
-            BoardSprites[x][y].HP = BoardSprites[x][y].HP - (damage - BoardSprites[x][y].defence); //TODO : if damage given is smaller than 0, don't do any damage.
+            BoardSprites[x][y].HP = BoardSprites[x][y].HP - (damage - BoardSprites[x][y].defence);
             //if unit has less than 1HP, remove it
             showMarket = false;
             message = u.unitType + " at " + (x + c) + ", " + (y + c) + " damaged by " + (damage - BoardSprites[x][y].defence);
