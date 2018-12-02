@@ -322,7 +322,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             if (GameEngine.enemyTappedUnit != null) {
                 GameEngine.enemyTappedUnit.draw(canvas, 1950, 640);
                 paint = new Paint();
-                paint.setTextSize(30);
+                paint.setTextSize(30 * FullscreenActivity.scaleFactor);
                 if (GameEngine.enemyTappedUnit.owner == GameEngine.red) {
                     paint.setColor(Color.RED);
                 }
