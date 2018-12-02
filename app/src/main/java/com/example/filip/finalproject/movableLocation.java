@@ -19,7 +19,8 @@ public class movableLocation {
         o.inScaled = false;
         icon = BitmapFactory.decodeResource(context.getResources(),R.drawable.yellow, o);
         icon = replaceColor(icon);
-        displacement = 37;
+        icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        displacement = (int) (37  * FullscreenActivity.scaleFactor);
     }
 
 
@@ -46,92 +47,109 @@ public class movableLocation {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.harvester, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
         if (number == 1) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.harvesternoright, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
         if (number == 2) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.harvesternoleft, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
         if (number == 3) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.unselect, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
         if (number == 4) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.nextplayer, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
         if (number == 5) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.buy, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
         if (number == 6) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.infg, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
         if (number == 7) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.cavg, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
         if (number == 8) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.artg, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
         if (number == 9) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.infr, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
         if (number == 10) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.cavr, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
         if (number == 11) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.artr, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
         if (number == 12) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armg, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
         if (number == 13) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armr, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
         if (number == 14) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.heal, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
         if (number == 15) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.target, o);
             icon = replaceColor(icon);
-            displacement = 14;
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+            displacement = (int) (14  * FullscreenActivity.scaleFactor);
         }
         if (number == 16) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.undo, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
     }
     //draw yellow circles at given coordinates, +37 centers the image
     public void draw(Canvas canvas, int x, int y) {
-        canvas.drawBitmap(icon, (x*128) + displacement,(y*128) + displacement, null);
+        canvas.drawBitmap(icon, (x*GameEngine.squareLength) + displacement,(y*GameEngine.squareLength) + displacement, null);
     }
 }

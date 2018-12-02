@@ -12,6 +12,9 @@ import android.app.Activity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.Display;
+import android.util.DisplayMetrics;
+import android.graphics.Point;
 import android.view.View.OnTouchListener;
 import android.widget.FrameLayout;
 import android.view.View.OnClickListener;
@@ -29,13 +32,30 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     /*
     This method should create the whole screen.
      */
+    public static float scaleFactor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState); //creates image?
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //sets game to fullscreen
         this.requestWindowFeature(Window.FEATURE_NO_TITLE); // flips game horizontally
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        int width = displayMetrics.widthPixels;
+        float scale;
+
+        if (height / 1440.0f < width / 2560.0f) {
+            scale = width / 2560.0f;
+        }   else {
+            scale = height / 1440.0f;
+        }
+        scaleFactor = scale;
+
+
         GameView myGameView = new GameView(this); //creates context
         myGameView.setOnTouchListener(this); //sets listener
         setContentView(myGameView); //sets context

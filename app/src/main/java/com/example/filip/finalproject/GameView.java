@@ -50,7 +50,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         GameEngine.red = new Player("red");
         BitmapFactory.Options o = new Options();
         o.inScaled = false;
-        grid = new GameEngine(BitmapFactory.decodeResource(this.getResources(), R.mipmap.grid, o)); // these lines create the board.
+        Bitmap map = BitmapFactory.decodeResource(this.getResources(), R.mipmap.grid, o);
+        map = Bitmap.createScaledBitmap(map,(int)(map.getWidth() * FullscreenActivity.scaleFactor), (int)(map.getHeight() * FullscreenActivity.scaleFactor), true);
+        grid = new GameEngine(map); // these lines create the board.
         theContext = this.getContext(); // Stores the context, see the variable comment above
 
 
@@ -185,34 +187,34 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     arm.draw(canvas, 13, 10);
                 }
                 Paint thePaint = new Paint();
-                thePaint.setTextSize(40);
+                thePaint.setTextSize(40 * FullscreenActivity.scaleFactor);
                 thePaint.setColor(Color.YELLOW);
-                canvas.drawText("2", 1000,1260,thePaint);
-                canvas.drawText("3", 1255,1260,thePaint);
-                canvas.drawText("5", 1515,1260,thePaint);
-                canvas.drawText("2", 1768,1260,thePaint);
+                canvas.drawText("2", 1000 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("3", 1255 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("5", 1515 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("2", 1768 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 thePaint.setColor(Color.argb(255,204,102,0));
-                canvas.drawText("0", 950,1260,thePaint);
-                canvas.drawText("0", 1205,1260,thePaint);
-                canvas.drawText("4", 1465,1260,thePaint);
-                canvas.drawText("4", 1718,1260,thePaint);
+                canvas.drawText("0", 950 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("0", 1205 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("4", 1465 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("4", 1718  * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 thePaint.setColor(Color.GRAY);
-                canvas.drawText("0", 905,1260,thePaint);
-                canvas.drawText("0", 1160,1260,thePaint);
-                canvas.drawText("0", 1420,1260,thePaint);
-                canvas.drawText("25", 1660,1260,thePaint);
+                canvas.drawText("0", 905 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("0", 1160 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("0", 1420 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("25", 1660 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
 
 
             } else {
                 Paint thePaint = new Paint();
-                thePaint.setTextSize(70);
+                thePaint.setTextSize(70 * FullscreenActivity.scaleFactor);
                 if (GameEngine.playing == GameEngine.green) {
                     thePaint.setColor(Color.GREEN);
                 }
                 if (GameEngine.playing == GameEngine.red) {
                     thePaint.setColor(Color.RED);
                 }
-                canvas.drawText(GameEngine.message, 850, 1330, thePaint);
+                canvas.drawText(GameEngine.message, 850 * FullscreenActivity.scaleFactor, 1330 * FullscreenActivity.scaleFactor, thePaint);
             }
 
             for (int i = 0; i < resources.length; i++) {
@@ -233,7 +235,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             //bottom five lines draw the text that displays the tap coordinates, should be removed in final version.
             Paint paint = new Paint();
-            paint.setTextSize(60);
+            paint.setTextSize(60 * FullscreenActivity.scaleFactor);
             if (GameEngine.playing == GameEngine.green) {
                 paint.setColor(Color.GREEN);
             }
@@ -241,7 +243,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 paint.setColor(Color.RED);
             }
             int[] tapCoord = GameEngine.getSquareCoordinates(GameEngine.lastTap[0], GameEngine.lastTap[1]);
-            canvas.drawText( tapCoord[0]+ " " + tapCoord[1] + " " + Player.print(GameEngine.playing) + " " , 2000, 70, paint);
+            canvas.drawText( tapCoord[0]+ " " + tapCoord[1] + " " + Player.print(GameEngine.playing) + " " , 2000 * FullscreenActivity.scaleFactor, 70 * FullscreenActivity.scaleFactor, paint);
 
             //draws yellow squares where selected unit can move.
             if (GameEngine.theUnit != null && GameEngine.theUnit.hasMove == true) {
@@ -278,7 +280,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             if (GameEngine.theUnit != null) {
                 GameEngine.theUnit.draw(canvas, 1950, 1040);
                 paint = new Paint();
-                paint.setTextSize(30);
+                paint.setTextSize(30 * FullscreenActivity.scaleFactor);
                 if (GameEngine.theUnit.owner == GameEngine.red) {
                     paint.setColor(Color.RED);
                 }
@@ -304,16 +306,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }   else {
                     canMoveAndAttack[1] = "cannot attack this turn";
                 }
-                canvas.drawText( "Close attack damage :    " + unitInfo[0] + "  Range : "  + unitInfo[1], 2000, 1220, paint);
-                canvas.drawText( "Ranged attack damage : " + unitInfo[2] + "  Range : "  + unitInfo[3], 2000, 1260, paint);
-                canvas.drawText( "Health : " + unitInfo[4] + " / "  + unitInfo[5], 2000, 1300, paint);
-                canvas.drawText( "Unit's defence : " + unitInfo[6], 2000, 1340, paint);
+                canvas.drawText( "Close attack damage :    " + unitInfo[0] + "  Range : "  + unitInfo[1], 2000 * FullscreenActivity.scaleFactor, 1220 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText( "Ranged attack damage : " + unitInfo[2] + "  Range : "  + unitInfo[3], 2000 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText( "Health : " + unitInfo[4] + " / "  + unitInfo[5], 2000 * FullscreenActivity.scaleFactor, 1300 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText( "Unit's defence : " + unitInfo[6], 2000 * FullscreenActivity.scaleFactor, 1340 * FullscreenActivity.scaleFactor, paint);
                 if (GameEngine.theUnit.movement != 0) {
-                    canvas.drawText("This unit " + canMoveAndAttack[0], 2000, 1380, paint);
+                    canvas.drawText("This unit " + canMoveAndAttack[0], 2000 * FullscreenActivity.scaleFactor, 1380 * FullscreenActivity.scaleFactor, paint);
                 } else {
-                    canvas.drawText("This unit cannot move", 2000, 1380, paint);
+                    canvas.drawText("This unit cannot move", 2000 * FullscreenActivity.scaleFactor, 1380 * FullscreenActivity.scaleFactor, paint);
                 }
-                canvas.drawText( "This unit " + canMoveAndAttack[1], 2000, 1420, paint);
+                canvas.drawText( "This unit " + canMoveAndAttack[1], 2000 * FullscreenActivity.scaleFactor, 1420 * FullscreenActivity.scaleFactor, paint);
             }
 
             //display info about opponent's selected unit
@@ -346,34 +348,34 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }   else {
                     canMoveAndAttack[1] = "cannot attack this turn";
                 }
-                canvas.drawText( "Close attack damage :    " + unitInfo[0] + "  Range : "  + unitInfo[1], 2000, 820, paint);
-                canvas.drawText( "Ranged attack damage : " + unitInfo[2] + "  Range : "  + unitInfo[3], 2000, 860, paint);
-                canvas.drawText( "Health : " + unitInfo[4] + " / "  + unitInfo[5], 2000, 900, paint);
-                canvas.drawText( "Unit's defence : " + unitInfo[6], 2000, 940, paint);
+                canvas.drawText( "Close attack damage :    " + unitInfo[0] + "  Range : "  + unitInfo[1], 2000 * FullscreenActivity.scaleFactor, 820 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText( "Ranged attack damage : " + unitInfo[2] + "  Range : "  + unitInfo[3], 2000 * FullscreenActivity.scaleFactor, 860 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText( "Health : " + unitInfo[4] + " / "  + unitInfo[5], 2000 * FullscreenActivity.scaleFactor, 900 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText( "Unit's defence : " + unitInfo[6], 2000 * FullscreenActivity.scaleFactor, 940 * FullscreenActivity.scaleFactor, paint);
                 if (GameEngine.enemyTappedUnit.movement != 0) {
-                    canvas.drawText("This unit " + canMoveAndAttack[0], 2000, 980, paint);
+                    canvas.drawText("This unit " + canMoveAndAttack[0], 2000 * FullscreenActivity.scaleFactor, 980 * FullscreenActivity.scaleFactor, paint);
                 } else {
-                    canvas.drawText("This unit cannot move", 2000, 980, paint);
+                    canvas.drawText("This unit cannot move", 2000 * FullscreenActivity.scaleFactor, 980 * FullscreenActivity.scaleFactor, paint);
                 }
-                canvas.drawText( "This unit " + canMoveAndAttack[1], 2000, 1020, paint);
+                canvas.drawText( "This unit " + canMoveAndAttack[1], 2000 * FullscreenActivity.scaleFactor, 1020 * FullscreenActivity.scaleFactor, paint);
             }
         }
 
         Paint paint = new Paint();
-        paint.setTextSize(60);
+        paint.setTextSize(60 * FullscreenActivity.scaleFactor);
         paint.setColor(Color.YELLOW);
-        canvas.drawText( "Food storage : " + GameEngine.playing.foodStorage + " (+" + GameEngine.lastAddedResounces[0] + ")", 50, 1360, paint);
+        canvas.drawText( "Food storage : " + GameEngine.playing.foodStorage + " (+" + GameEngine.lastAddedResounces[0] + ")", 50 * FullscreenActivity.scaleFactor, 1360 * FullscreenActivity.scaleFactor, paint);
 
 
         paint = new Paint();
-        paint.setTextSize(60);
+        paint.setTextSize(60 * FullscreenActivity.scaleFactor);
         paint.setColor(Color.argb(255,204,102,0));
-        canvas.drawText( "Iron storage : " + GameEngine.playing.ironStorage + " (+" + GameEngine.lastAddedResounces[1] + ")", 50, 1280, paint);
+        canvas.drawText( "Iron storage : " + GameEngine.playing.ironStorage + " (+" + GameEngine.lastAddedResounces[1] + ")", 50 * FullscreenActivity.scaleFactor, 1280 * FullscreenActivity.scaleFactor, paint);
 
         paint = new Paint();
-        paint.setTextSize(60);
+        paint.setTextSize(60 * FullscreenActivity.scaleFactor);
         paint.setColor(Color.GRAY);
-        canvas.drawText( "Oil storage : " + GameEngine.playing.oilStorage + " (+" + GameEngine.lastAddedResounces[2] + ")", 50, 1200, paint);
+        canvas.drawText( "Oil storage : " + GameEngine.playing.oilStorage + " (+" + GameEngine.lastAddedResounces[2] + ")", 50 * FullscreenActivity.scaleFactor, 1200 * FullscreenActivity.scaleFactor, paint);
 
     }
 

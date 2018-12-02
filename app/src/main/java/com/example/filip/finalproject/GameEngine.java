@@ -9,8 +9,9 @@ import java.lang.Math;
 public class GameEngine {
 
     // Place to store the coordinates of last tap. lastTap[0] is x, lastTap[1] is y.
-    static int[] lastTap = new int[]{16000, 16000};
+    static int[] lastTap = new int[]{(int) (16000  * FullscreenActivity.scaleFactor), (int) (16000  * FullscreenActivity.scaleFactor)};
 
+    public static int squareLength = (int) (128  * FullscreenActivity.scaleFactor);
     public Bitmap image; // Image of the grid
     public static Units theUnit = null; // Selected unit, unlike the selected unit in GameView class this unit is the actual selected unit.
     public static SelectedUnit selected = null; // Selected unit, reference is not the same as the (selected) Unit itself.
@@ -50,12 +51,12 @@ public class GameEngine {
     public static void tapProcessor (int x, int y) {
 
         //This makes sure that unit gets tapped only once.
-        if (selected != null && x/128 == selected.coordinates[0] && y / 128 == selected.coordinates[1]) {
+        if (selected != null && x/squareLength  == selected.coordinates[0] && y / squareLength  == selected.coordinates[1]) {
             return;
         }
 
         //un-selects the unit if the button is pressed.
-        if (x / 128 == 16 && y / 128 == 1 && (selected != null || enemySelected  != null)) {
+        if (x / squareLength  == 16 && y / squareLength  == 1 && (selected != null || enemySelected  != null)) {
             selected = null;
             theUnit = null;
             enemySelected = null;
@@ -66,7 +67,7 @@ public class GameEngine {
         }
 
         //heal the unit if the button is pressed
-        if (x / 128 == 18 && y / 128 == 1 && selected != null) {
+        if (x / squareLength  == 18 && y / squareLength  == 1 && selected != null) {
             if (theUnit.HP != theUnit.maxHP) {
                 if (theUnit.hasAttack) {
                     theUnit.HP++;
@@ -87,7 +88,7 @@ public class GameEngine {
         }
 
         //switches active player if the button is pressed.
-        if (x / 128 == 16 && y / 128 == 3  && ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128))) {
+        if (x / squareLength  == 16 && y / squareLength  == 3  && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
             switchPlayer();
             selected = null;
             theUnit = null;
@@ -99,7 +100,7 @@ public class GameEngine {
         }
 
         //Undo
-        if (x / 128 == 18 && y / 128 == 3  && ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128)) && theUnit != null && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
+        if (x / squareLength  == 18 && y / squareLength  == 3  && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength )) && theUnit != null && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
             BoardSprites[theUnit.coordinates[0]][theUnit.coordinates[1]] = null;
             theUnit.coordinates[0] = lastCoordinates[0];
             theUnit.coordinates[1] = lastCoordinates[1];
@@ -115,7 +116,7 @@ public class GameEngine {
         }
 
         //switches market visibility if the button is pressed.
-        if (x / 128 == 5 && y / 128 == 10  && ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128))) {
+        if (x / squareLength  == 5 && y / squareLength  == 10  && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
             GameEngine.showMarket =  !GameEngine.showMarket;
             if (showSupport == true) {
                 showSupport = false;
@@ -125,7 +126,7 @@ public class GameEngine {
             return;
         }
         //switches support visibility if the button is pressed. TODO : Add support abilities in game
-        if (x / 128 == 12 && y / 128 == 10  && ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128))) {
+        if (x / squareLength  == 12 && y / squareLength  == 10  && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
             GameEngine.showMarket =  !GameEngine.showMarket;
             if (showSupport == true) {
                 showSupport = false;
@@ -136,16 +137,17 @@ public class GameEngine {
         }
 
         //buys new infantry for two food
-        if (x / 128 == 7 && y / 128 == 10 && showMarket &&
-                ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128))) {
+        if (x / squareLength  == 7 && y / squareLength  == 10 && showMarket &&
+                ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
             if (playing.foodStorage > 1) {
                 if (playing == green && BoardSprites[2][2] == null) {
                     new Infantry(GameView.theContext, 2, 2, playing);
+                    playing.foodStorage -=2;
                 }
                 if (playing == red && BoardSprites[12][6] == null) {
                     new Infantry(GameView.theContext, 12, 6, playing);
+                    playing.foodStorage -=2;
                 }
-                playing.foodStorage -=2;
             }
             if (playing.foodStorage < 2) {
                 showMarket = false;
@@ -156,16 +158,18 @@ public class GameEngine {
             lastTap[1] = y;
         }
         //buys new cavalry for three food
-        if (x / 128 == 9 && y / 128 == 10 && showMarket &&
-                ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128))) {
+        if (x / squareLength  == 9 && y / squareLength  == 10 && showMarket &&
+                ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
             if (playing.foodStorage > 2) {
                 if (playing == green && BoardSprites[2][2] == null) {
                     new Cavalry(GameView.theContext, 2, 2, playing);
+                    playing.foodStorage -=3;
                 }
                 if ((playing == red && BoardSprites[12][6] == null)) {
                     new Cavalry(GameView.theContext, 12, 6, playing);
+                    playing.foodStorage -=3;
                 }
-                playing.foodStorage -=3;
+
             }
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
@@ -173,17 +177,20 @@ public class GameEngine {
             lastTap[1] = y;
         }
         //buys new artillery for five food and four iron
-        if (x / 128 == 11 && y / 128 == 10 && showMarket &&
-                ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128))) {
+        if (x / squareLength  == 11 && y / squareLength  == 10 && showMarket &&
+                ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
             if (playing.foodStorage > 4 && playing.ironStorage > 3) {
                 if (playing == green && BoardSprites[2][2] == null) {
                     new Artillery(GameView.theContext, 2, 2, playing);
+                    playing.foodStorage -=5;
+                    playing.ironStorage -=4;
                 }
                 if ((playing == red && BoardSprites[12][6] == null)) {
                     new Artillery(GameView.theContext, 12, 6, playing);
+                    playing.foodStorage -=5;
+                    playing.ironStorage -=4;
                 }
-                playing.foodStorage -=5;
-                playing.ironStorage -=4;
+
             }
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
@@ -191,19 +198,23 @@ public class GameEngine {
             lastTap[1] = y;
         }
 
-        //buys new armor for two food, four iron and twenty oil
-        if (x / 128 == 13 && y / 128 == 10 && showMarket &&
-                ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128))) {
+        //buys new armor for two food, four iron and twenty five oil
+        if (x / squareLength  == 13 && y / squareLength  == 10 && showMarket &&
+                ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
             if (playing.foodStorage > 1 && playing.ironStorage > 3 && playing.oilStorage > 24) {
                 if (playing == green && BoardSprites[2][2] == null) {
                     new Armor(GameView.theContext, 2, 2, playing);
+                    playing.foodStorage -=2;
+                    playing.ironStorage -=4;
+                    playing.oilStorage -=25;
                 }
                 if ((playing == red && BoardSprites[12][6] == null)) {
                     new Armor(GameView.theContext, 12, 6, playing);
+                    playing.foodStorage -=2;
+                    playing.ironStorage -=4;
+                    playing.oilStorage -=25;
                 }
-                playing.foodStorage -=2;
-                playing.ironStorage -=4;
-                playing.oilStorage -=25;
+
             }
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
@@ -212,30 +223,30 @@ public class GameEngine {
         }
 
         // If tap is outside the grid, do nothing.
-        if (x / 128 >= 15 || y / 128 >= 9) {
+        if (x / squareLength  >= 15 || y / squareLength  >= 9) {
             return;
         }
 
         //if user taps on empty square with no units selected, do nothing
-        if (selected == null && BoardSprites[x / 128][y / 128] == null) {
+        if (selected == null && BoardSprites[x / squareLength ][y / squareLength ] == null) {
             return;
         }
 
         //If user taps on a unit, select it, or display info on enemy unit.
-        if (BoardSprites[x / 128][y / 128] != null) {
-            if (BoardSprites[x / 128][y / 128].owner == playing) {
-                theUnit = BoardSprites[x / 128][y / 128];
+        if (BoardSprites[x / squareLength ][y / squareLength ] != null) {
+            if (BoardSprites[x / squareLength ][y / squareLength ].owner == playing) {
+                theUnit = BoardSprites[x / squareLength ][y / squareLength ];
                 selected = new SelectedUnit(GameView.theContext, x, y, theUnit.owner, theUnit.unitType);
-                message = theUnit.unitType + " at " + ((x/128) + c) + ", " + ((y/128) + c);
+                message = theUnit.unitType + " at " + ((x/squareLength ) + c) + ", " + ((y/squareLength ) + c);
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
                 return;
             }
-            else if (BoardSprites[x / 128][y / 128].owner != playing) {
-                enemyTappedUnit = BoardSprites[x / 128][y / 128];
-                enemySelected = new SelectedUnit(GameView.theContext, x, y, BoardSprites[x / 128][y / 128].owner, BoardSprites[x / 128][y / 128].unitType);
+            else if (BoardSprites[x / squareLength ][y / squareLength ].owner != playing) {
+                enemyTappedUnit = BoardSprites[x / squareLength ][y / squareLength ];
+                enemySelected = new SelectedUnit(GameView.theContext, x, y, BoardSprites[x / squareLength ][y / squareLength ].owner, BoardSprites[x / squareLength ][y / squareLength ].unitType);
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
                 lastTap[0] = x; //sets the lastTap coordinates
@@ -244,13 +255,13 @@ public class GameEngine {
         }
 
         //if user taps with unit selected on an empty square, move it TODO : make sure unit cannot move over another unit
-        if (theUnit != null && BoardSprites[x / 128][y / 128] == null
+        if (theUnit != null && BoardSprites[x / squareLength ][y / squareLength ] == null
                 && (theUnit.movement >= getSquareDistance           //also check if unit is in range.
-                        (getCoordinates(theUnit)[0], x / 128,
-                                getCoordinates(theUnit)[1], y / 128))
+                        (getCoordinates(theUnit)[0], x / squareLength ,
+                                getCoordinates(theUnit)[1], y / squareLength ))
                 && theUnit.hasMove == true
-                && ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128))) {
-            moveTo(theUnit, x / 128, y / 128); //and then move the unit, and un-select it.
+                && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
+            moveTo(theUnit, x / squareLength , y / squareLength ); //and then move the unit, and un-select it.
             //if unit has attack, don't un-select it yet. TODO : if no units are in range, un-select it because it cannot attack anyway
             if (theUnit.hasAttack) {
                 theUnit.hasMove = false;
@@ -275,13 +286,13 @@ public class GameEngine {
 
 
         //if player taps with unit selected on an opponent's unit, attack it
-        if (theUnit != null && BoardSprites[x / 128][y / 128] != null &&
-                BoardSprites[x / 128][y / 128].owner != theUnit.owner &&
+        if (theUnit != null && BoardSprites[x / squareLength ][y / squareLength ] != null &&
+                BoardSprites[x / squareLength ][y / squareLength ].owner != theUnit.owner &&
                 (theUnit.attack1Range >= getSquareDistance           //and check if unit is in range of first (stronger) attack.
-                        (getCoordinates(theUnit)[0], x / 128,
-                                getCoordinates(theUnit)[1], y / 128))
+                        (getCoordinates(theUnit)[0], x / squareLength ,
+                                getCoordinates(theUnit)[1], y / squareLength ))
                 && theUnit.hasAttack == true) {
-            DamageUnit(theUnit.attack1, BoardSprites[x / 128][y / 128], x / 128, y / 128); //and then move the unit, and un-select it.
+            DamageUnit(theUnit.attack1, BoardSprites[x / squareLength ][y / squareLength ], x / squareLength , y / squareLength ); //and then move the unit, and un-select it.
             //if unit has a move, don't un-select it yet.
             if (theUnit.hasMove) {
                 theUnit.hasAttack = false;
@@ -305,13 +316,13 @@ public class GameEngine {
         }
 
         //if user taps with unit selected on an opponent's unit, attack it
-        if (theUnit != null && BoardSprites[x / 128][y / 128] != null &&
-                BoardSprites[x / 128][y / 128].owner != theUnit.owner &&
+        if (theUnit != null && BoardSprites[x / squareLength ][y / squareLength ] != null &&
+                BoardSprites[x / squareLength ][y / squareLength ].owner != theUnit.owner &&
                 (theUnit.attack2Range >= getSquareDistance           //and check if unit is in range of second (weaker) attack.
-                        (getCoordinates(theUnit)[0], x / 128,
-                                getCoordinates(theUnit)[1], y / 128))
+                        (getCoordinates(theUnit)[0], x / squareLength ,
+                                getCoordinates(theUnit)[1], y / squareLength ))
                 && theUnit.hasAttack == true) {
-            DamageUnit(theUnit.attack2, BoardSprites[x / 128][y / 128], x / 128, y / 128);
+            DamageUnit(theUnit.attack2, BoardSprites[x / squareLength ][y / squareLength ], x / squareLength , y / squareLength );
             if (theUnit.hasMove) {
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
@@ -367,7 +378,7 @@ public class GameEngine {
         lastCoordinates[1] = selected.coordinates[1];
         u.moveTo(x,y);
         BoardSprites[x][y] = u;
-        selected = new SelectedUnit(GameView.theContext, x * 128, y * 128, theUnit.owner, theUnit.unitType);
+        selected = new SelectedUnit(GameView.theContext, x * squareLength , y * squareLength , theUnit.owner, theUnit.unitType);
         BoardSprites[a][b] = null;
         estimateResources();
         showMarket = false;
@@ -404,9 +415,9 @@ public class GameEngine {
         }
     }
 
-    //returns the SquareCoordinates of coordinates. Every Square coordinate represents a square on the board, since every square is 128 pixels the coordinates have to be divided by 128.
+    //returns the SquareCoordinates of coordinates. Every Square coordinate represents a square on the board, since every square is squareLength  pixels the coordinates have to be divided by squareLength .
     public static int[] getSquareCoordinates (int a, int b) {
-        int[] toReturn = new int[] { a / 128, b / 128};
+        int[] toReturn = new int[] { a / squareLength , b / squareLength };
         return toReturn;
     }
 

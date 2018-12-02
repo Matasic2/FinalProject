@@ -26,16 +26,19 @@ public class Resources {
                 BitmapFactory.Options o = new Options();
                 o.inScaled = false;
                 icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.oil_drill, o);
+                icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
             }
             if (resourcetype.equals("iron")) {
                 BitmapFactory.Options o = new Options();
                 o.inScaled = false;
                 icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.iron_mine, o);
+                icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
             }
             if (resourcetype.equals("food")) {
                 BitmapFactory.Options o = new Options();
                 o.inScaled = false;
                 icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.food_farm, o);
+                icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
             }
             Resources[] toReturn = new Resources[GameView.resources.length + 1];
             for (int k = 0; k < GameView.resources.length; k++) {
@@ -54,7 +57,7 @@ public class Resources {
         }
 
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(icon, coordinates[0] * 128, coordinates[1] * 128, null);
+        canvas.drawBitmap(icon, coordinates[0] * GameEngine.squareLength, coordinates[1] * GameEngine.squareLength, null);
     }
 
     public void draw(Canvas canvas, int x, int y) {
