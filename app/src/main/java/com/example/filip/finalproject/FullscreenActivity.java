@@ -33,6 +33,8 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     This method should create the whole screen.
      */
     public static float scaleFactor;
+    public static int heightscreen;
+    public static int widthfullscreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,9 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = displayMetrics.heightPixels;
+        heightscreen = height;
         int width = displayMetrics.widthPixels;
+        widthfullscreen = width;
         float scale;
 
         if (height / 1440.0f > width / 2560.0f) {

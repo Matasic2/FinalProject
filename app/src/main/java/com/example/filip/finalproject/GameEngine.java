@@ -43,7 +43,7 @@ public class GameEngine {
 
     //draws the board when grid.draw(canvas) is called in GameView function.
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(image, -1.0f, -1.0f, null);
+        canvas.drawBitmap(image, 0.0f, 0.0f, null);
     }
     /*
     A method that will process what happens with user's input (click/tap).
@@ -69,12 +69,12 @@ public class GameEngine {
         //heal the unit if the button is pressed
         if (x / squareLength  == 18 && y / squareLength  == 1 && selected != null) {
             if (theUnit.HP != theUnit.maxHP) {
-                if (theUnit.hasAttack) {
+                if (theUnit.hasAttack && theUnit.hasMove) {
                     theUnit.HP++;
+                    if (theUnit.unitType.equals("Armor")) {
+                        theUnit.HP++;
+                    }
                     theUnit.hasAttack = false;
-                }
-                if (theUnit.hasMove) {
-                    theUnit.HP++;
                     theUnit.hasMove = false;
                 }
                 if (theUnit.HP > theUnit.maxHP) {
@@ -451,12 +451,12 @@ public class GameEngine {
                     BoardSprites[i][j].hasAttack = true;
                 }
                 if (BoardSprites[i][j]!= null && BoardSprites[i][j].owner != playing) {
-                    if (BoardSprites[i][j].hasAttack) {
+                    if (BoardSprites[i][j].hasAttack && BoardSprites[i][j].hasMove) {
                         BoardSprites[i][j].HP++;
+                        if (BoardSprites[i][j].unitType.equals("Armor")) {
+                            BoardSprites[i][j].HP++;
+                        }
                         BoardSprites[i][j].hasAttack = false;
-                    }
-                    if (BoardSprites[i][j].hasMove) {
-                        BoardSprites[i][j].HP++;
                         BoardSprites[i][j].hasMove = false;
                     }
                     if (BoardSprites[i][j].HP > BoardSprites[i][j].maxHP) {

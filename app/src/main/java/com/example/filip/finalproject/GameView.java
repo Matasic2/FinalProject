@@ -155,6 +155,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             movableLocation pointers4 = new movableLocation(theContext, 4);
             movableLocation pointers5 = new movableLocation(theContext, 5);
             movableLocation pointers6 = new movableLocation(theContext, 16);
+            movableLocation pointers7 = new movableLocation(theContext, 17);
+            movableLocation pointers8 = new movableLocation(theContext, 18);
             pointers.draw(canvas,1,7);
             pointers.draw(canvas,13,1);
             pointers1.draw(canvas,6,1);
@@ -164,6 +166,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             pointers4.draw(canvas,16,3);
             pointers5.draw(canvas,5,10);
             pointers6.draw(canvas,18,3);
+            pointers7.draw(canvas,2,2);
+            pointers8.draw(canvas,12,6);
 
             if (GameEngine.showMarket) {
                 if (GameEngine.playing == GameEngine.green) {
@@ -243,7 +247,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 paint.setColor(Color.RED);
             }
             int[] tapCoord = GameEngine.getSquareCoordinates(GameEngine.lastTap[0], GameEngine.lastTap[1]);
-            canvas.drawText( tapCoord[0]+ " " + tapCoord[1] + " " + Player.print(GameEngine.playing) + " " , 2000 * FullscreenActivity.scaleFactor, 70 * FullscreenActivity.scaleFactor, paint);
+            canvas.drawText( Player.print(GameEngine.playing) + " is playing" + FullscreenActivity.scaleFactor, 2000 * FullscreenActivity.scaleFactor, 70 * FullscreenActivity.scaleFactor, paint);
 
             //draws yellow squares where selected unit can move.
             if (GameEngine.theUnit != null && GameEngine.theUnit.hasMove == true) {

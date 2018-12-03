@@ -162,6 +162,6 @@ public class Units {
 
     //Same as above, but draw then on given coordinates instead of unit's current coordinates.
     public void draw(Canvas canvas, int x, int y) {
-        canvas.drawBitmap(icon, x, y, null);
+        canvas.drawBitmap(icon, x * GameEngine.squareLength, y * GameEngine.squareLength, null);
     }
 }
