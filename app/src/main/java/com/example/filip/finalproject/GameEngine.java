@@ -128,6 +128,52 @@ public class GameEngine {
             return;
         }
 
+        //upgrade
+        if (x / squareLength  == 16 && y / squareLength  == 5 && theUnit != null) {
+            if (theUnit.unitType == "Infantry") {
+                if (theUnit.defence == Infantry.GreenDefence) {
+                    if (playing.ironStorage > 0) {
+                        theUnit.defence++;
+                        playing.ironStorage -= 1;
+                    }
+                }
+            }
+            if (theUnit.unitType == "Cavalry") {
+                if (theUnit.defence == Infantry.GreenDefence) {
+                    if (playing.ironStorage > 1) {
+                        theUnit.defence++;
+                        playing.ironStorage -= 2;
+                    }
+                }
+            }
+            if (theUnit.unitType == "Artillery") {
+                if (theUnit.defence == Infantry.GreenDefence) {
+                    if (playing.ironStorage > 1) {
+                        theUnit.defence++;
+                        playing.ironStorage -= 2;
+                    }
+                }
+            }
+            if (theUnit.unitType == "Armor") {
+                if (theUnit.defence == Infantry.GreenDefence) {
+                    if (playing.ironStorage > 4) {
+                        theUnit.defence++;
+                        playing.ironStorage -= 5;
+                    }
+                }
+            }
+            if (theUnit.unitType == "Headquarters") {
+                if (theUnit.defence == Infantry.GreenDefence) {
+                    if (playing.ironStorage > 3) {
+                        theUnit.defence++;
+                        playing.ironStorage -= 4;
+                    }
+                }
+            }
+            lastTap[0] = x; //sets the lastTap coordinates
+            lastTap[1] = y;
+        }
+
         //switches market visibility if the button is pressed.
         if (x / squareLength  == 5 && y / squareLength  == 10  && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
             GameEngine.showMarket =  !GameEngine.showMarket;

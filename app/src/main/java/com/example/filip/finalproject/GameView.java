@@ -157,6 +157,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             movableLocation pointers6 = new movableLocation(theContext, 16);
             movableLocation pointers7 = new movableLocation(theContext, 17);
             movableLocation pointers8 = new movableLocation(theContext, 18);
+            movableLocation pointers9 = new movableLocation(theContext, 19);
             pointers.draw(canvas,1,7);
             pointers.draw(canvas,13,1);
             pointers1.draw(canvas,6,1);
@@ -168,6 +169,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             pointers6.draw(canvas,18,3);
             pointers7.draw(canvas,2,2);
             pointers8.draw(canvas,12,6);
+            pointers9.draw(canvas,16,5);
 
             if (GameEngine.showMarket) {
                 if (GameEngine.playing == GameEngine.green) {
