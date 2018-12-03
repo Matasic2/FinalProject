@@ -206,7 +206,7 @@ public class GameEngine {
                     new Armor(GameView.theContext, 2, 2, playing);
                     playing.foodStorage -=2;
                     playing.ironStorage -=4;
-                    playing.oilStorage -=25;
+                    playing.oilStorage -=20;
                 }
                 if ((playing == red && BoardSprites[12][6] == null)) {
                     new Armor(GameView.theContext, 12, 6, playing);
