@@ -247,7 +247,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 paint.setColor(Color.RED);
             }
             int[] tapCoord = GameEngine.getSquareCoordinates(GameEngine.lastTap[0], GameEngine.lastTap[1]);
-            canvas.drawText( Player.print(GameEngine.playing) + " is playing" + FullscreenActivity.scaleFactor, 2000 * FullscreenActivity.scaleFactor, 70 * FullscreenActivity.scaleFactor, paint);
+            canvas.drawText( Player.print(GameEngine.playing) + " is playing", 2000 * FullscreenActivity.scaleFactor, 70 * FullscreenActivity.scaleFactor, paint);
 
             //draws yellow squares where selected unit can move.
             if (GameEngine.theUnit != null && GameEngine.theUnit.hasMove == true) {
