@@ -29,7 +29,6 @@ public class Units {
     public int maxHP; //Max HP of the unit
     public int movement; //Movement distance of the unit
 
-
     //Two methods below are from previous versions of the code, I might need them again later.
      /*public Units(Bitmap bmp) {
          icon = bmp;
@@ -162,6 +161,6 @@ public class Units {
 
     //Same as above, but draw then on given coordinates instead of unit's current coordinates.
     public void draw(Canvas canvas, int x, int y) {
-        canvas.drawBitmap(icon, x * GameEngine.squareLength, y * GameEngine.squareLength, null);
+        canvas.drawBitmap(icon, x * FullscreenActivity.scaleFactor, y * FullscreenActivity.scaleFactor, null);
     }
 }
