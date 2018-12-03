@@ -99,6 +99,19 @@ public class GameEngine {
             return;
         }
 
+        //deploy
+        if ((((x / squareLength  == 2 && y / squareLength  == 2)  && (playing == green && BoardSprites[2][2] == null)) ||
+                (((x / squareLength  == 12 && y / squareLength  == 6)  && (playing == red && BoardSprites[12][6] == null))))
+                && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
+            GameEngine.showMarket =  !GameEngine.showMarket;
+            if (showSupport == true) {
+                showSupport = false;
+            }
+            lastTap[0] = x; //sets the lastTap coordinates
+            lastTap[1] = y;
+            return;
+        }
+
         //Undo
         if (x / squareLength  == 18 && y / squareLength  == 3  && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength )) && theUnit != null && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
             BoardSprites[theUnit.coordinates[0]][theUnit.coordinates[1]] = null;

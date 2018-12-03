@@ -211,14 +211,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             } else {
                 Paint thePaint = new Paint();
-                thePaint.setTextSize(70 * FullscreenActivity.scaleFactor);
+                thePaint.setTextSize(65 * FullscreenActivity.scaleFactor);
                 if (GameEngine.playing == GameEngine.green) {
                     thePaint.setColor(Color.GREEN);
                 }
                 if (GameEngine.playing == GameEngine.red) {
                     thePaint.setColor(Color.RED);
                 }
-                canvas.drawText(GameEngine.message, 850 * FullscreenActivity.scaleFactor, 1330 * FullscreenActivity.scaleFactor, thePaint);
+                canvas.drawText(GameEngine.message, 800 * FullscreenActivity.scaleFactor, 1330 * FullscreenActivity.scaleFactor, thePaint);
             }
 
             for (int i = 0; i < resources.length; i++) {
@@ -282,9 +282,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             //display info about player's selected unit
             if (GameEngine.theUnit != null) {
-                GameEngine.theUnit.draw(canvas, 1950, 1040);
+                GameEngine.theUnit.draw(canvas, 1950, 1140);
                 paint = new Paint();
-                paint.setTextSize(30 * FullscreenActivity.scaleFactor);
+                paint.setTextSize(36 * FullscreenActivity.scaleFactor);
                 if (GameEngine.theUnit.owner == GameEngine.red) {
                     paint.setColor(Color.RED);
                 }
@@ -310,23 +310,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }   else {
                     canMoveAndAttack[1] = "cannot attack this turn";
                 }
-                canvas.drawText( "Close attack damage :    " + unitInfo[0] + "  Range : "  + unitInfo[1], 2000 * FullscreenActivity.scaleFactor, 1220 * FullscreenActivity.scaleFactor, paint);
-                canvas.drawText( "Ranged attack damage : " + unitInfo[2] + "  Range : "  + unitInfo[3], 2000 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, paint);
-                canvas.drawText( "Health : " + unitInfo[4] + " / "  + unitInfo[5], 2000 * FullscreenActivity.scaleFactor, 1300 * FullscreenActivity.scaleFactor, paint);
-                canvas.drawText( "Unit's defence : " + unitInfo[6], 2000 * FullscreenActivity.scaleFactor, 1340 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText( "Close attack damage :   " + unitInfo[0] + " Range : "  + unitInfo[1], 1950 * FullscreenActivity.scaleFactor, 1300 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText( "Ranged attack damage : " + unitInfo[2] + "  Range : "  + unitInfo[3], 1950 * FullscreenActivity.scaleFactor, 1340 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText( "Health : " + unitInfo[4] + " / "  + unitInfo[5], 2100 * FullscreenActivity.scaleFactor, 1190 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText( "Unit's defence : " + unitInfo[6], 2100 * FullscreenActivity.scaleFactor, 1240 * FullscreenActivity.scaleFactor, paint);
+
                 if (GameEngine.theUnit.movement != 0) {
-                    canvas.drawText("This unit " + canMoveAndAttack[0], 2000 * FullscreenActivity.scaleFactor, 1380 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("This unit " + canMoveAndAttack[0], 1950 * FullscreenActivity.scaleFactor, 1380 * FullscreenActivity.scaleFactor, paint);
                 } else {
-                    canvas.drawText("This unit cannot move", 2000 * FullscreenActivity.scaleFactor, 1380 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("This unit cannot move", 1950 * FullscreenActivity.scaleFactor, 1380 * FullscreenActivity.scaleFactor, paint);
                 }
-                canvas.drawText( "This unit " + canMoveAndAttack[1], 2000 * FullscreenActivity.scaleFactor, 1420 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText( "This unit " + canMoveAndAttack[1], 1950 * FullscreenActivity.scaleFactor, 1420 * FullscreenActivity.scaleFactor, paint);
             }
 
             //display info about opponent's selected unit
             if (GameEngine.enemyTappedUnit != null) {
-                GameEngine.enemyTappedUnit.draw(canvas, 1950, 640);
+                GameEngine.enemyTappedUnit.draw(canvas, 1950, 830);
                 paint = new Paint();
-                paint.setTextSize(30 * FullscreenActivity.scaleFactor);
+                paint.setTextSize(36 * FullscreenActivity.scaleFactor);
                 if (GameEngine.enemyTappedUnit.owner == GameEngine.red) {
                     paint.setColor(Color.RED);
                 }
@@ -352,16 +353,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }   else {
                     canMoveAndAttack[1] = "cannot attack this turn";
                 }
-                canvas.drawText( "Close attack damage :    " + unitInfo[0] + "  Range : "  + unitInfo[1], 2000 * FullscreenActivity.scaleFactor, 820 * FullscreenActivity.scaleFactor, paint);
-                canvas.drawText( "Ranged attack damage : " + unitInfo[2] + "  Range : "  + unitInfo[3], 2000 * FullscreenActivity.scaleFactor, 860 * FullscreenActivity.scaleFactor, paint);
-                canvas.drawText( "Health : " + unitInfo[4] + " / "  + unitInfo[5], 2000 * FullscreenActivity.scaleFactor, 900 * FullscreenActivity.scaleFactor, paint);
-                canvas.drawText( "Unit's defence : " + unitInfo[6], 2000 * FullscreenActivity.scaleFactor, 940 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText( "Close attack damage :   " + unitInfo[0] + " Range : "  + unitInfo[1], 1950 * FullscreenActivity.scaleFactor, 1010 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText( "Ranged attack damage : " + unitInfo[2] + "  Range : "  + unitInfo[3], 1950 * FullscreenActivity.scaleFactor, 1050 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText( "Health : " + unitInfo[4] + " / "  + unitInfo[5], 2100 * FullscreenActivity.scaleFactor, 900 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText( "Unit's defence : " + unitInfo[6], 2100 * FullscreenActivity.scaleFactor, 940 * FullscreenActivity.scaleFactor, paint);
                 if (GameEngine.enemyTappedUnit.movement != 0) {
-                    canvas.drawText("This unit " + canMoveAndAttack[0], 2000 * FullscreenActivity.scaleFactor, 980 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("This unit " + canMoveAndAttack[0], 1950 * FullscreenActivity.scaleFactor, 1090 * FullscreenActivity.scaleFactor, paint);
                 } else {
-                    canvas.drawText("This unit cannot move", 2000 * FullscreenActivity.scaleFactor, 980 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("This unit cannot move", 1950 * FullscreenActivity.scaleFactor, 1090 * FullscreenActivity.scaleFactor, paint);
                 }
-                canvas.drawText( "This unit " + canMoveAndAttack[1], 2000 * FullscreenActivity.scaleFactor, 1020 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText( "This unit " + canMoveAndAttack[1], 1950 * FullscreenActivity.scaleFactor, 1130 * FullscreenActivity.scaleFactor, paint);
             }
         }
 
