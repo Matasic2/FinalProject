@@ -494,7 +494,7 @@ public class GameEngine {
         int addedoil = 0;
         for (int i = 0; i < BoardResources.length; i++) {
             for (int j = 0; j < BoardResources[i].length; j++) {
-                //this long if statement checks if BoardResource[i][j] should yield a resource to the player.
+                //this long if statement checks if BoardResource[i][j] should yield a resource to the player. 
                 if (BoardResources[i][j]!= null &&
                         BoardSprites[BoardResources[i][j].collectorCoordinates[0]][BoardResources[i][j].collectorCoordinates[1]] != null &&
                         BoardSprites[BoardResources[i][j].collectorCoordinates[0]][BoardResources[i][j].collectorCoordinates[1]].owner == playing) {
