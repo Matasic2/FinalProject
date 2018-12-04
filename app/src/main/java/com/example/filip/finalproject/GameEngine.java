@@ -118,6 +118,7 @@ public class GameEngine {
             theUnit.coordinates[0] = lastCoordinates[0];
             theUnit.coordinates[1] = lastCoordinates[1];
             BoardSprites[lastCoordinates[0]][lastCoordinates[1]] = theUnit;
+            theUnit.brightenIcon();
             theUnit.hasMove = true;
             theUnit = null;
             selected = null;
@@ -322,19 +323,18 @@ public class GameEngine {
                 && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
             moveTo(theUnit, x / squareLength , y / squareLength ); //and then move the unit, and un-select it.
             //if unit has attack, don't un-select it yet. TODO : if no units are in range, un-select it because it cannot attack anyway
-            if (theUnit.hasAttack && (checkIfAnyInRange(theUnit))) {
+            if (theUnit.hasAttack) {
                 theUnit.hasMove = false;
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
                 return;
             }
             //if units doesn't have an attack, un-select it
-            if (!(theUnit.hasAttack) || !(checkIfAnyInRange(theUnit))) {
+            if (!(theUnit.hasAttack)) {
                 theUnit.hasMove = false;
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
                 checkAction(theUnit);
-                boolean whyIsThisNeccesary = checkIfAnyInRange(theUnit);
                 selected = null;
                 theUnit = null;
                 return;
