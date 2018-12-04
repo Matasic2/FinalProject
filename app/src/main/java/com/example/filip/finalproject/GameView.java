@@ -177,27 +177,27 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             if (GameEngine.theUnit != null) {
                 if (GameEngine.theUnit.unitType == "Infantry") {
                     if (GameEngine.theUnit.defence == Infantry.GreenDefence) {
-                        canvas.drawText ("1", ((16*128)+36) * FullscreenActivity.scaleFactor,((5*128)+80) * FullscreenActivity.scaleFactor,newPaint);
+                        canvas.drawText ("1", ((16*128)  * FullscreenActivity.scaleFactor + 52 * FullscreenActivity.scaleFactor),((5*128) * FullscreenActivity.scaleFactor + 84 * FullscreenActivity.scaleFactor),newPaint);
                     }
                 }
                 if (GameEngine.theUnit.unitType == "Cavalry") {
                     if (GameEngine.theUnit.defence == Cavalry.GreenDefence) {
-                            canvas.drawText ("2", ((16*128)+36) * FullscreenActivity.scaleFactor,((5*128)+80) * FullscreenActivity.scaleFactor,newPaint);
+                            canvas.drawText ("2", ((16*128) * FullscreenActivity.scaleFactor + 52 * FullscreenActivity.scaleFactor) ,((5*128) * FullscreenActivity.scaleFactor +84* FullscreenActivity.scaleFactor),newPaint);
                     }
                 }
                 if (GameEngine.theUnit.unitType == "Artillery") {
                     if (GameEngine.theUnit.defence == Artillery.GreenDefence) {
-                            canvas.drawText("2", ((16 * 128) + 36) * FullscreenActivity.scaleFactor, ((5 * 128) + 80) * FullscreenActivity.scaleFactor, newPaint);
+                            canvas.drawText("2", ((16 * 128)* FullscreenActivity.scaleFactor + 52 * FullscreenActivity.scaleFactor), ((5 * 128)  * FullscreenActivity.scaleFactor + 84* FullscreenActivity.scaleFactor), newPaint);
                         }
                 }
                 if (GameEngine.theUnit.unitType == "Armor") {
                     if (GameEngine.theUnit.defence == Armor.GreenDefence) {
-                            canvas.drawText ("5", ((16*128)+36) * FullscreenActivity.scaleFactor,((5*128)+80) * FullscreenActivity.scaleFactor,newPaint);
+                            canvas.drawText ("5", ((16*128) * FullscreenActivity.scaleFactor + 52 * FullscreenActivity.scaleFactor),((5*128)  * FullscreenActivity.scaleFactor +84* FullscreenActivity.scaleFactor),newPaint);
                         }
                 }
                 if (GameEngine.theUnit.unitType == "Headquarters") {
                     if (GameEngine.theUnit.defence == Headquaters.GreenDefence) {
-                            canvas.drawText ("4", ((16*128)+36) * FullscreenActivity.scaleFactor,((5*128)+80) * FullscreenActivity.scaleFactor,newPaint);
+                            canvas.drawText ("4", ((16*128) * FullscreenActivity.scaleFactor + 52 * FullscreenActivity.scaleFactor),((5*128)  * FullscreenActivity.scaleFactor +84* FullscreenActivity.scaleFactor),newPaint);
                     }
                 }
             }

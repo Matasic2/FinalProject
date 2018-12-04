@@ -322,7 +322,7 @@ public class GameEngine {
                 && theUnit.hasMove == true
                 && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
             moveTo(theUnit, x / squareLength , y / squareLength ); //and then move the unit, and un-select it.
-            //if unit has attack, don't un-select it yet. TODO : if no units are in range, un-select it because it cannot attack anyway
+            //if unit has attack, don't un-select it yet.
             if (theUnit.hasAttack) {
                 theUnit.hasMove = false;
                 lastTap[0] = x; //sets the lastTap coordinates
@@ -335,8 +335,6 @@ public class GameEngine {
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
                 checkAction(theUnit);
-                selected = null;
-                theUnit = null;
                 return;
             }
         }
