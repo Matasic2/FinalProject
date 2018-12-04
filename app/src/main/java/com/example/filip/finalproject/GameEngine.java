@@ -100,7 +100,7 @@ public class GameEngine {
         }
 
         //deploy
-        if ((((x / squareLength  == 2 && y / squareLength  == 2)  && (playing == green && BoardSprites[2][2] == null)) ||
+        if (selected == null && (((x / squareLength  == 2 && y / squareLength  == 2)  && (playing == green && BoardSprites[2][2] == null)) ||
                 (((x / squareLength  == 12 && y / squareLength  == 6)  && (playing == red && BoardSprites[12][6] == null))))
                 && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
             GameEngine.showMarket =  !GameEngine.showMarket;
