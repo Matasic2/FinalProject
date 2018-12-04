@@ -139,7 +139,7 @@ public class GameEngine {
                 }
             }
             if (theUnit.unitType == "Cavalry") {
-                if (theUnit.defence == Infantry.GreenDefence) {
+                if (theUnit.defence == Cavalry.GreenDefence) {
                     if (playing.ironStorage > 1) {
                         theUnit.defence++;
                         playing.ironStorage -= 2;
@@ -147,7 +147,7 @@ public class GameEngine {
                 }
             }
             if (theUnit.unitType == "Artillery") {
-                if (theUnit.defence == Infantry.GreenDefence) {
+                if (theUnit.defence == Artillery.GreenDefence) {
                     if (playing.ironStorage > 1) {
                         theUnit.defence++;
                         playing.ironStorage -= 2;
@@ -155,7 +155,7 @@ public class GameEngine {
                 }
             }
             if (theUnit.unitType == "Armor") {
-                if (theUnit.defence == Infantry.GreenDefence) {
+                if (theUnit.defence == Armor.GreenDefence) {
                     if (playing.ironStorage > 4) {
                         theUnit.defence++;
                         playing.ironStorage -= 5;
@@ -163,7 +163,7 @@ public class GameEngine {
                 }
             }
             if (theUnit.unitType == "Headquarters") {
-                if (theUnit.defence == Infantry.GreenDefence) {
+                if (theUnit.defence == Headquaters.GreenDefence) {
                     if (playing.ironStorage > 3) {
                         theUnit.defence++;
                         playing.ironStorage -= 4;
@@ -292,7 +292,7 @@ public class GameEngine {
         }
 
         //If user taps on a unit, select it, or display info on enemy unit.
-        if (BoardSprites[x / squareLength ][y / squareLength ] != null) {
+        if (BoardSprites[x / squareLength ][y / squareLength ] != null && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
             if (BoardSprites[x / squareLength ][y / squareLength ].owner == playing) {
                 theUnit = BoardSprites[x / squareLength ][y / squareLength ];
                 selected = new SelectedUnit(GameView.theContext, x, y, theUnit.owner, theUnit.unitType);
@@ -322,19 +322,21 @@ public class GameEngine {
                 && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
             moveTo(theUnit, x / squareLength , y / squareLength ); //and then move the unit, and un-select it.
             //if unit has attack, don't un-select it yet. TODO : if no units are in range, un-select it because it cannot attack anyway
-            if (theUnit.hasAttack) {
+            if (theUnit.hasAttack && (checkIfAnyInRange(theUnit))) {
                 theUnit.hasMove = false;
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
                 return;
             }
             //if units doesn't have an attack, un-select it
-            if (!(theUnit.hasAttack)) {
+            if (!(theUnit.hasAttack) || !(checkIfAnyInRange(theUnit))) {
                 theUnit.hasMove = false;
-                selected = null;
-                theUnit = null;
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
+                checkAction(theUnit);
+                boolean whyIsThisNeccesary = checkIfAnyInRange(theUnit);
+                selected = null;
+                theUnit = null;
                 return;
             }
         }
@@ -366,6 +368,7 @@ public class GameEngine {
                 theUnit.hasAttack = false;
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
+                checkAction(theUnit);
                 selected = null;
                 theUnit = null;
                 lastTap[0] = x; //sets the lastTap coordinates
@@ -388,16 +391,18 @@ public class GameEngine {
                 theUnit.hasAttack = false;
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
+                checkAction(theUnit);
                 return;
             }
             if (!theUnit.hasMove) {
                 theUnit.hasAttack = false;
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
-                selected = null;
-                theUnit = null;
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
+                checkAction(theUnit);
+                selected = null;
+                theUnit = null;
                 return;
             }
         }
@@ -442,6 +447,8 @@ public class GameEngine {
         estimateResources();
         showMarket = false;
         message = u.unitType + " moved to " + (x + c) + ", " + (y + c);
+        checkAction(u);
+        checkIfAnyInRange(u);
     }
 
     //damages the unit at given coordinates
@@ -464,7 +471,7 @@ public class GameEngine {
                         showMarket = false;
                         message = u.unitType + " at " + (x + c) + ", " + (y + c) + " is destroyed";
                         if (u.unitType.equals("Headquarters")) {
-                            message = "Headquarters have been destroyed, " + playing.color + " player wins!";
+                            message = "HQ has been destroyed, " + playing.color + " player wins!";
                             showMarket = false;
                         }
                         return;
@@ -474,6 +481,32 @@ public class GameEngine {
         }
     }
 
+    public static void checkAction(Units u) {
+        if (u.hasMove == false && u.hasAttack == false) {
+            u.darkenIcon();
+        }
+    }
+    public static boolean checkIfAnyInRange(Units u) {
+        boolean InRange = false;
+        if (u != null && u.hasAttack == true) {
+            for (int i = 0; i < GameEngine.BoardSprites.length; i++) { // TODO : optimize this
+                for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
+                    if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != GameEngine.playing &&
+                            (u.attack2Range >= GameEngine.getSquareDistance
+                                    (GameEngine.getCoordinates(u)[0], i,
+                                            GameEngine.getCoordinates(u)[1], j))) {
+                        InRange = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (!InRange) {
+            u.darkenIcon();
+            return false;
+        }
+        return true;
+    }
     //returns the SquareCoordinates of coordinates. Every Square coordinate represents a square on the board, since every square is squareLength  pixels the coordinates have to be divided by squareLength .
     public static int[] getSquareCoordinates (int a, int b) {
         int[] toReturn = new int[] { a / squareLength , b / squareLength };
@@ -495,21 +528,21 @@ public class GameEngine {
     }
 
     //switches the player when called
-    public static void switchPlayer(){
+    public static void switchPlayer() {
         if (playing == green) {
             playing = red;
-        }
-        else if (playing == red) {
+        } else if (playing == red) {
             playing = green;
         }
         // gives movement and attack to next player's units
         for (int i = 0; i < BoardSprites.length; i++) {
             for (int j = 0; j < BoardSprites[i].length; j++) {
-                if (BoardSprites[i][j]!= null && BoardSprites[i][j].owner == playing) {
+                if (BoardSprites[i][j] != null && BoardSprites[i][j].owner == playing) {
                     BoardSprites[i][j].hasMove = true;
                     BoardSprites[i][j].hasAttack = true;
+                    BoardSprites[i][j].brightenIcon();
                 }
-                if (BoardSprites[i][j]!= null && BoardSprites[i][j].owner != playing) {
+                if (BoardSprites[i][j] != null && BoardSprites[i][j].owner != playing) {
                     if (BoardSprites[i][j].hasAttack && BoardSprites[i][j].hasMove) {
                         BoardSprites[i][j].HP++;
                         if (BoardSprites[i][j].unitType.equals("Armor")) {

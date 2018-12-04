@@ -55,24 +55,167 @@ public class Units {
        GameView.units = toReturn;
        GameEngine.BoardSprites[coordinates[0]][coordinates[1]] = this;
    }*/
-        //see above for meaning of these values
-        public void setParameters(int atc1, int atc2, int atc1r, int atc2r,int def, int hp, int maxhp, int mov) {
-            this.attack1 = atc1;
-            this.attack2 = atc2;
-            this.attack1Range = atc1r;
-            this.attack2Range = atc2r;
-            this.defence = def;
-            this.HP = hp;
-            this.maxHP = maxhp;
-            this.movement = mov;
-        }
-        //creates a new unit, initialize icon to it's unit type, attribute attack, defence and HP values, and set the owner. It also adds it to GaveView's units array and to GameEngine's Object[][] array.
+    //see above for meaning of these values
+    public void setParameters(int atc1, int atc2, int atc1r, int atc2r, int def, int hp, int maxhp, int mov) {
+        this.attack1 = atc1;
+        this.attack2 = atc2;
+        this.attack1Range = atc1r;
+        this.attack2Range = atc2r;
+        this.defence = def;
+        this.HP = hp;
+        this.maxHP = maxhp;
+        this.movement = mov;
+    }
+
+    //creates a new unit, initialize icon to it's unit type, attribute attack, defence and HP values, and set the owner. It also adds it to GaveView's units array and to GameEngine's Object[][] array.
     public Units(Context context, int x, int y, Player player, String unitType) {
-            //see above for meaning of these values
-            this.unitType = unitType;
-            this.owner = player;
+        //see above for meaning of these values
+        this.unitType = unitType;
+        this.owner = player;
 
 
+        //these if statements get the icon of constructed unit
+        if (owner == GameEngine.green && unitType.equals("Infantry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.infg2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Infantry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.infr2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.green && unitType.equals("Cavalry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.cavg2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Cavalry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.cavr2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.green && unitType.equals("Artillery")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.artg2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Artillery")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.artr2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.green && unitType.equals("Headquarters")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.hqg, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Headquarters")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.hqr, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.green && unitType.equals("Armor")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armg2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Armor")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armr2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+
+        //sets the starting coordinates of the unit
+        coordinates[0] = x;
+        coordinates[1] = y;
+
+        //adds the unit to GameView.units array, which stores units that have to be drawn.
+        Units[] toReturn = new Units[GameView.units.length + 1];
+        for (int k = 0; k < GameView.units.length; k++) {
+            toReturn[k] = GameView.units[k];
+        }
+        toReturn[toReturn.length - 1] = this;
+        GameView.units = toReturn;
+        GameEngine.BoardSprites[coordinates[0]][coordinates[1]] = this;
+    }
+
+    public void darkenIcon() {
+            Context context = GameView.theContext;
+        if (owner == GameEngine.green && unitType.equals("Infantry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.infg, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Infantry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.infr, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.green && unitType.equals("Cavalry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.cavg, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Cavalry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.cavr, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.green && unitType.equals("Artillery")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.artg, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Artillery")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.artr, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.green && unitType.equals("Headquarters")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.hqg, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Headquarters")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.hqr, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.green && unitType.equals("Armor")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armg, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Armor")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armr, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+    }
+
+    public void brightenIcon() {
+        Context context = GameView.theContext;
         //these if statements get the icon of constructed unit
         if (owner == GameEngine.green && unitType.equals("Infantry")) {
             BitmapFactory.Options o = new Options();
@@ -134,19 +277,6 @@ public class Units {
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armr2, o);
             icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
-
-        //sets the starting coordinates of the unit
-        coordinates[0] = x;
-        coordinates[1] = y;
-
-        //adds the unit to GameView.units array, which stores units that have to be drawn.
-        Units[] toReturn = new Units[GameView.units.length + 1];
-        for (int k = 0; k < GameView.units.length; k++) {
-            toReturn[k] = GameView.units[k];
-        }
-        toReturn[toReturn.length - 1] = this;
-        GameView.units = toReturn;
-        GameEngine.BoardSprites[coordinates[0]][coordinates[1]] = this;
     }
 
     //changes the coordinates of the unit

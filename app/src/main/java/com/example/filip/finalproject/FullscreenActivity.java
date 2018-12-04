@@ -88,4 +88,13 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         super.onDestroy();
 
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        if (GameView.theContext != null && GameView.grid != null && GameView.thread != null) {
+            int a = 0;
+        }
+        super.onSaveInstanceState(savedInstanceState);
+    }
 }

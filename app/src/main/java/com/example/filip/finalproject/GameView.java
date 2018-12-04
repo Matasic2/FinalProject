@@ -19,8 +19,8 @@ import android.widget.FrameLayout;
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public static Context theContext; //context of the View, required for adding textures to units in other classes.
-    public MainThread thread; //Game's thread. Copied from net, I have no idea why this is important :)
-    public GameEngine grid = null; // Grid of the game
+    public static MainThread thread; //Game's thread. Copied from net, I have no idea why this is important :)
+    public static GameEngine grid = null; // Grid of the game
     public static SelectedUnit selected = null; //Player's selected unit
     public static SelectedUnit enemySelected = null; //opponent's selected unit
     public static Units[] units = new Units[0]; // Array of units that will be drawn, they don't have the physical location on board (In GameEngine class, BoardSprites does that).
