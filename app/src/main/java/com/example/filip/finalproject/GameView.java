@@ -171,6 +171,37 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             pointers8.draw(canvas,12,6);
             pointers9.draw(canvas,16,5);
 
+            Paint newPaint = new Paint();
+            newPaint.setTextSize(65 * FullscreenActivity.scaleFactor);
+            newPaint.setColor(Color.argb(255,154,52,0));
+            if (GameEngine.theUnit != null) {
+                if (GameEngine.theUnit.unitType == "Infantry") {
+                    if (GameEngine.theUnit.defence == Infantry.GreenDefence) {
+                        canvas.drawText ("1", ((16*128)+36) * FullscreenActivity.scaleFactor,((5*128)+80) * FullscreenActivity.scaleFactor,newPaint);
+                    }
+                }
+                if (GameEngine.theUnit.unitType == "Cavalry") {
+                    if (GameEngine.theUnit.defence == Cavalry.GreenDefence) {
+                            canvas.drawText ("2", ((16*128)+36) * FullscreenActivity.scaleFactor,((5*128)+80) * FullscreenActivity.scaleFactor,newPaint);
+                    }
+                }
+                if (GameEngine.theUnit.unitType == "Artillery") {
+                    if (GameEngine.theUnit.defence == Artillery.GreenDefence) {
+                            canvas.drawText("2", ((16 * 128) + 36) * FullscreenActivity.scaleFactor, ((5 * 128) + 80) * FullscreenActivity.scaleFactor, newPaint);
+                        }
+                }
+                if (GameEngine.theUnit.unitType == "Armor") {
+                    if (GameEngine.theUnit.defence == Armor.GreenDefence) {
+                            canvas.drawText ("5", ((16*128)+36) * FullscreenActivity.scaleFactor,((5*128)+80) * FullscreenActivity.scaleFactor,newPaint);
+                        }
+                }
+                if (GameEngine.theUnit.unitType == "Headquarters") {
+                    if (GameEngine.theUnit.defence == Headquaters.GreenDefence) {
+                            canvas.drawText ("4", ((16*128)+36) * FullscreenActivity.scaleFactor,((5*128)+80) * FullscreenActivity.scaleFactor,newPaint);
+                    }
+                }
+            }
+
             if (GameEngine.showMarket) {
                 if (GameEngine.playing == GameEngine.green) {
                     movableLocation inf = new movableLocation(theContext, 6);
