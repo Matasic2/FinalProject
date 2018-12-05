@@ -12,6 +12,9 @@ public class Artillery extends Units {
     public static int GreenHP = 7; // HP value of Green's infantry, this value can be changed
     public static int GreenMovement = 1; // Movement value of Green's infantry, this value can be changed
 
+    public static int foodPrice = 7;
+    public static int ironPrice = 4;
+    public static int oilPrice = 0;
 
     public static int RedAttack1 = 50; // Red Cavalry's first attack value, this value can be changed
     public static int RedAttack2 = 5; //  Red Cavalry's first attack value, this value can be changed

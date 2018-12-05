@@ -196,20 +196,20 @@ public class GameEngine {
             return;
         }
 
-        //buys new infantry for two food
+        //buys new infantry
         if (x / squareLength  == 7 && y / squareLength  == 10 && showMarket &&
                 ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
-            if (playing.foodStorage > 1) {
+            if (playing.foodStorage >= Infantry.foodPrice) {
                 if (playing == green && BoardSprites[2][2] == null) {
                     new Infantry(GameView.theContext, 2, 2, playing);
-                    playing.foodStorage -=2;
+                    playing.foodStorage -=Infantry.foodPrice;
                 }
                 if (playing == red && BoardSprites[12][6] == null) {
                     new Infantry(GameView.theContext, 12, 6, playing);
-                    playing.foodStorage -=2;
+                    playing.foodStorage -=Infantry.foodPrice;
                 }
             }
-            if (playing.foodStorage < 2) {
+            if (playing.foodStorage < Infantry.foodPrice) {
                 showMarket = false;
             }
             lastCoordinates[0] = 125;
@@ -217,17 +217,17 @@ public class GameEngine {
             lastTap[0] = x; //sets the lastTap coordinates
             lastTap[1] = y;
         }
-        //buys new cavalry for three food
+        //buys new cavalry
         if (x / squareLength  == 9 && y / squareLength  == 10 && showMarket &&
                 ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
-            if (playing.foodStorage > 2) {
+            if (playing.foodStorage >= Cavalry.foodPrice) {
                 if (playing == green && BoardSprites[2][2] == null) {
                     new Cavalry(GameView.theContext, 2, 2, playing);
-                    playing.foodStorage -=3;
+                    playing.foodStorage -=Cavalry.foodPrice;
                 }
                 if ((playing == red && BoardSprites[12][6] == null)) {
                     new Cavalry(GameView.theContext, 12, 6, playing);
-                    playing.foodStorage -=3;
+                    playing.foodStorage -=Cavalry.foodPrice;
                 }
 
             }
@@ -239,16 +239,16 @@ public class GameEngine {
         //buys new artillery for five food and four iron
         if (x / squareLength  == 11 && y / squareLength  == 10 && showMarket &&
                 ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
-            if (playing.foodStorage > 4 && playing.ironStorage > 3) {
+            if (playing.foodStorage >= Artillery.foodPrice && playing.ironStorage >= Artillery.ironPrice) {
                 if (playing == green && BoardSprites[2][2] == null) {
                     new Artillery(GameView.theContext, 2, 2, playing);
-                    playing.foodStorage -=5;
-                    playing.ironStorage -=4;
+                    playing.foodStorage -=Artillery.foodPrice;
+                    playing.ironStorage -=Artillery.ironPrice;
                 }
                 if ((playing == red && BoardSprites[12][6] == null)) {
                     new Artillery(GameView.theContext, 12, 6, playing);
-                    playing.foodStorage -=5;
-                    playing.ironStorage -=4;
+                    playing.foodStorage -=Artillery.foodPrice;
+                    playing.ironStorage -=Artillery.ironPrice;
                 }
 
             }
@@ -261,18 +261,18 @@ public class GameEngine {
         //buys new armor for two food, four iron and twenty five oil
         if (x / squareLength  == 13 && y / squareLength  == 10 && showMarket &&
                 ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
-            if (playing.foodStorage > 1 && playing.ironStorage > 3 && playing.oilStorage > 19) {
+            if (playing.foodStorage >= Armor.foodPrice && playing.ironStorage >= Armor.ironPrice && playing.oilStorage >= Armor.oilPrice) {
                 if (playing == green && BoardSprites[2][2] == null) {
                     new Armor(GameView.theContext, 2, 2, playing);
-                    playing.foodStorage -=2;
-                    playing.ironStorage -=4;
-                    playing.oilStorage -=20;
+                    playing.foodStorage -=Armor.foodPrice;
+                    playing.ironStorage -=Armor.ironPrice;
+                    playing.oilStorage -=Armor.oilPrice;
                 }
                 if ((playing == red && BoardSprites[12][6] == null)) {
                     new Armor(GameView.theContext, 12, 6, playing);
-                    playing.foodStorage -=2;
-                    playing.ironStorage -=4;
-                    playing.oilStorage -=20;
+                    playing.foodStorage -=Armor.foodPrice;
+                    playing.ironStorage -=Armor.ironPrice;
+                    playing.oilStorage -=Armor.oilPrice;
                 }
 
             }

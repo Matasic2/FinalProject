@@ -77,6 +77,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     protected void onPause(){
         super.onPause();
 
+
     }
     @Override
     protected void onResume(){

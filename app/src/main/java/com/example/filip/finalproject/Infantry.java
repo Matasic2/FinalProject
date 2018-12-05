@@ -13,6 +13,10 @@ public class Infantry extends Units {
     public static int GreenHP = 4; // HP value of Green's Cavalry, this value can be changed
     public static int GreenMovement = 2; // Movement value of Green's Cavalry, this value can be changed
 
+    public static int foodPrice = 2;
+    public static int ironPrice = 0;
+    public static int oilPrice = 0;
+
     public static int RedAttack1 = 12; // Red Cavalry's first attack value, this value can be changed
     public static int RedAttack2 = 2; //  Red Cavalry's first attack value, this value can be changed
     public static int RedFirstAttackRange = 1; //  Red Cavalry's first attack range, this value can be changed
