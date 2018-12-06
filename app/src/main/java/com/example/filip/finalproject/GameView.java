@@ -100,17 +100,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             new Infantry(theContext, 12, 6, GameEngine.red);
         }
 
-        for (int i = 1; i < 1; i++) {
+        for (int i = 0; i < 0; i++) {
             new Cavalry(theContext, 1, i * 2, GameEngine.green);
         }
-        for (int i = 1; i < 1; i++) {
+        for (int i = 0; i < 0; i++) {
             new Cavalry(theContext, 12, i * 2, GameEngine.red);
         }
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 0; i++) {
             new Artillery(theContext, 14, 8, GameEngine.green);
         }
-        for (int i = 5; i < 5; i++) {
+        for (int i = 0; i < 0; i++) {
             new Artillery(theContext, 13, i, GameEngine.red);
         }
         selected = new SelectedUnit(theContext); // adds selected unit to the board, but doesn't show it until it has to.
