@@ -36,6 +36,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     public static float scaleFactor;
     public static int heightscreen;
     public static int widthfullscreen;
+    public static FullscreenActivity theActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +68,16 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         GameView myGameView = new GameView(this); //creates context
         myGameView.setOnTouchListener(this); //sets listener
         setContentView(myGameView); //sets context
-        long[] vibratepattern = new long[] {300,200,300,200, 3000, 1000, 300,200,300,200, 3000};
+        theActivity = this;
+    }
+
+    public void vibrate() {
+        long[] vibratepattern = new long[] {100,1500,1500};
 
         Vibrator vibe = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         vibe.vibrate(vibratepattern, -1);
     }
+
 
     /*
     This will register the touch and send it to GameEngine for computing.

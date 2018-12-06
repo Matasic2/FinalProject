@@ -107,8 +107,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             new Cavalry(theContext, 12, i * 2, GameEngine.red);
         }
 
-        for (int i = 5; i < 5; i++) {
-            new Artillery(theContext, 0, i, GameEngine.green);
+        for (int i = 0; i < 1; i++) {
+            new Artillery(theContext, 14, 8, GameEngine.green);
         }
         for (int i = 5; i < 5; i++) {
             new Artillery(theContext, 13, i, GameEngine.red);

@@ -473,9 +473,7 @@ public class GameEngine {
                         message = u.unitType + " at " + (x + c) + ", " + (y + c) + " is destroyed";
                         if (u.unitType.equals("Headquarters")) {
                             message = "HQ has been destroyed, " + playing.color + " player wins!";
-
-
-
+                            FullscreenActivity.theActivity.vibrate();
                             showMarket = false;
                         }
                         return;
