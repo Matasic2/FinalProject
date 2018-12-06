@@ -472,6 +472,10 @@ public class GameEngine {
                         showMarket = false;
                         message = u.unitType + " at " + (x + c) + ", " + (y + c) + " is destroyed";
                         if (u.unitType.equals("Headquarters")) {
+                            selected = null;
+                            theUnit = null;
+                            enemySelected = null;
+                            enemyTappedUnit = null;
                             message = "HQ has been destroyed, " + playing.color + " player wins!";
                             FullscreenActivity.theActivity.vibrate();
                             showMarket = false;
