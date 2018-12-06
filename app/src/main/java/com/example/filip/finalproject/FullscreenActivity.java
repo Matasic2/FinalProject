@@ -26,6 +26,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.os.Vibrator;
 
 public class FullscreenActivity extends Activity implements View.OnTouchListener{
 
@@ -52,6 +53,9 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         widthfullscreen = width;
         float scale;
 
+
+
+
         if (height / 1440.0f > width / 2560.0f) {
             scale = width / 2560.0f;
         }   else {
@@ -63,6 +67,10 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         GameView myGameView = new GameView(this); //creates context
         myGameView.setOnTouchListener(this); //sets listener
         setContentView(myGameView); //sets context
+        long[] vibratepattern = new long[] {300,200,300,200, 3000, 1000, 300,200,300,200, 3000};
+
+        Vibrator vibe = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibe.vibrate(vibratepattern, -1);
     }
 
     /*
@@ -89,6 +97,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         super.onDestroy();
 
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {

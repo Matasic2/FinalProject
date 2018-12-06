@@ -1,9 +1,12 @@
 package com.example.filip.finalproject;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Vibrator;
 import android.util.EventLog;
 import android.graphics.Canvas;
 import java.lang.Math;
+import android.os.Vibrator;
 
 // Class that will run the game and manage all the events.
 public class GameEngine {
@@ -470,6 +473,9 @@ public class GameEngine {
                         message = u.unitType + " at " + (x + c) + ", " + (y + c) + " is destroyed";
                         if (u.unitType.equals("Headquarters")) {
                             message = "HQ has been destroyed, " + playing.color + " player wins!";
+
+
+
                             showMarket = false;
                         }
                         return;
@@ -478,6 +484,7 @@ public class GameEngine {
             }
         }
     }
+
 
     public static void checkAction(Units u) {
         if (u.hasMove == false && u.hasAttack == false) {
