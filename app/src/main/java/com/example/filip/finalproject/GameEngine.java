@@ -16,6 +16,7 @@ public class GameEngine {
 
     public static int squareLength = (int) (128  * FullscreenActivity.scaleFactor);
     public Bitmap image; // Image of the grid
+    public static Units lastUnit;
     public static Units theUnit = null; // Selected unit, unlike the selected unit in GameView class this unit is the actual selected unit.
     public static SelectedUnit selected = null; // Selected unit, reference is not the same as the (selected) Unit itself.
     public static Units enemyTappedUnit = null; //same as above, but of opponent
@@ -117,19 +118,53 @@ public class GameEngine {
 
         //Undo
         if (x / squareLength  == 18 && y / squareLength  == 3  && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength )) && theUnit != null && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
-            BoardSprites[theUnit.coordinates[0]][theUnit.coordinates[1]] = null;
-            theUnit.coordinates[0] = lastCoordinates[0];
-            theUnit.coordinates[1] = lastCoordinates[1];
-            BoardSprites[lastCoordinates[0]][lastCoordinates[1]] = theUnit;
-            theUnit.brightenIcon();
-            theUnit.hasMove = true;
-            theUnit = null;
-            selected = null;
-            lastCoordinates[0] = 125;
-            lastCoordinates[1] = 125;
-            lastTap[0] = x; //sets the lastTap coordinates
-            lastTap[1] = y;
-            return;
+            if (lastUnit == null) {
+                BoardSprites[theUnit.coordinates[0]][theUnit.coordinates[1]] = null;
+                theUnit.coordinates[0] = lastCoordinates[0];
+                theUnit.coordinates[1] = lastCoordinates[1];
+                BoardSprites[lastCoordinates[0]][lastCoordinates[1]] = theUnit;
+                theUnit.brightenIcon();
+                theUnit.hasMove = true;
+                theUnit = null;
+                selected = null;
+                lastCoordinates[0] = 125;
+                lastCoordinates[1] = 125;
+                lastTap[0] = x; //sets the lastTap coordinates
+                lastTap[1] = y;
+                return;
+            }
+            else {
+
+                Units u = BoardSprites[lastCoordinates[0]][lastCoordinates[1]];
+                for (int i = 0; i < GameView.units.length; i++) {
+                    if (GameView.units[i] == u) {
+                        GameView.removeSprite(i);
+                    }
+                }
+
+                BoardSprites[lastCoordinates[0]][lastCoordinates[1]] = lastUnit;
+                lastUnit.coordinates[0] = lastCoordinates[0];
+                lastUnit.coordinates[1] = lastCoordinates[1];
+
+                Units[] toReturn = new Units[GameView.units.length + 1];
+                for (int k = 0; k < GameView.units.length; k++) {
+                    toReturn[k] = GameView.units[k];
+                }
+                toReturn[toReturn.length - 1] = lastUnit;
+                GameView.units = toReturn;
+
+                theUnit.brightenIcon();
+                theUnit.hasAttack = true;
+                theUnit = null;
+                selected = null;
+                enemyTappedUnit = null;
+                enemySelected = null;
+                lastCoordinates[0] = 125;
+                lastCoordinates[1] = 125;
+                lastTap[0] = x; //sets the lastTap coordinates
+                lastTap[1] = y;
+
+            }
         }
 
         //upgrade
@@ -217,6 +252,7 @@ public class GameEngine {
             }
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
+            lastUnit = null;
             lastTap[0] = x; //sets the lastTap coordinates
             lastTap[1] = y;
         }
@@ -236,6 +272,7 @@ public class GameEngine {
             }
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
+            lastUnit = null;
             lastTap[0] = x; //sets the lastTap coordinates
             lastTap[1] = y;
         }
@@ -257,6 +294,7 @@ public class GameEngine {
             }
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
+            lastUnit = null;
             lastTap[0] = x; //sets the lastTap coordinates
             lastTap[1] = y;
         }
@@ -281,6 +319,7 @@ public class GameEngine {
             }
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
+            lastUnit = null;
             lastTap[0] = x; //sets the lastTap coordinates
             lastTap[1] = y;
         }
@@ -303,6 +342,7 @@ public class GameEngine {
                 message = theUnit.unitType + " at " + ((x/squareLength ) + c) + ", " + ((y/squareLength ) + c);
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
+                lastUnit = null;
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
                 return;
@@ -312,6 +352,7 @@ public class GameEngine {
                 enemySelected = new SelectedUnit(GameView.theContext, x, y, BoardSprites[x / squareLength ][y / squareLength ].owner, BoardSprites[x / squareLength ][y / squareLength ].unitType);
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
+                lastUnit = null;
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
             }
@@ -357,23 +398,19 @@ public class GameEngine {
             DamageUnit(theUnit.attack1, BoardSprites[x / squareLength ][y / squareLength ], x / squareLength , y / squareLength ); //and then move the unit, and un-select it.
             //if unit has a move, don't un-select it yet.
             if (theUnit.hasMove) {
+
                 theUnit.hasAttack = false;
-                lastCoordinates[0] = 125;
-                lastCoordinates[1] = 125;
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
                 return;
             }
             //if units doesn't have a move, un-select it
             if (!theUnit.hasMove) {
-                theUnit.hasAttack = false;
-                lastCoordinates[0] = 125;
-                lastCoordinates[1] = 125;
-                checkAction(theUnit);
-                selected = null;
-                theUnit = null;
+
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
+                theUnit.hasAttack = false;
+                checkAction(theUnit);
                 return;
             }
         }
@@ -387,8 +424,7 @@ public class GameEngine {
                 && theUnit.hasAttack == true) {
             DamageUnit(theUnit.attack2, BoardSprites[x / squareLength ][y / squareLength ], x / squareLength , y / squareLength );
             if (theUnit.hasMove) {
-                lastCoordinates[0] = 125;
-                lastCoordinates[1] = 125;
+
                 theUnit.hasAttack = false;
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
@@ -396,14 +432,11 @@ public class GameEngine {
                 return;
             }
             if (!theUnit.hasMove) {
+
                 theUnit.hasAttack = false;
-                lastCoordinates[0] = 125;
-                lastCoordinates[1] = 125;
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
                 checkAction(theUnit);
-                selected = null;
-                theUnit = null;
                 return;
             }
         }
@@ -441,6 +474,7 @@ public class GameEngine {
         }
         lastCoordinates[0] = selected.coordinates[0];
         lastCoordinates[1] = selected.coordinates[1];
+        lastUnit = null;
         u.moveTo(x,y);
         BoardSprites[x][y] = u;
         selected = new SelectedUnit(GameView.theContext, x * squareLength , y * squareLength , theUnit.owner, theUnit.unitType);
@@ -454,6 +488,9 @@ public class GameEngine {
 
     //damages the unit at given coordinates
     public static void DamageUnit(int damage, Units u, int x, int y) {
+        lastUnit = new Units(u, GameView.theContext);
+        lastCoordinates[0] = u.coordinates[0];
+        lastCoordinates[1] = u.coordinates[1];
         if (BoardSprites[x][y].defence >= damage) {
             showMarket = false;
             message = u.unitType + " at "+ (x + c) + ", " + (y + c) + " was not damaged";

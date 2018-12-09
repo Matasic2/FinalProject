@@ -7,12 +7,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.content.SharedPreferences;
 import android.view.MotionEvent;
 import android.app.Activity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.Display;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.graphics.Point;
 import android.view.View.OnTouchListener;
@@ -27,6 +29,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Vibrator;
+
+import java.util.List;
 
 public class FullscreenActivity extends Activity implements View.OnTouchListener{
 
@@ -53,6 +57,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         int width = displayMetrics.widthPixels;
         widthfullscreen = width;
         float scale;
+
 
 
 
@@ -90,7 +95,6 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     @Override
     protected void onPause(){
         super.onPause();
-
 
     }
     @Override
