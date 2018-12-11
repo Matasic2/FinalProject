@@ -398,7 +398,6 @@ public class GameEngine {
             DamageUnit(theUnit.attack1, BoardSprites[x / squareLength ][y / squareLength ], x / squareLength , y / squareLength ); //and then move the unit, and un-select it.
             //if unit has a move, don't un-select it yet.
             if (theUnit.hasMove) {
-
                 theUnit.hasAttack = false;
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
@@ -423,6 +422,7 @@ public class GameEngine {
                                 getCoordinates(theUnit)[1], y / squareLength ))
                 && theUnit.hasAttack == true) {
             DamageUnit(theUnit.attack2, BoardSprites[x / squareLength ][y / squareLength ], x / squareLength , y / squareLength );
+
             if (theUnit.hasMove) {
 
                 theUnit.hasAttack = false;
@@ -509,8 +509,6 @@ public class GameEngine {
                         showMarket = false;
                         message = u.unitType + " at " + (x + c) + ", " + (y + c) + " is destroyed";
                         if (u.unitType.equals("Headquarters")) {
-                            selected = null;
-                            theUnit = null;
                             enemySelected = null;
                             enemyTappedUnit = null;
                             message = "HQ has been destroyed, " + playing.color + " player wins!";
