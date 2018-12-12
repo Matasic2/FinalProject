@@ -397,6 +397,9 @@ public class GameEngine {
                 && theUnit.hasAttack == true) {
             DamageUnit(theUnit.attack1, BoardSprites[x / squareLength ][y / squareLength ], x / squareLength , y / squareLength ); //and then move the unit, and un-select it.
             //if unit has a move, don't un-select it yet.
+            if (theUnit == null) {
+                return;
+            }
             if (theUnit.hasMove) {
                 theUnit.hasAttack = false;
                 lastTap[0] = x; //sets the lastTap coordinates
@@ -422,9 +425,7 @@ public class GameEngine {
                                 getCoordinates(theUnit)[1], y / squareLength ))
                 && theUnit.hasAttack == true) {
             DamageUnit(theUnit.attack2, BoardSprites[x / squareLength ][y / squareLength ], x / squareLength , y / squareLength );
-
             if (theUnit.hasMove) {
-
                 theUnit.hasAttack = false;
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
@@ -432,7 +433,6 @@ public class GameEngine {
                 return;
             }
             if (!theUnit.hasMove) {
-
                 theUnit.hasAttack = false;
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
@@ -509,8 +509,23 @@ public class GameEngine {
                         showMarket = false;
                         message = u.unitType + " at " + (x + c) + ", " + (y + c) + " is destroyed";
                         if (u.unitType.equals("Headquarters")) {
+                            if (theUnit.hasMove) {
+                                theUnit.hasAttack = false;
+                                lastTap[0] = x; //sets the lastTap coordinates
+                                lastTap[1] = y;
+                            }
+                            //if units doesn't have a move, un-select it
+                            if (!theUnit.hasMove) {
+
+                                lastTap[0] = x; //sets the lastTap coordinates
+                                lastTap[1] = y;
+                                theUnit.hasAttack = false;
+                                checkAction(theUnit);
+                            }
                             enemySelected = null;
                             enemyTappedUnit = null;
+                            selected = null;
+                            theUnit = null;
                             message = "HQ has been destroyed, " + playing.color + " player wins!";
                             FullscreenActivity.theActivity.vibrate();
                             showMarket = false;
