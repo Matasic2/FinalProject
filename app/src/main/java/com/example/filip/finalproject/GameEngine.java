@@ -26,7 +26,7 @@ public class GameEngine {
     public static Player red;//stores the reference to a player that is in charge of Red units
     public static Player playing = null; //player that makes moves
     public static Resources[][] BoardResources = new Resources[15][9];
-    public static boolean showSupport = false;
+    public static boolean showFactory = false;
     public static boolean showMarket = false;
     public static String message = "";
     public static int c = 0;
@@ -108,8 +108,8 @@ public class GameEngine {
                 (((x / squareLength  == 12 && y / squareLength  == 6)  && (playing == red && BoardSprites[12][6] == null))))
                 && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
             GameEngine.showMarket =  !GameEngine.showMarket;
-            if (showSupport == true) {
-                showSupport = false;
+            if (showFactory == true) {
+                showFactory = false;
             }
             lastTap[0] = x; //sets the lastTap coordinates
             lastTap[1] = y;
@@ -181,7 +181,7 @@ public class GameEngine {
                 if (theUnit.defence == Cavalry.GreenDefence) {
                     if (playing.ironStorage > 1) {
                         theUnit.defence++;
-                        playing.ironStorage -= 2;
+                        playing.ironStorage -= 1;
                     }
                 }
             }
@@ -209,6 +209,14 @@ public class GameEngine {
                     }
                 }
             }
+            if (theUnit.unitType == "MechInfantry") {
+                if (theUnit.defence == MechanizedInfantry.GreenDefence) {
+                    if (playing.ironStorage >= 2) {
+                        theUnit.defence++;
+                        playing.ironStorage -= 2;
+                    }
+                }
+            }
             lastTap[0] = x; //sets the lastTap coordinates
             lastTap[1] = y;
         }
@@ -216,18 +224,18 @@ public class GameEngine {
         //switches market visibility if the button is pressed.
         if (x / squareLength  == 5 && y / squareLength  == 10  && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
             GameEngine.showMarket =  !GameEngine.showMarket;
-            if (showSupport == true) {
-                showSupport = false;
+            if (showFactory == true) {
+                showFactory = false;
             }
             lastTap[0] = x; //sets the lastTap coordinates
             lastTap[1] = y;
             return;
         }
-        //switches support visibility if the button is pressed. TODO : Add support abilities in game
-        if (x / squareLength  == 12 && y / squareLength  == 10  && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
-            GameEngine.showMarket =  !GameEngine.showMarket;
-            if (showSupport == true) {
-                showSupport = false;
+        //switches factory visibility if the button is pressed.
+        if (x / squareLength  == 5 && y / squareLength  == 9  && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
+            GameEngine.showFactory =  !GameEngine.showFactory;
+            if (showMarket == true) {
+                showMarket = false;
             }
             lastTap[0] = x; //sets the lastTap coordinates
             lastTap[1] = y;
@@ -276,7 +284,7 @@ public class GameEngine {
             lastTap[0] = x; //sets the lastTap coordinates
             lastTap[1] = y;
         }
-        //buys new artillery for five food and four iron
+        //buys new artillery
         if (x / squareLength  == 11 && y / squareLength  == 10 && showMarket &&
                 ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
             if (playing.foodStorage >= Artillery.foodPrice && playing.ironStorage >= Artillery.ironPrice) {
@@ -299,8 +307,8 @@ public class GameEngine {
             lastTap[1] = y;
         }
 
-        //buys new armor for two food, four iron and twenty five oil
-        if (x / squareLength  == 13 && y / squareLength  == 10 && showMarket &&
+        //buys new armor
+        if (x / squareLength  == 9 && y / squareLength  == 10 && showFactory &&
                 ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
             if (playing.foodStorage >= Armor.foodPrice && playing.ironStorage >= Armor.ironPrice && playing.oilStorage >= Armor.oilPrice) {
                 if (playing == green && BoardSprites[2][2] == null) {
@@ -316,6 +324,53 @@ public class GameEngine {
                     playing.oilStorage -=Armor.oilPrice;
                 }
 
+            }
+            lastCoordinates[0] = 125;
+            lastCoordinates[1] = 125;
+            lastUnit = null;
+            lastTap[0] = x; //sets the lastTap coordinates
+            lastTap[1] = y;
+        }
+
+        //buys new MechInfantry
+        if (x / squareLength  == 7 && y / squareLength  == 10 && showFactory &&
+                ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
+                if (playing.foodStorage >= MechanizedInfantry.foodPrice && playing.ironStorage >= MechanizedInfantry.ironPrice && playing.oilStorage >= MechanizedInfantry.oilPrice) {
+                    if (playing == green && BoardSprites[2][2] == null) {
+                        new MechanizedInfantry(GameView.theContext, 2, 2, playing);
+                        playing.foodStorage -= MechanizedInfantry.foodPrice;
+                        playing.ironStorage -= MechanizedInfantry.ironPrice;
+                        playing.oilStorage -= MechanizedInfantry.oilPrice;
+                    }
+                    if ((playing == red && BoardSprites[12][6] == null)) {
+                        new MechanizedInfantry(GameView.theContext, 12, 6, playing);
+                        playing.foodStorage -= MechanizedInfantry.foodPrice;
+                        playing.ironStorage -= MechanizedInfantry.ironPrice;
+                        playing.oilStorage -= MechanizedInfantry.oilPrice;
+                    }
+                }
+                lastCoordinates[0] = 125;
+                lastCoordinates[1] = 125;
+                lastUnit = null;
+                lastTap[0] = x; //sets the lastTap coordinates
+                lastTap[1] = y;
+        }
+        //buys new Heavy Tank
+        if (x / squareLength  == 11 && y / squareLength  == 10 && showFactory &&
+                ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
+            if (playing.foodStorage >= HeavyTank.foodPrice && playing.ironStorage >= HeavyTank.ironPrice && playing.oilStorage >= HeavyTank.oilPrice) {
+                if (playing == green && BoardSprites[2][2] == null) {
+                    new HeavyTank(GameView.theContext, 2, 2, playing);
+                    playing.foodStorage -= HeavyTank.foodPrice;
+                    playing.ironStorage -= HeavyTank.ironPrice;
+                    playing.oilStorage -= HeavyTank.oilPrice;
+                }
+                if ((playing == red && BoardSprites[12][6] == null)) {
+                    new HeavyTank(GameView.theContext, 12, 6, playing);
+                    playing.foodStorage -= HeavyTank.foodPrice;
+                    playing.ironStorage -= HeavyTank.ironPrice;
+                    playing.oilStorage -= HeavyTank.oilPrice;
+                }
             }
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
@@ -635,6 +690,7 @@ public class GameEngine {
         }
         GameEngine.estimateResources();
         showMarket = false;
+        showFactory = false;
         message = "";
     }
     public static void estimateResources() {

@@ -2,31 +2,31 @@ package com.example.filip.finalproject;
 
 import android.content.Context;
 
-public class Armor extends Units {
+public class MechanizedInfantry extends Units {
 
     // TODO : fix these comments
     public static int GreenAttack1 = 15; // Green Cavalry's first attack value, this value can be changed
-    public static int GreenAttack2 = 10; //  Green Cavalry's first attack value, this value can be changed
+    public static int GreenAttack2 = 2; //  Green Cavalry's first attack value, this value can be changed
     public static int GreenFirstAttackRange = 1; //  Green Cavalry's first attack range, this value can be changed
     public static int GreenSecondAttackRange = 4; //  Green Cavalry's second attack value, this value can be changed
-    public static int GreenDefence = 3; // Defence value of Green's Cavalry, this value can be changed
-    public static int GreenHP = 25; // HP value of Green's Cavalry, this value can be changed
-    public static int GreenMovement = 2; // Movement value of Green's Cavalry, this value can be changed
+    public static int GreenDefence = 1; // Defence value of Green's Cavalry, this value can be changed
+    public static int GreenHP = 4; // HP value of Green's Cavalry, this value can be changed
+    public static int GreenMovement = 4; // Movement value of Green's Cavalry, this value can be changed
 
-    public static int foodPrice = 2;
-    public static int ironPrice = 4;
-    public static int oilPrice = 20;
+    public static int foodPrice = 3;
+    public static int ironPrice = 1;
+    public static int oilPrice = 4;
 
     public static int RedAttack1 = 15; // Red Cavalry's first attack value, this value can be changed
-    public static int RedAttack2 = 10; //  Red Cavalry's first attack value, this value can be changed
+    public static int RedAttack2 = 2; //  Red Cavalry's first attack value, this value can be changed
     public static int RedFirstAttackRange = 1; //  Red Cavalry's first attack range, this value can be changed
     public static int RedSecondAttackRange = 4; //  Red Cavalry's second attack value, this value can be changed
-    public static int RedDefence = 3; // Defence value of Red's Cavalry, this value can be changed
-    public static int RedHP = 25; // HP value of Red's Cavalry, this value can be changed
-    public static int RedMovement = 2; // Movement value of Red's Cavalry, this value can be changed
+    public static int RedDefence = 1; // Defence value of Red's Cavalry, this value can be changed
+    public static int RedHP = 4; // HP value of Red's Cavalry, this value can be changed
+    public static int RedMovement = 4; // Movement value of Red's Cavalry, this value can be changed
 
-    Armor(Context context, int x, int y, Player player) {
-        super(context, x, y, player, "Armor");
+    MechanizedInfantry(Context context, int x, int y, Player player) {
+        super(context, x, y, player, "Mech Infantry");
         if (player.color.equals("green")) {
             this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement);
         } else {

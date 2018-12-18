@@ -157,6 +157,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             movableLocation pointers6 = new movableLocation(theContext, 16);
             movableLocation pointers7 = new movableLocation(theContext, 17);
             movableLocation pointers8 = new movableLocation(theContext, 18);
+            movableLocation pointers99 = new movableLocation(theContext, 22);
             pointers.draw(canvas,1,7);
             pointers.draw(canvas,13,1);
             pointers1.draw(canvas,6,1);
@@ -168,6 +169,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             pointers6.draw(canvas,18,3);
             pointers7.draw(canvas,2,2);
             pointers8.draw(canvas,12,6);
+            pointers99.draw(canvas,5,9);
 
             Paint newPaint = new Paint();
             newPaint.setTextSize(65 * FullscreenActivity.scaleFactor);
@@ -183,7 +185,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }
                 if (GameEngine.theUnit.unitType == "Cavalry") {
                     if (GameEngine.theUnit.defence == Cavalry.GreenDefence) {
-                            canvas.drawText ("2", ((16*128) * FullscreenActivity.scaleFactor + 52 * FullscreenActivity.scaleFactor) ,((5*128) * FullscreenActivity.scaleFactor +84* FullscreenActivity.scaleFactor),newPaint);
+                            canvas.drawText ("1", ((16*128) * FullscreenActivity.scaleFactor + 52 * FullscreenActivity.scaleFactor) ,((5*128) * FullscreenActivity.scaleFactor +84* FullscreenActivity.scaleFactor),newPaint);
                     }
                 }
                 if (GameEngine.theUnit.unitType == "Artillery") {
@@ -208,21 +210,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     movableLocation inf = new movableLocation(theContext, 6);
                     movableLocation cav = new movableLocation(theContext, 7);
                     movableLocation art = new movableLocation(theContext, 8);
-                    movableLocation arm = new movableLocation(theContext, 12);
                     inf.draw(canvas, 7, 10);
                     cav.draw(canvas, 9, 10);
                     art.draw(canvas, 11, 10);
-                    arm.draw(canvas, 13, 10);
                 }
                 if (GameEngine.playing == GameEngine.red) {
                     movableLocation inf = new movableLocation(theContext, 9);
                     movableLocation cav = new movableLocation(theContext, 10);
                     movableLocation art = new movableLocation(theContext, 11);
-                    movableLocation arm = new movableLocation(theContext, 13);
                     inf.draw(canvas, 7, 10);
                     cav.draw(canvas, 9, 10);
                     art.draw(canvas, 11, 10);
-                    arm.draw(canvas, 13, 10);
                 }
                 Paint thePaint = new Paint();
                 thePaint.setTextSize(40 * FullscreenActivity.scaleFactor);
@@ -230,20 +228,52 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 canvas.drawText("" + Infantry.foodPrice, 1000 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("" + Cavalry.foodPrice, 1255 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("" + Artillery.foodPrice, 1515 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
-                canvas.drawText("" + Armor.foodPrice, 1768 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 thePaint.setColor(Color.argb(255,204,102,0));
                 canvas.drawText("" + Infantry.ironPrice, 950 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("" + Cavalry.ironPrice, 1205 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("" + Artillery.ironPrice, 1465 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
-                canvas.drawText("" + Armor.ironPrice, 1718  * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 thePaint.setColor(Color.GRAY);
                 canvas.drawText("" + Infantry.oilPrice, 905 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("" + Cavalry.oilPrice, 1160 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("" + Artillery.oilPrice, 1420 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
-                canvas.drawText("" + Armor.oilPrice, 1660 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
 
 
-            } else {
+            }
+
+            else if (GameEngine.showFactory) {
+                if (GameEngine.playing == GameEngine.green) {
+                    movableLocation minf = new movableLocation(theContext, 20);
+                    movableLocation arm = new movableLocation(theContext, 12);
+                    movableLocation htank = new movableLocation(theContext, 23);
+                    minf.draw(canvas, 7, 10);
+                    arm.draw(canvas, 9, 10);
+                    htank.draw(canvas, 11, 10);
+                }
+                if (GameEngine.playing == GameEngine.red) {
+                    movableLocation minf = new movableLocation(theContext, 21);
+                    movableLocation arm = new movableLocation(theContext, 13);
+                    movableLocation htank = new movableLocation(theContext, 24);
+                    minf.draw(canvas, 7, 10);
+                    arm.draw(canvas, 9, 10);
+                    htank.draw(canvas, 11, 10);
+                }
+                Paint thePaint = new Paint();
+                thePaint.setTextSize(40 * FullscreenActivity.scaleFactor);
+                thePaint.setColor(Color.YELLOW);
+                canvas.drawText("" + MechanizedInfantry.foodPrice, 1000 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + Armor.foodPrice, 1255 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + HeavyTank.foodPrice, 1515 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                thePaint.setColor(Color.argb(255,204,102,0));
+                canvas.drawText("" + MechanizedInfantry.ironPrice, 950 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + Armor.ironPrice, 1215 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + HeavyTank.ironPrice, 1465 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                thePaint.setColor(Color.GRAY);
+                canvas.drawText("" + MechanizedInfantry.oilPrice, 905 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + Armor.oilPrice, 1160 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + HeavyTank.oilPrice, 1400 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+
+
+            }   else {
                 Paint thePaint = new Paint();
                 thePaint.setTextSize(65 * FullscreenActivity.scaleFactor);
                 if (GameEngine.playing == GameEngine.green) {

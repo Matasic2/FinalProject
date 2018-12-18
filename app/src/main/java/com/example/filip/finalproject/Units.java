@@ -135,6 +135,30 @@ public class Units {
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armr2, o);
             icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
+        if (owner == GameEngine.green && unitType.equals("Mech Infantry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfg2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Mech Infantry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfr2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.green && unitType.equals("Heavy Tank")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.htankg2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Heavy Tank")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.htankr2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
 
         //sets the starting coordinates of the unit
         coordinates[0] = x;
@@ -227,6 +251,30 @@ public class Units {
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armr2, o);
             icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
+        if (owner == GameEngine.green && unitType.equals("Mech Infantry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfg2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Mech Infantry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfr2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.green && unitType.equals("Heavy Tank")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.htankg2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Heavy Tank")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.htankr2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
 
         //sets the starting coordinates of the unit
 
@@ -295,6 +343,30 @@ public class Units {
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armr, o);
             icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
+        if (owner == GameEngine.green && unitType.equals("Mech Infantry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfg, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Mech Infantry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfr, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.green && unitType.equals("Heavy Tank")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.htankg, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Heavy Tank")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.htankr, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
     }
 
     public void brightenIcon() {
@@ -359,6 +431,30 @@ public class Units {
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armr2, o);
             icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.green && unitType.equals("Mech Infantry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfg2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Mech Infantry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfr2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.green && unitType.equals("Heavy Tank")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.htankg2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Heavy Tank")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.htankr2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
     }
 
