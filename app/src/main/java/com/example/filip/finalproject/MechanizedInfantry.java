@@ -10,7 +10,7 @@ public class MechanizedInfantry extends Units {
     public static int GreenFirstAttackRange = 1; //  Green Cavalry's first attack range, this value can be changed
     public static int GreenSecondAttackRange = 4; //  Green Cavalry's second attack value, this value can be changed
     public static int GreenDefence = 1; // Defence value of Green's Cavalry, this value can be changed
-    public static int GreenHP = 4; // HP value of Green's Cavalry, this value can be changed
+    public static int GreenHP = 3; // HP value of Green's Cavalry, this value can be changed
     public static int GreenMovement = 4; // Movement value of Green's Cavalry, this value can be changed
 
     public static int foodPrice = 3;
@@ -22,7 +22,7 @@ public class MechanizedInfantry extends Units {
     public static int RedFirstAttackRange = 1; //  Red Cavalry's first attack range, this value can be changed
     public static int RedSecondAttackRange = 4; //  Red Cavalry's second attack value, this value can be changed
     public static int RedDefence = 1; // Defence value of Red's Cavalry, this value can be changed
-    public static int RedHP = 4; // HP value of Red's Cavalry, this value can be changed
+    public static int RedHP = 3; // HP value of Red's Cavalry, this value can be changed
     public static int RedMovement = 4; // Movement value of Red's Cavalry, this value can be changed
 
     MechanizedInfantry(Context context, int x, int y, Player player) {

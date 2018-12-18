@@ -10,7 +10,7 @@ public class HeavyTank extends Units {
     public static int GreenFirstAttackRange = 2; //  Green Cavalry's first attack range, this value can be changed
     public static int GreenSecondAttackRange = 5; //  Green Cavalry's second attack value, this value can be changed
     public static int GreenDefence = 2; // Defence value of Green's Cavalry, this value can be changed
-    public static int GreenHP = 60; // HP value of Green's Cavalry, this value can be changed
+    public static int GreenHP = 70; // HP value of Green's Cavalry, this value can be changed
     public static int GreenMovement = 1; // Movement value of Green's Cavalry, this value can be changed
 
     public static int foodPrice = 10;
@@ -22,7 +22,7 @@ public class HeavyTank extends Units {
     public static int RedFirstAttackRange = 2; //  Red Cavalry's first attack range, this value can be changed
     public static int RedSecondAttackRange = 5; //  Red Cavalry's second attack value, this value can be changed
     public static int RedDefence = 2; // Defence value of Red's Cavalry, this value can be changed
-    public static int RedHP = 60; // HP value of Red's Cavalry, this value can be changed
+    public static int RedHP = 70; // HP value of Red's Cavalry, this value can be changed
     public static int RedMovement = 1; // Movement value of Red's Cavalry, this value can be changed
 
     HeavyTank(Context context, int x, int y, Player player) {
