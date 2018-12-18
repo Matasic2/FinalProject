@@ -15,7 +15,7 @@ public class MechanizedInfantry extends Units {
 
     public static int foodPrice = 3;
     public static int ironPrice = 1;
-    public static int oilPrice = 4;
+    public static int oilPrice = 3;
 
     public static int RedAttack1 = 15; // Red Cavalry's first attack value, this value can be changed
     public static int RedAttack2 = 2; //  Red Cavalry's first attack value, this value can be changed

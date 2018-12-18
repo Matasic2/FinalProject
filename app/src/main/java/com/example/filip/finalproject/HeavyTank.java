@@ -15,7 +15,7 @@ public class HeavyTank extends Units {
 
     public static int foodPrice = 10;
     public static int ironPrice = 9;
-    public static int oilPrice = 45;
+    public static int oilPrice = 30;
 
     public static int RedAttack1 = 20; // Red Cavalry's first attack value, this value can be changed
     public static int RedAttack2 = 12; //  Red Cavalry's first attack value, this value can be changed
