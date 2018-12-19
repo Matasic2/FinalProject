@@ -16,7 +16,7 @@ public class ScenarioMenu extends AppCompatActivity {
         button3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 MainMenu.scenario = "Somme";
-                startActivity(new Intent(ScenarioMenu.this, FullscreenActivity.class));
+                startActivity(new Intent(ScenarioMenu.this, FullscreenActivity.class)); //creates new scenario "Somme"
             }
         });
 

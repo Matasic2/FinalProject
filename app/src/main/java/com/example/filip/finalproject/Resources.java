@@ -15,7 +15,7 @@ public class Resources {
     3. Make storage in player class and make it yield resources in GameEngine.switchPlayer
 */
 
-    public String resourceType;
+    public String resourceType; //string which stores resource type
     public int[] coordinates = new int[]{10, 8};// coordinates of a Resource
     public int[] collectorCoordinates = new int[]{11, 8};// coordinates of a base collecting a resource
 

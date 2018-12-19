@@ -11,7 +11,7 @@ import android.graphics.Color;
 public class movableLocation {
 
     public Bitmap icon; //adds icon
-    public int displacement = 0;
+    public int displacement = 0; //displacement of the icon, used if the icon has to be centered
 
     public movableLocation(Context context) {
 
@@ -23,7 +23,7 @@ public class movableLocation {
         displacement = (int) (37  * FullscreenActivity.scaleFactor);
     }
 
-
+    // replaces all white pixels with empty pixels
     public Bitmap replaceColor(Bitmap src){
         if(src == null)
             return null;
@@ -40,7 +40,7 @@ public class movableLocation {
         return result;
     }
 
-
+    //adds texture to the object, icon depends on number inputed
     public movableLocation(Context context, int number) {
 
         if (number == 0) {

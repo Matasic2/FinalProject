@@ -13,10 +13,12 @@ public class Cavalry extends Units{
     public static int GreenHP = 10; // HP value of Green's Cavalry, this value can be changed
     public static int GreenMovement = 3; // Movement value of Green's Cavalry, this value can be changed
 
+    //cost of Cavalry unit
     public static int foodPrice = 3;
     public static int ironPrice = 0;
     public static int oilPrice = 0;
 
+    //How much health will the unit gain if healed
     public static int healedBy = 2;
 
     public static int RedAttack1 = 10; // Red Cavalry's first attack value, this value can be changed

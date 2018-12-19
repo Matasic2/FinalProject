@@ -1,12 +1,8 @@
 package com.example.filip.finalproject;
 
-import android.content.Context;
+
 import android.graphics.Bitmap;
-import android.os.Vibrator;
-import android.util.EventLog;
 import android.graphics.Canvas;
-import java.lang.Math;
-import android.os.Vibrator;
 
 // Class that will run the game and manage all the events.
 public class GameEngine {
@@ -14,9 +10,9 @@ public class GameEngine {
     // Place to store the coordinates of last tap. lastTap[0] is x, lastTap[1] is y.
     static int[] lastTap = new int[]{(int) (16000  * FullscreenActivity.scaleFactor), (int) (16000  * FullscreenActivity.scaleFactor)};
 
-    public static int squareLength = (int) (128  * FullscreenActivity.scaleFactor);
+    public static int squareLength = (int) (128  * FullscreenActivity.scaleFactor); //scales square length, dependent on scale factor
     public Bitmap image; // Image of the grid
-    public static Units lastUnit;
+    public static Units lastUnit; //stores the last unit which made some action
     public static Units theUnit = null; // Selected unit, unlike the selected unit in GameView class this unit is the actual selected unit.
     public static SelectedUnit selected = null; // Selected unit, reference is not the same as the (selected) Unit itself.
     public static Units enemyTappedUnit = null; //same as above, but of opponent
@@ -25,22 +21,22 @@ public class GameEngine {
     public static Player green; //stores the reference to a player that is in charge of Green units
     public static Player red;//stores the reference to a player that is in charge of Red units
     public static Player playing = null; //player that makes moves
-    public static Resources[][] BoardResources = new Resources[15][9];
-    public static boolean showFactory = false;
-    public static boolean showMarket = false;
-    public static String message = "";
-    public static int c = 0;
-    public static int[] lastCoordinates = new int[2];
+    public static Resources[][] BoardResources = new Resources[15][9]; //a 2D array of Units that stores the resources in the game
+    public static boolean showFactory = false; //shows factory units which can be purchased
+    public static boolean showMarket = false; //shows market units which can be purchased
+    public static String message = ""; //stores message to user
+    public static int c = 0; //offset for x and y coordinate message, if set to 0 top left will be 0,0 if set to 1 top left will be 1,1
+    public static int[] lastCoordinates = new int[2]; //coordinates of last action
 
 
-    public static int[] lastAddedResounces = new int[3]; //memorizes last added resources, to display next to storage
+    public static int[] lastAddedResources = new int[3]; //memorizes last added resources, to display next to storage
 
     //Constructor that creates the unit and it's image, doesn't set it's coordinates. Mostly used by onDraw function in GameView
     public GameEngine(Bitmap bmp) {
         image = bmp;
     }
 
-    // no idea what this is for, but code doesn't work without this for some reason.
+    // updates board
     public void update() {
         return;
     }
@@ -76,7 +72,22 @@ public class GameEngine {
                 if (theUnit.hasAttack && theUnit.hasMove) {
                     theUnit.HP++;
                     if (theUnit.unitType.equals("Armor")) {
-                        theUnit.HP++;
+                        theUnit.HP += Armor.healedBy;
+                    }
+                    if (theUnit.unitType.equals("Cavalry")) {
+                        theUnit.HP += Cavalry.healedBy;
+                    }
+                    if (theUnit.unitType.equals("Infantry")) {
+                        theUnit.HP += Infantry.healedBy;
+                    }
+                    if (theUnit.unitType.equals("Artillery")) {
+                        theUnit.HP += Artillery.healedBy;
+                    }
+                    if (theUnit.unitType.equals("Mech Infantry")) {
+                        theUnit.HP += MechanizedInfantry.healedBy;
+                    }
+                    if (theUnit.unitType.equals("Heavy Tank")) {
+                        theUnit.HP += HeavyTank.healedBy;
                     }
                     theUnit.hasAttack = false;
                     theUnit.hasMove = false;
@@ -182,7 +193,7 @@ public class GameEngine {
             }
             if (theUnit.unitType == "Cavalry") {
                 if (theUnit.defence == Cavalry.GreenDefence) {
-                    if (playing.ironStorage > 1) {
+                    if (playing.ironStorage >= 0) {
                         theUnit.defence++;
                         playing.ironStorage -= 1;
                     }
@@ -212,11 +223,11 @@ public class GameEngine {
                     }
                 }
             }
-            if (theUnit.unitType == "MechInfantry") {
+            if (theUnit.unitType == "Mech Infantry") {
                 if (theUnit.defence == MechanizedInfantry.GreenDefence) {
-                    if (playing.ironStorage >= 2) {
+                    if (playing.ironStorage >= 1) {
                         theUnit.defence++;
-                        playing.ironStorage -= 2;
+                        playing.ironStorage -= 1;
                     }
                 }
             }
@@ -598,12 +609,14 @@ public class GameEngine {
         }
     }
 
-
+    //checks if unit has action, and darkens the icon if it doesn't
     public static void checkAction(Units u) {
         if (u.hasMove == false && u.hasAttack == false) {
             u.darkenIcon();
         }
     }
+
+    //check if any unit is in range
     public static boolean checkIfAnyInRange(Units u) {
         boolean InRange = false;
         if (u != null && u.hasAttack == true) {
@@ -699,6 +712,8 @@ public class GameEngine {
         showFactory = false;
         message = "";
     }
+
+    //estimates the resources that will be given to playing player next turn
     public static void estimateResources() {
         int addediron = 0;
         int addedfood = 0;
@@ -721,8 +736,8 @@ public class GameEngine {
                 }
             }
         }
-        GameEngine.lastAddedResounces[0] = addedfood;
-        GameEngine.lastAddedResounces[1] = addediron;
-        GameEngine.lastAddedResounces[2] = addedoil;
+        GameEngine.lastAddedResources[0] = addedfood;
+        GameEngine.lastAddedResources[1] = addediron;
+        GameEngine.lastAddedResources[2] = addedoil;
     }
 }

@@ -9,9 +9,6 @@ import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.FrameLayout;
 
 
 //Most of the coded code as mentioned in comments is from this class is copied from Java tutorial found online(https://www.youtube.com/watch?v=6prI4ZB_rXI). It's a great tutorial that got me started.
@@ -42,7 +39,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
-    //this is where the board and all starting units are initialized (with their respective textures).
+    //this is where the board and all starting units, resources are initialized (with their respective textures).
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
 
@@ -58,6 +55,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         grid = new GameEngine(map); // these lines create the board.
         theContext = this.getContext(); // Stores the context, see the variable comment above
 
+        //skirmish
         if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI")) {
             // next lines generate green's "natural resources" (the resources which are expected to be controlled by green player).
             new Food(theContext, 1, 0, 1, 1);
@@ -486,18 +484,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         Paint paint = new Paint();
         paint.setTextSize(60 * FullscreenActivity.scaleFactor);
         paint.setColor(Color.YELLOW);
-        canvas.drawText( "Food storage : " + GameEngine.playing.foodStorage + " (+" + GameEngine.lastAddedResounces[0] + ")", 50 * FullscreenActivity.scaleFactor, 1360 * FullscreenActivity.scaleFactor, paint);
+        canvas.drawText( "Food storage : " + GameEngine.playing.foodStorage + " (+" + GameEngine.lastAddedResources[0] + ")", 50 * FullscreenActivity.scaleFactor, 1360 * FullscreenActivity.scaleFactor, paint);
 
 
         paint = new Paint();
         paint.setTextSize(60 * FullscreenActivity.scaleFactor);
         paint.setColor(Color.argb(255,204,102,0));
-        canvas.drawText( "Iron storage : " + GameEngine.playing.ironStorage + " (+" + GameEngine.lastAddedResounces[1] + ")", 50 * FullscreenActivity.scaleFactor, 1280 * FullscreenActivity.scaleFactor, paint);
+        canvas.drawText( "Iron storage : " + GameEngine.playing.ironStorage + " (+" + GameEngine.lastAddedResources[1] + ")", 50 * FullscreenActivity.scaleFactor, 1280 * FullscreenActivity.scaleFactor, paint);
 
         paint = new Paint();
         paint.setTextSize(60 * FullscreenActivity.scaleFactor);
         paint.setColor(Color.GRAY);
-        canvas.drawText( "Oil storage : " + GameEngine.playing.oilStorage + " (+" + GameEngine.lastAddedResounces[2] + ")", 50 * FullscreenActivity.scaleFactor, 1200 * FullscreenActivity.scaleFactor, paint);
+        canvas.drawText( "Oil storage : " + GameEngine.playing.oilStorage + " (+" + GameEngine.lastAddedResources[2] + ")", 50 * FullscreenActivity.scaleFactor, 1200 * FullscreenActivity.scaleFactor, paint);
 
     }
 

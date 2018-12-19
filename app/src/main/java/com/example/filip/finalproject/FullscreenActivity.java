@@ -35,21 +35,22 @@ import java.util.List;
 public class FullscreenActivity extends Activity implements View.OnTouchListener{
 
     /*
-    This method should create the whole screen.
+    This method creates Fullscreen activity
      */
-    public static float scaleFactor;
-    public static int heightscreen;
-    public static int widthfullscreen;
-    public static FullscreenActivity theActivity;
+    public static float scaleFactor; //scale factor for all icons and tap coordinates
+    public static int heightscreen; //height of the screen
+    public static int widthfullscreen; //width of the screen
+    public static FullscreenActivity theActivity; //stores the reference of the activity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        super.onCreate(savedInstanceState); //creates image?
+        super.onCreate(savedInstanceState); //creates image
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //sets game to fullscreen
         this.requestWindowFeature(Window.FEATURE_NO_TITLE); // flips game horizontally
 
+        //takes height and width of the screen, and calculates the scale
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = displayMetrics.heightPixels;
@@ -58,10 +59,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         widthfullscreen = width;
         float scale;
 
-
-
-
-
+        //Scales down to smallest phone resolution
         if (height / 1440.0f > width / 2560.0f) {
             scale = width / 2560.0f;
         }   else {
@@ -76,6 +74,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         theActivity = this;
     }
 
+    //vibrates the phone
     public void vibrate() {
         long[] vibratepattern = new long[] {100,1500,1500};
 

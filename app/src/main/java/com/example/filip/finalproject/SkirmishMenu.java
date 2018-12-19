@@ -16,14 +16,14 @@ public class SkirmishMenu extends AppCompatActivity {
         button4.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 MainMenu.scenario = "Skirmish";
-                startActivity(new Intent(SkirmishMenu.this, FullscreenActivity.class));
+                startActivity(new Intent(SkirmishMenu.this, FullscreenActivity.class)); //new player vs player skirmish
             }
         });
         Button button5 = (Button) findViewById(R.id.button5);
         button5.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 MainMenu.scenario = "Skirmish vs AI";
-                startActivity(new Intent(SkirmishMenu.this, FullscreenActivity.class));
+                startActivity(new Intent(SkirmishMenu.this, FullscreenActivity.class)); // new player vs AI skirmish
             }
         });
     }
