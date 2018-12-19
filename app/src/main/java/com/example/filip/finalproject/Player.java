@@ -8,8 +8,11 @@ public class Player {
     public int foodStorage = 0;
     public int[] upgrades = new int[10]; //Player's upgrades, empty and unused for now
 
-    Player (String str) {
+    public boolean isHuman;
+
+    Player (String str, boolean human) {
         color = str;
+        isHuman = human;
     }
     public static String print(Player p) {
         return p.color;

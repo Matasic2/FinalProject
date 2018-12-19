@@ -17,6 +17,8 @@ public class Infantry extends Units {
     public static int ironPrice = 0;
     public static int oilPrice = 0;
 
+    public static int healedBy = 1;
+
     public static int RedAttack1 = 12; // Red Cavalry's first attack value, this value can be changed
     public static int RedAttack2 = 2; //  Red Cavalry's first attack value, this value can be changed
     public static int RedFirstAttackRange = 1; //  Red Cavalry's first attack range, this value can be changed

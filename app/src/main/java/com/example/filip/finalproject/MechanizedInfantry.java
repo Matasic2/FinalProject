@@ -13,9 +13,11 @@ public class MechanizedInfantry extends Units {
     public static int GreenHP = 3; // HP value of Green's Cavalry, this value can be changed
     public static int GreenMovement = 4; // Movement value of Green's Cavalry, this value can be changed
 
-    public static int foodPrice = 3;
+    public static int foodPrice = 2;
     public static int ironPrice = 1;
     public static int oilPrice = 3;
+
+    public static int healedBy = 1;
 
     public static int RedAttack1 = 15; // Red Cavalry's first attack value, this value can be changed
     public static int RedAttack2 = 2; //  Red Cavalry's first attack value, this value can be changed

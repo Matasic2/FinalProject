@@ -17,6 +17,8 @@ public class Armor extends Units {
     public static int ironPrice = 4;
     public static int oilPrice = 20;
 
+    public static int healedBy = 4;
+
     public static int RedAttack1 = 15; // Red Cavalry's first attack value, this value can be changed
     public static int RedAttack2 = 10; //  Red Cavalry's first attack value, this value can be changed
     public static int RedFirstAttackRange = 1; //  Red Cavalry's first attack range, this value can be changed

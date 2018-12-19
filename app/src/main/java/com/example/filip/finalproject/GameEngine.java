@@ -100,6 +100,9 @@ public class GameEngine {
             enemyTappedUnit = null;
             lastTap[0] = x; //sets the lastTap coordinates
             lastTap[1] = y;
+            if (playing.isHuman == false) {
+                AI.playTurn(red);
+            }
             return;
         }
 
@@ -455,14 +458,14 @@ public class GameEngine {
             if (theUnit == null) {
                 return;
             }
-            if (theUnit.hasMove) {
+            if (theUnit != null && theUnit.hasMove) {
                 theUnit.hasAttack = false;
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
                 return;
             }
             //if units doesn't have a move, un-select it
-            if (!theUnit.hasMove) {
+            if (theUnit != null && !theUnit.hasMove) {
 
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
@@ -480,14 +483,14 @@ public class GameEngine {
                                 getCoordinates(theUnit)[1], y / squareLength ))
                 && theUnit.hasAttack == true) {
             DamageUnit(theUnit.attack2, BoardSprites[x / squareLength ][y / squareLength ], x / squareLength , y / squareLength );
-            if (theUnit.hasMove) {
+            if (theUnit != null && theUnit.hasMove) {
                 theUnit.hasAttack = false;
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
                 checkAction(theUnit);
                 return;
             }
-            if (!theUnit.hasMove) {
+            if (theUnit != null && !theUnit.hasMove) {
                 theUnit.hasAttack = false;
                 lastTap[0] = x; //sets the lastTap coordinates
                 lastTap[1] = y;
@@ -527,12 +530,16 @@ public class GameEngine {
                 }
             }
         }
-        lastCoordinates[0] = selected.coordinates[0];
-        lastCoordinates[1] = selected.coordinates[1];
-        lastUnit = null;
+        if (playing.isHuman) {
+            lastCoordinates[0] = selected.coordinates[0];
+            lastCoordinates[1] = selected.coordinates[1];
+            lastUnit = null;
+        }
         u.moveTo(x,y);
         BoardSprites[x][y] = u;
-        selected = new SelectedUnit(GameView.theContext, x * squareLength , y * squareLength , theUnit.owner, theUnit.unitType);
+        if (playing.isHuman) {
+            selected = new SelectedUnit(GameView.theContext, x * squareLength, y * squareLength, theUnit.owner, theUnit.unitType);
+        }
         BoardSprites[a][b] = null;
         estimateResources();
         showMarket = false;
@@ -571,7 +578,6 @@ public class GameEngine {
                             }
                             //if units doesn't have a move, un-select it
                             if (!theUnit.hasMove) {
-
                                 lastTap[0] = x; //sets the lastTap coordinates
                                 lastTap[1] = y;
                                 theUnit.hasAttack = false;
