@@ -56,10 +56,7 @@ public class GameEngine {
 
         //un-selects the unit if the button is pressed.
         if (x / squareLength  == 16 && y / squareLength  == 1 && (selected != null || enemySelected  != null)) {
-            selected = null;
-            theUnit = null;
-            enemySelected = null;
-            enemyTappedUnit = null;
+            unselectAll();
             return;
         }
 
@@ -93,21 +90,21 @@ public class GameEngine {
                     theUnit.HP = theUnit.maxHP;
                 }
             }
-            selected = null;
-            theUnit = null;
+            unselectFriendly();
         }
 
         //switches active player if the button is pressed.
         if (x / squareLength  == 16 && y / squareLength  == 3) {
             if (queue.length != 0 && message != "Any undeployed unit will be removed, tap again to continue") {
                 message = "Any undeployed unit will be removed, tap again to continue";
+                showFactory = false;
+                showMarket = false;
+                unselectAll();
+                return;
             }
             queue = new Units[0];
             switchPlayer();
-            selected = null;
-            theUnit = null;
-            enemySelected = null;
-            enemyTappedUnit = null;
+            unselectAll();
             if (playing.isHuman == false) {
                 AI.playTurn(red);
             }
@@ -133,8 +130,7 @@ public class GameEngine {
                 BoardSprites[lastCoordinates[0]][lastCoordinates[1]] = theUnit;
                 theUnit.brightenIcon();
                 theUnit.hasMove = true;
-                theUnit = null;
-                selected = null;
+                unselectFriendly();
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
                 return;
@@ -161,10 +157,7 @@ public class GameEngine {
 
                 theUnit.brightenIcon();
                 theUnit.hasAttack = true;
-                theUnit = null;
-                selected = null;
-                enemyTappedUnit = null;
-                enemySelected = null;
+                unselectAll();
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
             }
@@ -243,12 +236,16 @@ public class GameEngine {
         if (x / squareLength  == 7 && y / squareLength  == 10 && showMarket) {
             if (playing.foodStorage >= Infantry.foodPrice) {
                 if (playing == green) {
-                    new Infantry(GameView.theContext, 2, 2, playing);
-                    playing.foodStorage -=Infantry.foodPrice;
+                    if (GameEngine.BoardSprites[2][2]== null || (GameEngine.BoardSprites[2][2]!= null && GameEngine.BoardSprites[2][2].owner == green)) {
+                        new Infantry(GameView.theContext, 2, 2, playing);
+                        playing.foodStorage -= Infantry.foodPrice;
+                    }
                 }
                 if (playing == red) {
-                    new Infantry(GameView.theContext, 12, 6, playing);
-                    playing.foodStorage -=Infantry.foodPrice;
+                    if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
+                        new Infantry(GameView.theContext, 12, 6, playing);
+                        playing.foodStorage -= Infantry.foodPrice;
+                    }
                 }
             }
             if (playing.foodStorage < Infantry.foodPrice) {
@@ -262,12 +259,16 @@ public class GameEngine {
         if (x / squareLength  == 9 && y / squareLength  == 10 && showMarket) {
             if (playing.foodStorage >= Cavalry.foodPrice) {
                 if (playing == green) {
-                    new Cavalry(GameView.theContext, 2, 2, playing);
-                    playing.foodStorage -=Cavalry.foodPrice;
+                    if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[2][2]!= null && GameEngine.BoardSprites[2][2].owner == green)) {
+                        new Cavalry(GameView.theContext, 2, 2, playing);
+                        playing.foodStorage -= Cavalry.foodPrice;
+                    }
                 }
                 if ((playing == red)) {
-                    new Cavalry(GameView.theContext, 12, 6, playing);
-                    playing.foodStorage -=Cavalry.foodPrice;
+                    if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
+                        new Cavalry(GameView.theContext, 12, 6, playing);
+                        playing.foodStorage -= Cavalry.foodPrice;
+                    }
                 }
 
             }
@@ -279,14 +280,18 @@ public class GameEngine {
         if (x / squareLength  == 11 && y / squareLength  == 10 && showMarket) {
             if (playing.foodStorage >= Artillery.foodPrice && playing.ironStorage >= Artillery.ironPrice) {
                 if (playing == green) {
-                    new Artillery(GameView.theContext, 2, 2, playing);
-                    playing.foodStorage -=Artillery.foodPrice;
-                    playing.ironStorage -=Artillery.ironPrice;
+                    if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[2][2]!= null && GameEngine.BoardSprites[2][2].owner == green)) {
+                        new Artillery(GameView.theContext, 2, 2, playing);
+                        playing.foodStorage -= Artillery.foodPrice;
+                        playing.ironStorage -= Artillery.ironPrice;
+                    }
                 }
                 if ((playing == red)) {
-                    new Artillery(GameView.theContext, 12, 6, playing);
-                    playing.foodStorage -=Artillery.foodPrice;
-                    playing.ironStorage -=Artillery.ironPrice;
+                    if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
+                        new Artillery(GameView.theContext, 12, 6, playing);
+                        playing.foodStorage -= Artillery.foodPrice;
+                        playing.ironStorage -= Artillery.ironPrice;
+                    }
                 }
 
             }
@@ -299,16 +304,20 @@ public class GameEngine {
         if (x / squareLength  == 9 && y / squareLength  == 10 && showFactory) {
             if (playing.foodStorage >= Armor.foodPrice && playing.ironStorage >= Armor.ironPrice && playing.oilStorage >= Armor.oilPrice) {
                 if (playing == green) {
-                    new Armor(GameView.theContext, 2, 2, playing);
-                    playing.foodStorage -=Armor.foodPrice;
-                    playing.ironStorage -=Armor.ironPrice;
-                    playing.oilStorage -=Armor.oilPrice;
+                    if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[2][2]!= null && GameEngine.BoardSprites[2][2].owner == green)) {
+                        new Armor(GameView.theContext, 2, 2, playing);
+                        playing.foodStorage -= Armor.foodPrice;
+                        playing.ironStorage -= Armor.ironPrice;
+                        playing.oilStorage -= Armor.oilPrice;
+                    }
                 }
                 if ((playing == red)) {
-                    new Armor(GameView.theContext, 12, 6, playing);
-                    playing.foodStorage -=Armor.foodPrice;
-                    playing.ironStorage -=Armor.ironPrice;
-                    playing.oilStorage -=Armor.oilPrice;
+                    if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
+                        new Armor(GameView.theContext, 12, 6, playing);
+                        playing.foodStorage -= Armor.foodPrice;
+                        playing.ironStorage -= Armor.ironPrice;
+                        playing.oilStorage -= Armor.oilPrice;
+                    }
                 }
 
             }
@@ -321,16 +330,20 @@ public class GameEngine {
         if (x / squareLength  == 7 && y / squareLength  == 10 && showFactory) {
                 if (playing.foodStorage >= MechanizedInfantry.foodPrice && playing.ironStorage >= MechanizedInfantry.ironPrice && playing.oilStorage >= MechanizedInfantry.oilPrice) {
                     if (playing == green) {
-                        new MechanizedInfantry(GameView.theContext, 2, 2, playing);
-                        playing.foodStorage -= MechanizedInfantry.foodPrice;
-                        playing.ironStorage -= MechanizedInfantry.ironPrice;
-                        playing.oilStorage -= MechanizedInfantry.oilPrice;
+                        if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[2][2]!= null && GameEngine.BoardSprites[2][2].owner == green)) {
+                            new MechanizedInfantry(GameView.theContext, 2, 2, playing);
+                            playing.foodStorage -= MechanizedInfantry.foodPrice;
+                            playing.ironStorage -= MechanizedInfantry.ironPrice;
+                            playing.oilStorage -= MechanizedInfantry.oilPrice;
+                        }
                     }
                     if ((playing == red)) {
-                        new MechanizedInfantry(GameView.theContext, 12, 6, playing);
-                        playing.foodStorage -= MechanizedInfantry.foodPrice;
-                        playing.ironStorage -= MechanizedInfantry.ironPrice;
-                        playing.oilStorage -= MechanizedInfantry.oilPrice;
+                        if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
+                            new MechanizedInfantry(GameView.theContext, 12, 6, playing);
+                            playing.foodStorage -= MechanizedInfantry.foodPrice;
+                            playing.ironStorage -= MechanizedInfantry.ironPrice;
+                            playing.oilStorage -= MechanizedInfantry.oilPrice;
+                        }
                     }
                 }
                 lastCoordinates[0] = 125;
@@ -341,16 +354,20 @@ public class GameEngine {
         if (x / squareLength  == 11 && y / squareLength  == 10 && showFactory) {
             if (playing.foodStorage >= HeavyTank.foodPrice && playing.ironStorage >= HeavyTank.ironPrice && playing.oilStorage >= HeavyTank.oilPrice) {
                 if (playing == green) {
-                    new HeavyTank(GameView.theContext, 2, 2, playing);
-                    playing.foodStorage -= HeavyTank.foodPrice;
-                    playing.ironStorage -= HeavyTank.ironPrice;
-                    playing.oilStorage -= HeavyTank.oilPrice;
+                    if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[2][2]!= null && GameEngine.BoardSprites[2][2].owner == green)) {
+                        new HeavyTank(GameView.theContext, 2, 2, playing);
+                        playing.foodStorage -= HeavyTank.foodPrice;
+                        playing.ironStorage -= HeavyTank.ironPrice;
+                        playing.oilStorage -= HeavyTank.oilPrice;
+                    }
                 }
                 if (playing == red) {
-                    new HeavyTank(GameView.theContext, 12, 6, playing);
-                    playing.foodStorage -= HeavyTank.foodPrice;
-                    playing.ironStorage -= HeavyTank.ironPrice;
-                    playing.oilStorage -= HeavyTank.oilPrice;
+                    if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
+                        new HeavyTank(GameView.theContext, 12, 6, playing);
+                        playing.foodStorage -= HeavyTank.foodPrice;
+                        playing.ironStorage -= HeavyTank.ironPrice;
+                        playing.oilStorage -= HeavyTank.oilPrice;
+                    }
                 }
             }
             lastCoordinates[0] = 125;
@@ -531,8 +548,7 @@ public class GameEngine {
                 for (int i = 0; i < GameView.units.length; i++) {
                     if (GameView.units[i] == u) {
                         GameView.removeSprite(i);
-                        enemyTappedUnit = null;
-                        enemySelected = null;
+                        unselectEnemy();
                         showMarket = false;
                         message = u.unitType + " at " + (x + c) + ", " + (y + c) + " is destroyed";
                         if (u.unitType.equals("Headquarters")) {
@@ -544,10 +560,7 @@ public class GameEngine {
                                 theUnit.hasAttack = false;
                                 checkAction(theUnit);
                             }
-                            enemySelected = null;
-                            enemyTappedUnit = null;
-                            selected = null;
-                            theUnit = null;
+                            unselectAll();
                             message = "HQ has been destroyed, " + playing.color + " player wins!";
                             FullscreenActivity.theActivity.vibrate();
                             showMarket = false;
@@ -558,7 +571,24 @@ public class GameEngine {
             }
         }
     }
-
+    //unselects all units
+    public static void unselectAll() {
+        selected = null;
+        theUnit = null;
+        enemySelected = null;
+        enemyTappedUnit = null;
+    }
+    //unselects enemy unit
+    public static void unselectEnemy() {
+        enemySelected = null;
+        enemyTappedUnit = null;
+    }
+    //unselects friendly unit
+    public static void unselectFriendly() {
+        selected = null;
+        theUnit = null;
+    }
+    //deploys next unit in queue
     public static void nextInQueue(){
         if (GameEngine.queue.length == 0) {
             return;
