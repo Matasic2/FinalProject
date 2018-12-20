@@ -171,7 +171,21 @@ public class Units {
         }
         toReturn[toReturn.length - 1] = this;
         GameView.units = toReturn;
-        GameEngine.BoardSprites[coordinates[0]][coordinates[1]] = this;
+        //if the spawn point is empty, put it there
+        if (GameEngine.BoardSprites[coordinates[0]][coordinates[1]] == null) {
+            GameEngine.BoardSprites[coordinates[0]][coordinates[1]] = this;
+        }
+        //if not, add the unit to the queue
+        else {
+            toReturn = new Units[GameEngine.queue.length + 1];
+            for (int k = 0; k < GameEngine.queue.length; k++) {
+                toReturn[k] = GameEngine.queue[k];
+            }
+            toReturn[toReturn.length - 1] = this;
+            coordinates[0] = 125;
+            coordinates[1] = 125;
+            GameEngine.queue = toReturn;
+        }
     }
 
     public Units(Units u, Context context) {
@@ -465,7 +479,9 @@ public class Units {
     }
     //draws the unit when unit[i].draw(canvas) is called in GameView function.
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(icon, coordinates[0] * GameEngine.squareLength, coordinates[1] * GameEngine.squareLength, null);
+        if (coordinates[0] != 125) {
+            canvas.drawBitmap(icon, coordinates[0] * GameEngine.squareLength, coordinates[1] * GameEngine.squareLength, null);
+        }
     }
 
     //Same as above, but draw then on given coordinates instead of unit's current coordinates.

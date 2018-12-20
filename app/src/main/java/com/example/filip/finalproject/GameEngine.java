@@ -7,8 +7,6 @@ import android.graphics.Canvas;
 // Class that will run the game and manage all the events.
 public class GameEngine {
 
-    // Place to store the coordinates of last tap. lastTap[0] is x, lastTap[1] is y.
-    static int[] lastTap = new int[]{(int) (16000  * FullscreenActivity.scaleFactor), (int) (16000  * FullscreenActivity.scaleFactor)};
 
     public static int squareLength = (int) (128  * FullscreenActivity.scaleFactor); //scales square length, dependent on scale factor
     public Bitmap image; // Image of the grid
@@ -27,6 +25,7 @@ public class GameEngine {
     public static String message = ""; //stores message to user
     public static int c = 0; //offset for x and y coordinate message, if set to 0 top left will be 0,0 if set to 1 top left will be 1,1
     public static int[] lastCoordinates = new int[2]; //coordinates of last action
+    public static Units[] queue = new Units[0]; // stores all units that will be deployed
 
 
     public static int[] lastAddedResources = new int[3]; //memorizes last added resources, to display next to storage
@@ -61,8 +60,6 @@ public class GameEngine {
             theUnit = null;
             enemySelected = null;
             enemyTappedUnit = null;
-            lastTap[0] = x; //sets the lastTap coordinates
-            lastTap[1] = y;
             return;
         }
 
@@ -96,21 +93,21 @@ public class GameEngine {
                     theUnit.HP = theUnit.maxHP;
                 }
             }
-            lastTap[0] = x; //sets the lastTap coordinates
-            lastTap[1] = y;
             selected = null;
             theUnit = null;
         }
 
         //switches active player if the button is pressed.
-        if (x / squareLength  == 16 && y / squareLength  == 3  && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
+        if (x / squareLength  == 16 && y / squareLength  == 3) {
+            if (queue.length != 0 && message != "Any undeployed unit will be removed, tap again to continue") {
+                message = "Any undeployed unit will be removed, tap again to continue";
+            }
+            queue = new Units[0];
             switchPlayer();
             selected = null;
             theUnit = null;
             enemySelected = null;
             enemyTappedUnit = null;
-            lastTap[0] = x; //sets the lastTap coordinates
-            lastTap[1] = y;
             if (playing.isHuman == false) {
                 AI.playTurn(red);
             }
@@ -119,19 +116,16 @@ public class GameEngine {
 
         //deploy
         if (selected == null && (((x / squareLength  == 2 && y / squareLength  == 2)  && (playing == green && BoardSprites[2][2] == null)) ||
-                (((x / squareLength  == 12 && y / squareLength  == 6)  && (playing == red && BoardSprites[12][6] == null))))
-                && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
+                (((x / squareLength  == 12 && y / squareLength  == 6)  && (playing == red && BoardSprites[12][6] == null))))) {
             GameEngine.showMarket =  !GameEngine.showMarket;
             if (showFactory == true) {
                 showFactory = false;
             }
-            lastTap[0] = x; //sets the lastTap coordinates
-            lastTap[1] = y;
             return;
         }
 
         //Undo
-        if (x / squareLength  == 18 && y / squareLength  == 3  && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength )) && theUnit != null && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
+        if (x / squareLength  == 18 && y / squareLength  == 3 && theUnit != null && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
             if (lastUnit == null) {
                 BoardSprites[theUnit.coordinates[0]][theUnit.coordinates[1]] = null;
                 theUnit.coordinates[0] = lastCoordinates[0];
@@ -143,8 +137,6 @@ public class GameEngine {
                 selected = null;
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
-                lastTap[0] = x; //sets the lastTap coordinates
-                lastTap[1] = y;
                 return;
             }
             else {
@@ -175,9 +167,6 @@ public class GameEngine {
                 enemySelected = null;
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
-                lastTap[0] = x; //sets the lastTap coordinates
-                lastTap[1] = y;
-
             }
         }
 
@@ -231,40 +220,33 @@ public class GameEngine {
                     }
                 }
             }
-            lastTap[0] = x; //sets the lastTap coordinates
-            lastTap[1] = y;
         }
 
         //switches market visibility if the button is pressed.
-        if (x / squareLength  == 5 && y / squareLength  == 10  && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
+        if (x / squareLength  == 5 && y / squareLength  == 10) {
             GameEngine.showMarket =  !GameEngine.showMarket;
             if (showFactory == true) {
                 showFactory = false;
             }
-            lastTap[0] = x; //sets the lastTap coordinates
-            lastTap[1] = y;
             return;
         }
         //switches factory visibility if the button is pressed.
-        if (x / squareLength  == 5 && y / squareLength  == 9  && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
+        if (x / squareLength  == 5 && y / squareLength  == 9) {
             GameEngine.showFactory =  !GameEngine.showFactory;
             if (showMarket == true) {
                 showMarket = false;
             }
-            lastTap[0] = x; //sets the lastTap coordinates
-            lastTap[1] = y;
             return;
         }
 
         //buys new infantry
-        if (x / squareLength  == 7 && y / squareLength  == 10 && showMarket &&
-                ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
+        if (x / squareLength  == 7 && y / squareLength  == 10 && showMarket) {
             if (playing.foodStorage >= Infantry.foodPrice) {
-                if (playing == green && BoardSprites[2][2] == null) {
+                if (playing == green) {
                     new Infantry(GameView.theContext, 2, 2, playing);
                     playing.foodStorage -=Infantry.foodPrice;
                 }
-                if (playing == red && BoardSprites[12][6] == null) {
+                if (playing == red) {
                     new Infantry(GameView.theContext, 12, 6, playing);
                     playing.foodStorage -=Infantry.foodPrice;
                 }
@@ -275,18 +257,15 @@ public class GameEngine {
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
             lastUnit = null;
-            lastTap[0] = x; //sets the lastTap coordinates
-            lastTap[1] = y;
         }
         //buys new cavalry
-        if (x / squareLength  == 9 && y / squareLength  == 10 && showMarket &&
-                ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
+        if (x / squareLength  == 9 && y / squareLength  == 10 && showMarket) {
             if (playing.foodStorage >= Cavalry.foodPrice) {
-                if (playing == green && BoardSprites[2][2] == null) {
+                if (playing == green) {
                     new Cavalry(GameView.theContext, 2, 2, playing);
                     playing.foodStorage -=Cavalry.foodPrice;
                 }
-                if ((playing == red && BoardSprites[12][6] == null)) {
+                if ((playing == red)) {
                     new Cavalry(GameView.theContext, 12, 6, playing);
                     playing.foodStorage -=Cavalry.foodPrice;
                 }
@@ -295,19 +274,16 @@ public class GameEngine {
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
             lastUnit = null;
-            lastTap[0] = x; //sets the lastTap coordinates
-            lastTap[1] = y;
         }
         //buys new artillery
-        if (x / squareLength  == 11 && y / squareLength  == 10 && showMarket &&
-                ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
+        if (x / squareLength  == 11 && y / squareLength  == 10 && showMarket) {
             if (playing.foodStorage >= Artillery.foodPrice && playing.ironStorage >= Artillery.ironPrice) {
-                if (playing == green && BoardSprites[2][2] == null) {
+                if (playing == green) {
                     new Artillery(GameView.theContext, 2, 2, playing);
                     playing.foodStorage -=Artillery.foodPrice;
                     playing.ironStorage -=Artillery.ironPrice;
                 }
-                if ((playing == red && BoardSprites[12][6] == null)) {
+                if ((playing == red)) {
                     new Artillery(GameView.theContext, 12, 6, playing);
                     playing.foodStorage -=Artillery.foodPrice;
                     playing.ironStorage -=Artillery.ironPrice;
@@ -317,21 +293,18 @@ public class GameEngine {
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
             lastUnit = null;
-            lastTap[0] = x; //sets the lastTap coordinates
-            lastTap[1] = y;
         }
 
         //buys new armor
-        if (x / squareLength  == 9 && y / squareLength  == 10 && showFactory &&
-                ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
+        if (x / squareLength  == 9 && y / squareLength  == 10 && showFactory) {
             if (playing.foodStorage >= Armor.foodPrice && playing.ironStorage >= Armor.ironPrice && playing.oilStorage >= Armor.oilPrice) {
-                if (playing == green && BoardSprites[2][2] == null) {
+                if (playing == green) {
                     new Armor(GameView.theContext, 2, 2, playing);
                     playing.foodStorage -=Armor.foodPrice;
                     playing.ironStorage -=Armor.ironPrice;
                     playing.oilStorage -=Armor.oilPrice;
                 }
-                if ((playing == red && BoardSprites[12][6] == null)) {
+                if ((playing == red)) {
                     new Armor(GameView.theContext, 12, 6, playing);
                     playing.foodStorage -=Armor.foodPrice;
                     playing.ironStorage -=Armor.ironPrice;
@@ -342,21 +315,18 @@ public class GameEngine {
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
             lastUnit = null;
-            lastTap[0] = x; //sets the lastTap coordinates
-            lastTap[1] = y;
         }
 
         //buys new MechInfantry
-        if (x / squareLength  == 7 && y / squareLength  == 10 && showFactory &&
-                ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
+        if (x / squareLength  == 7 && y / squareLength  == 10 && showFactory) {
                 if (playing.foodStorage >= MechanizedInfantry.foodPrice && playing.ironStorage >= MechanizedInfantry.ironPrice && playing.oilStorage >= MechanizedInfantry.oilPrice) {
-                    if (playing == green && BoardSprites[2][2] == null) {
+                    if (playing == green) {
                         new MechanizedInfantry(GameView.theContext, 2, 2, playing);
                         playing.foodStorage -= MechanizedInfantry.foodPrice;
                         playing.ironStorage -= MechanizedInfantry.ironPrice;
                         playing.oilStorage -= MechanizedInfantry.oilPrice;
                     }
-                    if ((playing == red && BoardSprites[12][6] == null)) {
+                    if ((playing == red)) {
                         new MechanizedInfantry(GameView.theContext, 12, 6, playing);
                         playing.foodStorage -= MechanizedInfantry.foodPrice;
                         playing.ironStorage -= MechanizedInfantry.ironPrice;
@@ -366,20 +336,17 @@ public class GameEngine {
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
                 lastUnit = null;
-                lastTap[0] = x; //sets the lastTap coordinates
-                lastTap[1] = y;
         }
         //buys new Heavy Tank
-        if (x / squareLength  == 11 && y / squareLength  == 10 && showFactory &&
-                ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
+        if (x / squareLength  == 11 && y / squareLength  == 10 && showFactory) {
             if (playing.foodStorage >= HeavyTank.foodPrice && playing.ironStorage >= HeavyTank.ironPrice && playing.oilStorage >= HeavyTank.oilPrice) {
-                if (playing == green && BoardSprites[2][2] == null) {
+                if (playing == green) {
                     new HeavyTank(GameView.theContext, 2, 2, playing);
                     playing.foodStorage -= HeavyTank.foodPrice;
                     playing.ironStorage -= HeavyTank.ironPrice;
                     playing.oilStorage -= HeavyTank.oilPrice;
                 }
-                if ((playing == red && BoardSprites[12][6] == null)) {
+                if (playing == red) {
                     new HeavyTank(GameView.theContext, 12, 6, playing);
                     playing.foodStorage -= HeavyTank.foodPrice;
                     playing.ironStorage -= HeavyTank.ironPrice;
@@ -389,8 +356,6 @@ public class GameEngine {
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
             lastUnit = null;
-            lastTap[0] = x; //sets the lastTap coordinates
-            lastTap[1] = y;
         }
 
         // If tap is outside the grid, do nothing.
@@ -404,7 +369,7 @@ public class GameEngine {
         }
 
         //If user taps on a unit, select it, or display info on enemy unit.
-        if (BoardSprites[x / squareLength ][y / squareLength ] != null && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
+        if (BoardSprites[x / squareLength ][y / squareLength ] != null) {
             if (BoardSprites[x / squareLength ][y / squareLength ].owner == playing) {
                 theUnit = BoardSprites[x / squareLength ][y / squareLength ];
                 selected = new SelectedUnit(GameView.theContext, x, y, theUnit.owner, theUnit.unitType);
@@ -414,8 +379,6 @@ public class GameEngine {
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
                 lastUnit = null;
-                lastTap[0] = x; //sets the lastTap coordinates
-                lastTap[1] = y;
                 return;
             }
             else if (BoardSprites[x / squareLength ][y / squareLength ].owner != playing) {
@@ -424,8 +387,6 @@ public class GameEngine {
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
                 lastUnit = null;
-                lastTap[0] = x; //sets the lastTap coordinates
-                lastTap[1] = y;
             }
         }
 
@@ -434,30 +395,20 @@ public class GameEngine {
                 && (theUnit.movement >= getSquareDistance           //also check if unit is in range.
                         (getCoordinates(theUnit)[0], x / squareLength ,
                                 getCoordinates(theUnit)[1], y / squareLength ))
-                && theUnit.hasMove == true
-                && ((lastTap[0] / squareLength  != x / squareLength ) || (lastTap[1] / squareLength  != y / squareLength ))) {
+                && theUnit.hasMove == true) {
             moveTo(theUnit, x / squareLength , y / squareLength ); //and then move the unit, and un-select it.
             //if unit has attack, don't un-select it yet.
             if (theUnit.hasAttack) {
                 theUnit.hasMove = false;
-                lastTap[0] = x; //sets the lastTap coordinates
-                lastTap[1] = y;
                 return;
             }
             //if units doesn't have an attack, un-select it
             if (!(theUnit.hasAttack)) {
                 theUnit.hasMove = false;
-                lastTap[0] = x; //sets the lastTap coordinates
-                lastTap[1] = y;
                 checkAction(theUnit);
                 return;
             }
         }
-
-
-        lastTap[0] = x; //sets the lastTap coordinates
-        lastTap[1] = y;
-
 
         //if player taps with unit selected on an opponent's unit, attack it
         if (theUnit != null && BoardSprites[x / squareLength ][y / squareLength ] != null &&
@@ -473,15 +424,10 @@ public class GameEngine {
             }
             if (theUnit != null && theUnit.hasMove) {
                 theUnit.hasAttack = false;
-                lastTap[0] = x; //sets the lastTap coordinates
-                lastTap[1] = y;
                 return;
             }
             //if units doesn't have a move, un-select it
             if (theUnit != null && !theUnit.hasMove) {
-
-                lastTap[0] = x; //sets the lastTap coordinates
-                lastTap[1] = y;
                 theUnit.hasAttack = false;
                 checkAction(theUnit);
                 return;
@@ -498,15 +444,11 @@ public class GameEngine {
             DamageUnit(theUnit.attack2, BoardSprites[x / squareLength ][y / squareLength ], x / squareLength , y / squareLength );
             if (theUnit != null && theUnit.hasMove) {
                 theUnit.hasAttack = false;
-                lastTap[0] = x; //sets the lastTap coordinates
-                lastTap[1] = y;
                 checkAction(theUnit);
                 return;
             }
             if (theUnit != null && !theUnit.hasMove) {
                 theUnit.hasAttack = false;
-                lastTap[0] = x; //sets the lastTap coordinates
-                lastTap[1] = y;
                 checkAction(theUnit);
                 return;
             }
@@ -533,6 +475,13 @@ public class GameEngine {
 
     //moves the unit to x and y
     public static void moveTo(Units u, int x, int y) {
+        boolean isAtStartingPosition = false;
+        if (u.owner == green && u.coordinates[0] == 2 && u.coordinates[1] == 2 && green.isHuman) {
+            isAtStartingPosition = true;
+        }
+        if (u.owner == red && u.coordinates[0] == 12 && u.coordinates[1] == 6 && red.isHuman) {
+            isAtStartingPosition = true;
+        }
         int a = 0, b = 0;
         for (int i = 0; i < BoardSprites.length; i++) {
             for (int j = 0; j < BoardSprites[i].length; j++) {
@@ -559,6 +508,9 @@ public class GameEngine {
         message = u.unitType + " moved to " + (x + c) + ", " + (y + c);
         checkAction(u);
         checkIfAnyInRange(u);
+        if (isAtStartingPosition) {
+            nextInQueue();
+        }
     }
 
     //damages the unit at given coordinates
@@ -586,13 +538,9 @@ public class GameEngine {
                         if (u.unitType.equals("Headquarters")) {
                             if (theUnit.hasMove) {
                                 theUnit.hasAttack = false;
-                                lastTap[0] = x; //sets the lastTap coordinates
-                                lastTap[1] = y;
                             }
                             //if units doesn't have a move, un-select it
                             if (!theUnit.hasMove) {
-                                lastTap[0] = x; //sets the lastTap coordinates
-                                lastTap[1] = y;
                                 theUnit.hasAttack = false;
                                 checkAction(theUnit);
                             }
@@ -611,6 +559,26 @@ public class GameEngine {
         }
     }
 
+    public static void nextInQueue(){
+        if (GameEngine.queue.length == 0) {
+            return;
+        }
+        if (playing == green) {
+            BoardSprites[2][2] = GameEngine.queue[0];
+            GameEngine.queue[0].coordinates[0] = 2;
+            GameEngine.queue[0].coordinates[1] = 2;
+        }
+        if (playing == red) {
+            BoardSprites[12][6] = GameEngine.queue[0];
+            GameEngine.queue[0].coordinates[0] = 12;
+            GameEngine.queue[0].coordinates[1] = 6;
+        }
+        Units []toReturn = new Units[GameEngine.queue.length - 1];
+        for (int k = 1; k < GameEngine.queue.length; k++) {
+            toReturn[k - 1] = GameEngine.queue[k];
+        }
+        GameEngine.queue = toReturn;
+    }
     //checks if unit has action, and darkens the icon if it doesn't
     public static void checkAction(Units u) {
         if (u.hasMove == false && u.hasAttack == false) {
