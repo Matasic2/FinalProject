@@ -88,7 +88,10 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
      */
     @Override
     public boolean onTouch (View view, MotionEvent event) {
-        GameEngine.tapProcessor((int) event.getX(), (int) event.getY()); //sends coordinates to GameEngine, which does everything.
+        if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
+            GameEngine.tapProcessor((int) event.getX(), (int) event.getY()); //sends coordinates to GameEngine, which does everything.
+        }
+
         return true;
     }
     @Override

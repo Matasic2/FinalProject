@@ -409,6 +409,8 @@ public class GameEngine {
                 theUnit = BoardSprites[x / squareLength ][y / squareLength ];
                 selected = new SelectedUnit(GameView.theContext, x, y, theUnit.owner, theUnit.unitType);
                 message = theUnit.unitType + " at " + ((x/squareLength ) + c) + ", " + ((y/squareLength ) + c);
+                showMarket = false;
+                showFactory = false;
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
                 lastUnit = null;
