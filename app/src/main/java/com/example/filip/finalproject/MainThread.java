@@ -12,11 +12,12 @@ public class MainThread extends Thread {
     public SurfaceHolder surfaceHolder;
     public GameView gameView;
     public static Canvas canvas;
+    public static boolean run;
 
     public MainThread(SurfaceHolder surfaceHolder, GameView gameView) {
 
         super();
-
+        run = true;
         this.surfaceHolder = surfaceHolder;
         this.gameView = gameView;
     }
@@ -24,7 +25,7 @@ public class MainThread extends Thread {
     @Override
     public void run() {
 
-        while (true) {
+        while (run) {
             try {
                 canvas = this.surfaceHolder.lockCanvas();
                 synchronized (surfaceHolder) {

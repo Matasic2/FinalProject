@@ -1,6 +1,7 @@
 package com.example.filip.finalproject;
 
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
@@ -30,6 +31,27 @@ public class GameEngine {
 
     public static int[] lastAddedResources = new int[3]; //memorizes last added resources, to display next to storage
 
+
+    //restarts board
+    public static void restart(){
+        lastUnit = null; //stores the last unit which made some action
+        theUnit = null; // Selected unit, unlike the selected unit in GameView class this unit is the actual selected unit.
+        selected = null; // Selected unit, reference is not the same as the (selected) Unit itself.
+        enemyTappedUnit = null; //same as above, but of opponent
+        enemySelected = null; // same as above, but for opponent
+        BoardSprites = new Units[15][9]; //A 2D array of Units that stores the units for game engine and data processing, unlike GameView's Units[] this isn't involved in drawing units.
+        playing = null; //player that makes moves
+        BoardResources = new Resources[15][9]; //a 2D array of Units that stores the resources in the game
+        showFactory = false; //shows factory units which can be purchased
+        showMarket = false; //shows market units which can be purchased
+        message = ""; //stores message to user
+        lastCoordinates = new int[2]; //coordinates of last action
+        queue = new Units[0]; // stores all units that will be deployed
+        AI.unitOrders = new String[0];
+        AI.units = new Units[0];
+        AI.turn = 0;
+        AI.aggresionLevel = 3;
+    }
     //Constructor that creates the unit and it's image, doesn't set it's coordinates. Mostly used by onDraw function in GameView
     public GameEngine(Bitmap bmp) {
         image = bmp;
@@ -215,6 +237,17 @@ public class GameEngine {
             }
         }
 
+
+        //back to menu
+        if (x / squareLength  == 18 && y / squareLength  == 5){
+            if (message == "You are about to leave the battle, tap again to continue") {
+                FullscreenActivity.theActivity.backToMenu();
+            }
+            else {
+                unselectAll();
+                message = "You are about to leave the battle, tap again to continue";
+            }
+        }
         //switches market visibility if the button is pressed.
         if (x / squareLength  == 5 && y / squareLength  == 10) {
             GameEngine.showMarket =  !GameEngine.showMarket;

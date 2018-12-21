@@ -1,6 +1,7 @@
 package com.example.filip.finalproject;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Picture;
 import android.support.v7.app.ActionBar;
@@ -95,22 +96,37 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         return true;
     }
     @Override
+    protected void onStart() {
+        super.onStart();
+        MainThread.run = true;
+    }
+    @Override
     protected void onPause(){
         super.onPause();
+        MainThread.run = false;
 
     }
     @Override
     protected void onResume(){
         super.onResume();
+        MainThread.run = true;
 
+        GameView myGameView = new GameView(this); //creates context
+        myGameView.setOnTouchListener(this); //sets listener
+        setContentView(myGameView); //sets context
+        theActivity = this;
     }
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        MainThread.run = false;
 
     }
-
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MainThread.run = false;
+    }
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save the user's current game state
@@ -118,5 +134,8 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
             int a = 0;
         }
         super.onSaveInstanceState(savedInstanceState);
+    }
+    public void backToMenu (){
+        startActivity(new Intent(FullscreenActivity.this, SkirmishMenu.class));
     }
 }
