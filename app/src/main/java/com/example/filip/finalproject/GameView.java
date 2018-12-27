@@ -50,6 +50,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             GameEngine.red = new Player("red", true);
             if (MainMenu.scenario.equals("Skirmish vs AI")) {
                 GameEngine.red.isHuman = false;
+                GameEngine.AIPlayer = GameEngine.red;
             }
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
@@ -215,7 +216,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             movableLocation pointers7 = new movableLocation(theContext, 17);
             movableLocation pointers8 = new movableLocation(theContext, 18);
             movableLocation pointers99 = new movableLocation(theContext, 22);
-            movableLocation pointers12 = new movableLocation(theContext, 23);
+            movableLocation pointers12 = new movableLocation(theContext, 25);
             pointers3.draw(canvas,16,1);
             pointers35.draw(canvas,18,1);
             pointers4.draw(canvas,16,3);

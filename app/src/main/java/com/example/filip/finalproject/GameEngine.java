@@ -27,6 +27,7 @@ public class GameEngine {
     public static int c = 0; //offset for x and y coordinate message, if set to 0 top left will be 0,0 if set to 1 top left will be 1,1
     public static int[] lastCoordinates = new int[2]; //coordinates of last action
     public static Units[] queue = new Units[0]; // stores all units that will be deployed
+    public static Player AIPlayer = null;
 
 
     public static int[] lastAddedResources = new int[3]; //memorizes last added resources, to display next to storage
@@ -275,7 +276,7 @@ public class GameEngine {
                     }
                 }
                 if (playing == red) {
-                    if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
+                    if (GameEngine.BoardSprites[12][6] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
                         new Infantry(GameView.theContext, 12, 6, playing);
                         playing.foodStorage -= Infantry.foodPrice;
                     }
@@ -298,7 +299,7 @@ public class GameEngine {
                     }
                 }
                 if ((playing == red)) {
-                    if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
+                    if (GameEngine.BoardSprites[12][6] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
                         new Cavalry(GameView.theContext, 12, 6, playing);
                         playing.foodStorage -= Cavalry.foodPrice;
                     }
@@ -320,7 +321,7 @@ public class GameEngine {
                     }
                 }
                 if ((playing == red)) {
-                    if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
+                    if (GameEngine.BoardSprites[12][6] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
                         new Artillery(GameView.theContext, 12, 6, playing);
                         playing.foodStorage -= Artillery.foodPrice;
                         playing.ironStorage -= Artillery.ironPrice;
@@ -345,7 +346,7 @@ public class GameEngine {
                     }
                 }
                 if ((playing == red)) {
-                    if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
+                    if (GameEngine.BoardSprites[12][6] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
                         new Armor(GameView.theContext, 12, 6, playing);
                         playing.foodStorage -= Armor.foodPrice;
                         playing.ironStorage -= Armor.ironPrice;
@@ -371,7 +372,7 @@ public class GameEngine {
                         }
                     }
                     if ((playing == red)) {
-                        if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
+                        if (GameEngine.BoardSprites[12][6] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
                             new MechanizedInfantry(GameView.theContext, 12, 6, playing);
                             playing.foodStorage -= MechanizedInfantry.foodPrice;
                             playing.ironStorage -= MechanizedInfantry.ironPrice;
@@ -395,7 +396,7 @@ public class GameEngine {
                     }
                 }
                 if (playing == red) {
-                    if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
+                    if (GameEngine.BoardSprites[12][6] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
                         new HeavyTank(GameView.theContext, 12, 6, playing);
                         playing.foodStorage -= HeavyTank.foodPrice;
                         playing.ironStorage -= HeavyTank.ironPrice;
@@ -585,11 +586,11 @@ public class GameEngine {
                         showMarket = false;
                         message = u.unitType + " at " + (x + c) + ", " + (y + c) + " is destroyed";
                         if (u.unitType.equals("Headquarters")) {
-                            if (theUnit.hasMove) {
+                            if (theUnit != null && theUnit.hasMove) {
                                 theUnit.hasAttack = false;
                             }
                             //if units doesn't have a move, un-select it
-                            if (!theUnit.hasMove) {
+                            if (theUnit != null && !theUnit.hasMove) {
                                 theUnit.hasAttack = false;
                                 checkAction(theUnit);
                             }
