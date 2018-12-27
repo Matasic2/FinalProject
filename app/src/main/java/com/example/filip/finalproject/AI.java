@@ -427,7 +427,7 @@ public class AI {
         if (u.HP <= damage - u.defence) {
             return getUnitValue(u);
         }
-        return (Math.min(u.maxHP, u.HP - damage + u.defence) / u.maxHP) * getUnitValue(u);
+        return (Math.min(u.maxHP, damage - u.defence) / u.maxHP) * getUnitValue(u);
     }
 
     public static int[] getEnemyUnitsCount(String whichUnit) {
