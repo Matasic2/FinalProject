@@ -9,7 +9,7 @@ public class AI {
     public static boolean makeUnitFor13_1 = false;
     public static boolean makeUnitFor8_7 = false;
 
-    public static int rng = 0;
+    public static int rng;
 
     public static Units[] units = new Units[0]; //list of all units the AI owns
     public static String[] unitOrders = new String[0]; //list of orders for every unit AI owns, corresponds to units in the previous list
@@ -20,7 +20,7 @@ public class AI {
         if (turn == 0) {
             addUnit(GameEngine.BoardSprites[12][6], "moveTo_8_7");
             Random rand = new Random();
-            rng = rand.nextInt(100);
+            AI.rng = rand.nextInt(100);
         }
         resetOrders(); //at the start of the every turn, decide what to do with all units
         turn++; //add turn to turn counter
@@ -78,7 +78,7 @@ public class AI {
         boolean hasEnoughFood = true;
         while (AIPlayer.foodStorage >= 2 && GameEngine.BoardSprites[12][6] == null) {
 
-            if (hasEnoughFood && (turn == 1 || makeUnitFor13_1 || makeUnitFor8_7)) {
+            if (hasEnoughFood && (turn == 1 || makeUnitFor13_1 || makeUnitFor8_7) && AIPlayer.foodStorage >= Cavalry.foodPrice) {
                 if (turn  == 1){
                     buyCavalry(AIPlayer, "moveTo_13_1");
                 }
@@ -107,6 +107,9 @@ public class AI {
             }
             else if (AIPlayer.foodStorage >= Cavalry.foodPrice && turn != 1 && GameEngine.BoardSprites[12][6] == null && rng < 50 && viableUnits[1]) {
                 if (GameEngine.BoardSprites[6][1] == null || GameEngine.BoardSprites[6][1].owner != AIPlayer) {
+                    buyCavalry(AIPlayer, "moveTo_6_1");
+                }
+                else {
                     buyCavalry(AIPlayer, "moveTo_2_2");
                 }
                 if (AIPlayer.foodStorage < 3) {
@@ -219,7 +222,7 @@ public class AI {
                 for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
                     if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != u.owner
                             && (u.movement + u.attack1Range >= GameEngine.getSquareDistance(u.coordinates[0], i, u.coordinates[1], j))) {
-                        float willDie = 1;
+                        float willDie = 1.0f;
                         if (GameEngine.BoardSprites[i][j].HP <= u.attack1 - GameEngine.BoardSprites[i][j].defence) {
                             willDie = 1.5f;
                         }
@@ -306,7 +309,7 @@ public class AI {
                 for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
                     if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != u.owner
                             && (u.attack2Range >= GameEngine.getSquareDistance(u.coordinates[0], i, u.coordinates[1], j))) {
-                        float willDie = 1;
+                        float willDie = 1.0f;
                         int attackDamage;
                         if ((u.attack1Range >= GameEngine.getSquareDistance(u.coordinates[0], i, u.coordinates[1], j)) && GameEngine.BoardSprites[i][j].HP <= u.attack1 - GameEngine.BoardSprites[i][j].defence) {
                             willDie = 1.5f;
@@ -382,7 +385,8 @@ public class AI {
         for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
             for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
                 if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner == GameEngine.AIPlayer && Math.ceil(GameEngine.getSquareDistance(i, x, j, y) / 3) < time ) {
-                    if (bool && Math.ceil(( (float)GameEngine.getSquareDistance(i, x, j, y) / GameEngine.BoardSprites[i][j].movement)) < time && (GameEngine.BoardSprites[i][j].unitType == "Infantry" ||  GameEngine.BoardSprites[i][j].unitType == "Cavalry")) {
+                    if (bool && Math.ceil(( (float)GameEngine.getSquareDistance(i, x, j, y) / GameEngine.BoardSprites[i][j].movement)) < time
+                            && (GameEngine.BoardSprites[i][j].unitType == "Infantry" ||  GameEngine.BoardSprites[i][j].unitType == "Cavalry")) {
                         time = (float) Math.ceil(( (float) GameEngine.getSquareDistance(i, x, j, y)) / GameEngine.BoardSprites[i][j].movement);
                         temp = GameEngine.BoardSprites[i][j];
                     }
@@ -439,10 +443,10 @@ public class AI {
         int heaCount = 0;
         for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
             for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
-                if (GameEngine.BoardSprites[i][j] == null || GameEngine.BoardSprites[i][j].owner != GameEngine.AIPlayer) {
+                if (GameEngine.BoardSprites[i][j] == null || GameEngine.BoardSprites[i][j].owner == GameEngine.AIPlayer) {
                     continue;
                 }
-               if (GameEngine.BoardSprites[i][j].unitType == "Infantry") {
+               else if (GameEngine.BoardSprites[i][j].unitType == "Infantry") {
                    infCount++;
                }
                else if (GameEngine.BoardSprites[i][j].unitType == "Cavalry") {

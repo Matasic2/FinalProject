@@ -526,6 +526,9 @@ public class GameEngine {
 
     //moves the unit to x and y
     public static void moveTo(Units u, int x, int y) {
+        if (u.coordinates[0] == x && u.coordinates[1] == y) {
+            return;
+        }
         boolean isAtStartingPosition = false;
         if (u.owner == green && u.coordinates[0] == 2 && u.coordinates[1] == 2 && green.isHuman) {
             isAtStartingPosition = true;

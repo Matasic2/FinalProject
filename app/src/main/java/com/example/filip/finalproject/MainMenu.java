@@ -8,6 +8,9 @@ import android.content.Intent;
 
 public class MainMenu extends AppCompatActivity {
 
+    //developer mode, should be set false on releases
+    public static boolean DEV_MODE = true;
+
     //Name of scenario that is being played
     public static String scenario = "";
     @Override
@@ -27,5 +30,14 @@ public class MainMenu extends AppCompatActivity {
                 startActivity(new Intent(MainMenu.this, ScenarioMenu.class));
             }
         });
+        if (DEV_MODE) {
+            Button devbutton = (Button) findViewById(R.id.devbutton); //button that switches main activity to skirmish menu
+            devbutton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    scenario = "dev_mode";
+                    startActivity(new Intent(MainMenu.this, FullscreenActivity.class));
+                }
+            });
+        }
     }
 }

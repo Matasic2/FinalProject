@@ -48,7 +48,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             GameEngine.restart();
             GameEngine.green = new Player("green", true);
             GameEngine.red = new Player("red", true);
-            if (MainMenu.scenario.equals("Skirmish vs AI")) {
+            if (MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("dev_mode")) {
                 GameEngine.red.isHuman = false;
                 GameEngine.AIPlayer = GameEngine.red;
             }
@@ -60,7 +60,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             theContext = this.getContext(); // Stores the context, see the variable comment above
 
             //skirmish
-            if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI")) {
+            if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") ||  MainMenu.scenario.equals("dev_mode")) {
                 // next lines generate green's "natural resources" (the resources which are expected to be controlled by green player).
                 new Food(theContext, 1, 0, 1, 1);
                 new Food(theContext, 2, 1, 1, 1);
@@ -91,31 +91,44 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 new Iron(theContext, 14, 1, 13, 1);
                 new Iron(theContext, 8, 6, 8, 7);
 
+                if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") ) {
+                    new Headquaters(theContext, 1, 1, GameEngine.green);
+                    new Headquaters(theContext, 13, 7, GameEngine.red);
 
-                new Headquaters(theContext, 1, 1, GameEngine.green);
-                new Headquaters(theContext, 13, 7, GameEngine.red);
+                    // These for loops create starting units.
+                    for (int i = 0; i < 2; i++) {
+                        new Infantry(theContext, 2, i * 2, GameEngine.green);
+                    }
 
-                // These for loops create starting units.
-                for (int i = 0; i < 2; i++) {
-                    new Infantry(theContext, 2, i * 2, GameEngine.green);
-                }
+                    for (int i = 0; i < 1; i++) {
+                        new Infantry(theContext, 12, 6, GameEngine.red);
+                    }
 
-                for (int i = 0; i < 1; i++) {
-                    new Infantry(theContext, 12, 6, GameEngine.red);
-                }
+                    for (int i = 0; i < 0; i++) {
+                        new Cavalry(theContext, 1, i * 2, GameEngine.green);
+                    }
+                    for (int i = 0; i < 0; i++) {
+                        new Cavalry(theContext, 12, i * 2, GameEngine.red);
+                    }
 
-                for (int i = 0; i < 0; i++) {
-                    new Cavalry(theContext, 1, i * 2, GameEngine.green);
+                    for (int i = 0; i < 0; i++) {
+                        new Artillery(theContext, 14, 8, GameEngine.green);
+                    }
+                    for (int i = 0; i < 0; i++) {
+                        new Artillery(theContext, 13, i, GameEngine.red);
+                    }
                 }
-                for (int i = 0; i < 0; i++) {
-                    new Cavalry(theContext, 12, i * 2, GameEngine.red);
-                }
+                else if (MainMenu.scenario.equals("dev_mode")){
+                    AI.addUnit(new Cavalry(theContext, 7, 3, GameEngine.red),"moveTo_6_1");
 
-                for (int i = 0; i < 0; i++) {
-                    new Artillery(theContext, 14, 8, GameEngine.green);
-                }
-                for (int i = 0; i < 0; i++) {
-                    new Artillery(theContext, 13, i, GameEngine.red);
+                    AI.addUnit(new Artillery(theContext, 12, 5, GameEngine.red),"MoveTo_2_2");
+                    new Artillery(theContext, 2, 5, GameEngine.green);
+                    AI.turn = 18;
+                    AI.rng = 40;
+                    GameEngine.red.foodStorage = 9;
+                    GameEngine.red.ironStorage = 3;
+                    GameEngine.red.oilStorage = 1;
+                    GameEngine.message = Integer.toString(AI.turn);
                 }
             }
 
@@ -199,7 +212,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if (canvas != null) {
             grid.draw(canvas);  //draws the grid first, because that is the bottom layer.
 
-            if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI")) {
+            if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("dev_mode")) {
                 movableLocation pointers = new movableLocation(theContext, 0);
                 movableLocation pointers1 = new movableLocation(theContext, 1);
                 movableLocation pointers2 = new movableLocation(theContext, 2);
