@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory.Options;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 import android.content.Context;
@@ -279,34 +280,32 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     movableLocation inf = new movableLocation(theContext, 6);
                     movableLocation cav = new movableLocation(theContext, 7);
                     movableLocation art = new movableLocation(theContext, 8);
-                    inf.draw(canvas, 7, 10);
-                    cav.draw(canvas, 9, 10);
+                    cav.draw(canvas, 7, 10);
+                    inf.draw(canvas, 9, 10);
                     art.draw(canvas, 11, 10);
                 }
                 if (GameEngine.playing == GameEngine.red) {
                     movableLocation inf = new movableLocation(theContext, 9);
                     movableLocation cav = new movableLocation(theContext, 10);
                     movableLocation art = new movableLocation(theContext, 11);
-                    inf.draw(canvas, 7, 10);
-                    cav.draw(canvas, 9, 10);
+                    cav.draw(canvas, 7, 10);
+                    inf.draw(canvas, 9, 10);
                     art.draw(canvas, 11, 10);
                 }
                 Paint thePaint = new Paint();
                 thePaint.setTextSize(40 * FullscreenActivity.scaleFactor);
                 thePaint.setColor(Color.YELLOW);
-                canvas.drawText("" + Infantry.foodPrice, 1000 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
-                canvas.drawText("" + Cavalry.foodPrice, 1255 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + Cavalry.foodPrice, 1000 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + Infantry.foodPrice, 1255 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("" + Artillery.foodPrice, 1515 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 thePaint.setColor(Color.argb(255,204,102,0));
-                canvas.drawText("" + Infantry.ironPrice, 950 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
-                canvas.drawText("" + Cavalry.ironPrice, 1205 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + Cavalry.ironPrice, 950 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + Infantry.ironPrice, 1205 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("" + Artillery.ironPrice, 1465 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 thePaint.setColor(Color.GRAY);
-                canvas.drawText("" + Infantry.oilPrice, 905 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
-                canvas.drawText("" + Cavalry.oilPrice, 1160 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + Cavalry.oilPrice,  905 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + Infantry.oilPrice, 1160 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("" + Artillery.oilPrice, 1420 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
-
-
             }
 
             else if (GameEngine.showFactory) {
@@ -514,6 +513,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         paint.setColor(Color.GRAY);
         canvas.drawText( "Oil storage : " + GameEngine.playing.oilStorage + " (+" + GameEngine.lastAddedResources[2] + ")", 50 * FullscreenActivity.scaleFactor, 1200 * FullscreenActivity.scaleFactor, paint);
 
+
+        //draws fog of war
+        boolean[][] fog_of_war;
+        if (GameEngine.playing.equals(GameEngine.green)) {
+            fog_of_war = GameEngine.getFogOfWar(0);
+        }   else {
+            fog_of_war = GameEngine.getFogOfWar(1);
+        }
+        for (int i = 0; i < fog_of_war.length; i++) {
+            for (int j = 0; j < fog_of_war[i].length; j++) {
+                if (!fog_of_war[i][j]) {
+                    paint.setColor(Color.argb(255,80,80,80));
+                    Rect rectangle = new Rect(i * GameEngine.squareLength, j * GameEngine.squareLength,(i + 1) * GameEngine.squareLength,(j + 1) * GameEngine.squareLength);
+                    canvas.drawRect(rectangle, paint);
+                }
+            }
+        }
     }
 
     //removes the sprite (drawing of a unit), called when unit is deleted.

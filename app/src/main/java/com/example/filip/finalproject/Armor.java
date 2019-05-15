@@ -12,6 +12,7 @@ public class Armor extends Units {
     public static int GreenDefence = 3; // Defence value of Green's Armor, this value can be changed
     public static int GreenHP = 25; // HP value of Green's Armor, this value can be changed
     public static int GreenMovement = 2; // Movement value of Green's Armor, this value can be changed
+    public static int GreenVisibility = 4; // Movement value of Green's Infantry, this value can be changed
 
     //cost of Armor unit
     public static int foodPrice = 2;
@@ -28,13 +29,14 @@ public class Armor extends Units {
     public static int RedDefence = 3; // Defence value of Red's Armor, this value can be changed
     public static int RedHP = 25; // HP value of Red's Armor, this value can be changed
     public static int RedMovement = 2; // Movement value of Red's Armor, this value can be changed
+    public static int RedVisibility = 4; // Movement value of Green's Infantry, this value can be changed
 
     Armor(Context context, int x, int y, Player player) {
         super(context, x, y, player, "Armor");
         if (player.color.equals("green")) {
-            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement);
+            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement, GreenVisibility);
         } else {
-            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement);
+            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility);
         }
     }
 }

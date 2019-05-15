@@ -265,10 +265,30 @@ public class GameEngine {
             }
             return;
         }
-
-        //buys new infantry
+        //buys new cavalry
         if (x / squareLength  == 7 && y / squareLength  == 10 && showMarket) {
-            if (playing.foodStorage >= Infantry.foodPrice) {
+            if (playing.foodStorage >= Cavalry.foodPrice) {
+                if (playing == green) {
+                    if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[2][2]!= null && GameEngine.BoardSprites[2][2].owner == green)) {
+                        new Cavalry(GameView.theContext, 2, 2, playing);
+                        playing.foodStorage -= Cavalry.foodPrice;
+                    }
+                }
+                if ((playing == red)) {
+                    if (GameEngine.BoardSprites[12][6] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
+                        new Cavalry(GameView.theContext, 12, 6, playing);
+                        playing.foodStorage -= Cavalry.foodPrice;
+                    }
+                }
+
+            }
+            lastCoordinates[0] = 125;
+            lastCoordinates[1] = 125;
+            lastUnit = null;
+        }
+        //buys new infantry
+        if (x / squareLength  == 9 && y / squareLength  == 10 && showMarket) {
+            if (playing.foodStorage >= Infantry.foodPrice && playing.ironStorage >= Infantry.ironPrice) {
                 if (playing == green) {
                     if (GameEngine.BoardSprites[2][2]== null || (GameEngine.BoardSprites[2][2]!= null && GameEngine.BoardSprites[2][2].owner == green)) {
                         new Infantry(GameView.theContext, 2, 2, playing);
@@ -284,27 +304,6 @@ public class GameEngine {
             }
             if (playing.foodStorage < Infantry.foodPrice) {
                 showMarket = false;
-            }
-            lastCoordinates[0] = 125;
-            lastCoordinates[1] = 125;
-            lastUnit = null;
-        }
-        //buys new cavalry
-        if (x / squareLength  == 9 && y / squareLength  == 10 && showMarket) {
-            if (playing.foodStorage >= Cavalry.foodPrice) {
-                if (playing == green) {
-                    if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[2][2]!= null && GameEngine.BoardSprites[2][2].owner == green)) {
-                        new Cavalry(GameView.theContext, 2, 2, playing);
-                        playing.foodStorage -= Cavalry.foodPrice;
-                    }
-                }
-                if ((playing == red)) {
-                    if (GameEngine.BoardSprites[12][6] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
-                        new Cavalry(GameView.theContext, 12, 6, playing);
-                        playing.foodStorage -= Cavalry.foodPrice;
-                    }
-                }
-
             }
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
@@ -777,4 +776,48 @@ public class GameEngine {
         GameEngine.lastAddedResources[1] = addediron;
         GameEngine.lastAddedResources[2] = addedoil;
     }
+
+    public static boolean[][] getFogOfWar(int player) {
+        boolean[][] tile_is_visible = new boolean[15][9];
+        for (int i = 0; i < tile_is_visible.length; i++) {
+            for (int j = 0; j < tile_is_visible[i].length; j++) {
+                tile_is_visible[i][j] = false;
+            }
+        }
+        //green player
+        if (player == 0) {
+            for (int i = 0; i < BoardSprites.length; i++) {
+                for (int j = 0; j < BoardSprites[i].length; j++) {
+                    if (BoardSprites[i][j] != null && BoardSprites[i][j].owner.color.equals("green")) {
+                        for (int a = 0; a < BoardSprites.length; a++) {
+                            for (int b = 0; b < BoardSprites[a].length; b++) {
+                                if (!tile_is_visible[a][b] && BoardSprites[i][j].getDistanceToPoint(a,b) <= BoardSprites[i][j].visibilityRange) {
+                                    tile_is_visible[a][b] = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //red player
+        if (player == 1) {
+            for (int i = 0; i < BoardSprites.length; i++) {
+                for (int j = 0; j < BoardSprites[i].length; j++) {
+                    if (BoardSprites[i][j] != null && BoardSprites[i][j].owner.color.equals("red")) {
+                        for (int a = 0; a < BoardSprites.length; a++) {
+                            for (int b = 0; b < BoardSprites[a].length; b++) {
+                                if (!tile_is_visible[a][b] && BoardSprites[i][j].getDistanceToPoint(a,b) <= BoardSprites[i][j].visibilityRange) {
+                                    tile_is_visible[a][b] = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return tile_is_visible;
+    }
 }
+

@@ -3,6 +3,7 @@ package com.example.filip.finalproject;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.opengl.Visibility;
 import android.util.EventLog;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -28,6 +29,7 @@ public class Units {
     public int HP; //Current HP of the unit
     public int maxHP; //Max HP of the unit
     public int movement; //Movement distance of the unit
+    public int visibilityRange; //how far the unit can see
 
     //Two methods below are from previous versions of the code, I might need them again later.
      /*public Units(Bitmap bmp) {
@@ -56,7 +58,7 @@ public class Units {
        GameEngine.BoardSprites[coordinates[0]][coordinates[1]] = this;
    }*/
     //see above for meaning of these values
-    public void setParameters(int atc1, int atc2, int atc1r, int atc2r, int def, int hp, int maxhp, int mov) {
+    public void setParameters(int atc1, int atc2, int atc1r, int atc2r, int def, int hp, int maxhp, int mov, int visibility) {
         this.attack1 = atc1;
         this.attack2 = atc2;
         this.attack1Range = atc1r;
@@ -65,6 +67,7 @@ public class Units {
         this.HP = hp;
         this.maxHP = maxhp;
         this.movement = mov;
+        this.visibilityRange = visibility;
     }
 
     //creates a new unit, initialize icon to it's unit type, attribute attack, defence and HP values, and set the owner. It also adds it to GaveView's units array and to GameEngine's Object[][] array.
@@ -487,5 +490,12 @@ public class Units {
     //Same as above, but draw then on given coordinates instead of unit's current coordinates.
     public void draw(Canvas canvas, int x, int y) {
         canvas.drawBitmap(icon, x * FullscreenActivity.scaleFactor, y * FullscreenActivity.scaleFactor, null);
+    }
+
+    //get unit's distance to the point
+    public int getDistanceToPoint(int x, int y) {
+        int x_distance = (this.coordinates[0] - x);
+        int y_distance = (this.coordinates[1] - y);
+        return Math.abs(x_distance) + Math.abs(y_distance);
     }
 }
