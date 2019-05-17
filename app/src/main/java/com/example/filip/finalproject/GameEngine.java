@@ -100,8 +100,8 @@ public class GameEngine {
                     if (theUnit.unitType.equals("Artillery")) {
                         theUnit.HP += Artillery.healedBy;
                     }
-                    if (theUnit.unitType.equals("Mech Infantry")) {
-                        theUnit.HP += MechanizedInfantry.healedBy;
+                    if (theUnit.unitType.equals("MGInfantry")) {
+                        theUnit.HP += MGInfantry.healedBy;
                     }
                     if (theUnit.unitType.equals("Heavy Tank")) {
                         theUnit.HP += HeavyTank.healedBy;
@@ -228,8 +228,8 @@ public class GameEngine {
                     }
                 }
             }
-            if (theUnit.unitType == "Mech Infantry") {
-                if (theUnit.defence == MechanizedInfantry.GreenDefence) {
+            if (theUnit.unitType == "MGInfantry") {
+                if (theUnit.defence == MGInfantry.GreenDefence) {
                     if (playing.ironStorage >= 1) {
                         theUnit.defence++;
                         playing.ironStorage -= 1;
@@ -293,12 +293,14 @@ public class GameEngine {
                     if (GameEngine.BoardSprites[2][2]== null || (GameEngine.BoardSprites[2][2]!= null && GameEngine.BoardSprites[2][2].owner == green)) {
                         new Infantry(GameView.theContext, 2, 2, playing);
                         playing.foodStorage -= Infantry.foodPrice;
+                        playing.ironStorage -= Infantry.ironPrice;
                     }
                 }
                 if (playing == red) {
                     if (GameEngine.BoardSprites[12][6] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
                         new Infantry(GameView.theContext, 12, 6, playing);
                         playing.foodStorage -= Infantry.foodPrice;
+                        playing.ironStorage -= Infantry.ironPrice;
                     }
                 }
             }
@@ -309,8 +311,32 @@ public class GameEngine {
             lastCoordinates[1] = 125;
             lastUnit = null;
         }
-        //buys new artillery
+        //buys new MGInfantry
         if (x / squareLength  == 11 && y / squareLength  == 10 && showMarket) {
+            if (playing.foodStorage >= MGInfantry.foodPrice && playing.ironStorage >= MGInfantry.ironPrice && playing.oilStorage >= MGInfantry.oilPrice) {
+                if (playing == green) {
+                    if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[2][2]!= null && GameEngine.BoardSprites[2][2].owner == green)) {
+                        new MGInfantry(GameView.theContext, 2, 2, playing);
+                        playing.foodStorage -= MGInfantry.foodPrice;
+                        playing.ironStorage -= MGInfantry.ironPrice;
+                        playing.oilStorage -= MGInfantry.oilPrice;
+                    }
+                }
+                if ((playing == red)) {
+                    if (GameEngine.BoardSprites[12][6] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
+                        new MGInfantry(GameView.theContext, 12, 6, playing);
+                        playing.foodStorage -= MGInfantry.foodPrice;
+                        playing.ironStorage -= MGInfantry.ironPrice;
+                        playing.oilStorage -= MGInfantry.oilPrice;
+                    }
+                }
+            }
+            lastCoordinates[0] = 125;
+            lastCoordinates[1] = 125;
+            lastUnit = null;
+        }
+        //buys new artillery
+        if (x / squareLength  == 13 && y / squareLength  == 10 && showMarket) {
             if (playing.foodStorage >= Artillery.foodPrice && playing.ironStorage >= Artillery.ironPrice) {
                 if (playing == green) {
                     if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[2][2]!= null && GameEngine.BoardSprites[2][2].owner == green)) {
@@ -332,7 +358,6 @@ public class GameEngine {
             lastCoordinates[1] = 125;
             lastUnit = null;
         }
-
         //buys new armor
         if (x / squareLength  == 9 && y / squareLength  == 10 && showFactory) {
             if (playing.foodStorage >= Armor.foodPrice && playing.ironStorage >= Armor.ironPrice && playing.oilStorage >= Armor.oilPrice) {
@@ -359,30 +384,7 @@ public class GameEngine {
             lastUnit = null;
         }
 
-        //buys new MechInfantry
-        if (x / squareLength  == 7 && y / squareLength  == 10 && showFactory) {
-                if (playing.foodStorage >= MechanizedInfantry.foodPrice && playing.ironStorage >= MechanizedInfantry.ironPrice && playing.oilStorage >= MechanizedInfantry.oilPrice) {
-                    if (playing == green) {
-                        if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[2][2]!= null && GameEngine.BoardSprites[2][2].owner == green)) {
-                            new MechanizedInfantry(GameView.theContext, 2, 2, playing);
-                            playing.foodStorage -= MechanizedInfantry.foodPrice;
-                            playing.ironStorage -= MechanizedInfantry.ironPrice;
-                            playing.oilStorage -= MechanizedInfantry.oilPrice;
-                        }
-                    }
-                    if ((playing == red)) {
-                        if (GameEngine.BoardSprites[12][6] == null || (GameEngine.BoardSprites[12][6]!= null && GameEngine.BoardSprites[12][6].owner == red)) {
-                            new MechanizedInfantry(GameView.theContext, 12, 6, playing);
-                            playing.foodStorage -= MechanizedInfantry.foodPrice;
-                            playing.ironStorage -= MechanizedInfantry.ironPrice;
-                            playing.oilStorage -= MechanizedInfantry.oilPrice;
-                        }
-                    }
-                }
-                lastCoordinates[0] = 125;
-                lastCoordinates[1] = 125;
-                lastUnit = null;
-        }
+
         //buys new Heavy Tank
         if (x / squareLength  == 11 && y / squareLength  == 10 && showFactory) {
             if (playing.foodStorage >= HeavyTank.foodPrice && playing.ironStorage >= HeavyTank.ironPrice && playing.oilStorage >= HeavyTank.oilPrice) {

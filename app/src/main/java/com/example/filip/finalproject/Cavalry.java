@@ -12,7 +12,7 @@ public class Cavalry extends Units{
     public static int GreenDefence = 0; // Defence value of Green's Cavalry, this value can be changed
     public static int GreenHP = 5; // HP value of Green's Cavalry, this value can be changed
     public static int GreenMovement = 3; // Movement value of Green's Cavalry, this value can be changed
-    public static int GreenVisibility = 4; // Movement value of Green's Infantry, this value can be changed
+    public static int GreenVisibility = 7; // Movement value of Green's Infantry, this value can be changed
 
     //cost of Cavalry unit
     public static int foodPrice = 2;
@@ -29,7 +29,7 @@ public class Cavalry extends Units{
     public static int RedDefence = 0; // Defence value of Red's Cavalry, this value can be changed
     public static int RedHP = 5; // HP value of Red's Cavalry, this value can be changed
     public static int RedMovement = 3; // Movement value of Red's Cavalry, this value can be changed
-    public static int RedVisibility = 4; // Movement value of Green's Infantry, this value can be changed
+    public static int RedVisibility = 7; // Movement value of Green's Infantry, this value can be changed
 
 
 

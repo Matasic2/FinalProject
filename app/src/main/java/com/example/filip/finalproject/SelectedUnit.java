@@ -100,7 +100,7 @@ public class SelectedUnit {
             return;
         }
 
-        if (GameEngine.BoardSprites[x/GameEngine.squareLength][y/GameEngine.squareLength] instanceof Units && player == GameEngine.green && unitType.equals("Mech Infantry")) { //if selected unit is Green Cavalry, use cavgs (CAValry Green Selected) texture
+        if (GameEngine.BoardSprites[x/GameEngine.squareLength][y/GameEngine.squareLength] instanceof Units && player == GameEngine.green && unitType.equals("MGInfantry")) { //if selected unit is Green Cavalry, use cavgs (CAValry Green Selected) texture
             BitmapFactory.Options o = new BitmapFactory.Options();
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfgs, o);
@@ -108,7 +108,7 @@ public class SelectedUnit {
             return;
         }
 
-        if (GameEngine.BoardSprites[x/GameEngine.squareLength][y/GameEngine.squareLength] instanceof Units && player == GameEngine.red &&  unitType.equals("Mech Infantry")) { //if selected unit is Red Cavalry, use cavrs (CAValry Red Selected) texture
+        if (GameEngine.BoardSprites[x/GameEngine.squareLength][y/GameEngine.squareLength] instanceof Units && player == GameEngine.red &&  unitType.equals("MGInfantry")) { //if selected unit is Red Cavalry, use cavrs (CAValry Red Selected) texture
             BitmapFactory.Options o = new BitmapFactory.Options();
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfrs, o);

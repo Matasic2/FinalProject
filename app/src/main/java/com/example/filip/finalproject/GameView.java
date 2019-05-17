@@ -280,32 +280,40 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     movableLocation inf = new movableLocation(theContext, 6);
                     movableLocation cav = new movableLocation(theContext, 7);
                     movableLocation art = new movableLocation(theContext, 8);
+                    movableLocation mg = new movableLocation(theContext, 20);
                     cav.draw(canvas, 7, 10);
                     inf.draw(canvas, 9, 10);
-                    art.draw(canvas, 11, 10);
+                    mg.draw(canvas, 11, 10);
+                    art.draw(canvas, 13, 10);
+
                 }
                 if (GameEngine.playing == GameEngine.red) {
                     movableLocation inf = new movableLocation(theContext, 9);
                     movableLocation cav = new movableLocation(theContext, 10);
                     movableLocation art = new movableLocation(theContext, 11);
+                    movableLocation mg = new movableLocation(theContext, 21);
                     cav.draw(canvas, 7, 10);
                     inf.draw(canvas, 9, 10);
-                    art.draw(canvas, 11, 10);
+                    mg.draw(canvas, 11, 10);
+                    art.draw(canvas, 13, 10);
                 }
                 Paint thePaint = new Paint();
                 thePaint.setTextSize(40 * FullscreenActivity.scaleFactor);
                 thePaint.setColor(Color.YELLOW);
                 canvas.drawText("" + Cavalry.foodPrice, 1000 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("" + Infantry.foodPrice, 1255 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
-                canvas.drawText("" + Artillery.foodPrice, 1515 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + MGInfantry.foodPrice, 1515 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + Artillery.foodPrice, 1770  * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 thePaint.setColor(Color.argb(255,204,102,0));
                 canvas.drawText("" + Cavalry.ironPrice, 950 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("" + Infantry.ironPrice, 1205 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
-                canvas.drawText("" + Artillery.ironPrice, 1465 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + MGInfantry.ironPrice, 1465 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + Artillery.ironPrice, 1720  * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 thePaint.setColor(Color.GRAY);
                 canvas.drawText("" + Cavalry.oilPrice,  905 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("" + Infantry.oilPrice, 1160 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
-                canvas.drawText("" + Artillery.oilPrice, 1420 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + MGInfantry.oilPrice, 1420 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + Artillery.oilPrice, 1675 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
             }
 
             else if (GameEngine.showFactory) {
@@ -328,15 +336,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 Paint thePaint = new Paint();
                 thePaint.setTextSize(40 * FullscreenActivity.scaleFactor);
                 thePaint.setColor(Color.YELLOW);
-                canvas.drawText("" + MechanizedInfantry.foodPrice, 1000 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + MGInfantry.foodPrice, 1000 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("" + Armor.foodPrice, 1255 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("" + HeavyTank.foodPrice, 1515 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 thePaint.setColor(Color.argb(255,204,102,0));
-                canvas.drawText("" + MechanizedInfantry.ironPrice, 950 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + MGInfantry.ironPrice, 950 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("" + Armor.ironPrice, 1215 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("" + HeavyTank.ironPrice, 1465 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 thePaint.setColor(Color.GRAY);
-                canvas.drawText("" + MechanizedInfantry.oilPrice, 905 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
+                canvas.drawText("" + MGInfantry.oilPrice, 905 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("" + Armor.oilPrice, 1160 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
                 canvas.drawText("" + HeavyTank.oilPrice, 1400 * FullscreenActivity.scaleFactor,1260 * FullscreenActivity.scaleFactor,thePaint);
 

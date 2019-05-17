@@ -138,13 +138,13 @@ public class Units {
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armr2, o);
             icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
-        if (owner == GameEngine.green && unitType.equals("Mech Infantry")) {
+        if (owner == GameEngine.green && unitType.equals("MGInfantry")) {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfg2, o);
             icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
-        if (owner == GameEngine.red && unitType.equals("Mech Infantry")) {
+        if (owner == GameEngine.red && unitType.equals("MGInfantry")) {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfr2, o);
@@ -268,13 +268,13 @@ public class Units {
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armr2, o);
             icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
-        if (owner == GameEngine.green && unitType.equals("Mech Infantry")) {
+        if (owner == GameEngine.green && unitType.equals("MGInfantry")) {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfg2, o);
             icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
-        if (owner == GameEngine.red && unitType.equals("Mech Infantry")) {
+        if (owner == GameEngine.red && unitType.equals("MGInfantry")) {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfr2, o);
@@ -360,13 +360,13 @@ public class Units {
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armr, o);
             icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
-        if (owner == GameEngine.green && unitType.equals("Mech Infantry")) {
+        if (owner == GameEngine.green && unitType.equals("MGInfantry")) {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfg, o);
             icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
-        if (owner == GameEngine.red && unitType.equals("Mech Infantry")) {
+        if (owner == GameEngine.red && unitType.equals("MGInfantry")) {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfr, o);
@@ -449,13 +449,13 @@ public class Units {
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armr2, o);
             icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
-        if (owner == GameEngine.green && unitType.equals("Mech Infantry")) {
+        if (owner == GameEngine.green && unitType.equals("MGInfantry")) {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfg2, o);
             icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
-        if (owner == GameEngine.red && unitType.equals("Mech Infantry")) {
+        if (owner == GameEngine.red && unitType.equals("MGInfantry")) {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfr2, o);
