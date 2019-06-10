@@ -3,6 +3,7 @@ package com.example.filip.finalproject;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.graphics.Paint;
 import android.util.EventLog;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -58,6 +59,9 @@ public class Resources {
 
     public void draw(Canvas canvas) {
         canvas.drawBitmap(icon, coordinates[0] * GameEngine.squareLength, coordinates[1] * GameEngine.squareLength, null);
+    }
+    public void draw(Canvas canvas,Paint paint, float displacement) {
+        canvas.drawBitmap(icon, coordinates[0] * GameEngine.squareLength + displacement, coordinates[1] * GameEngine.squareLength , paint);
     }
 
     public void draw(Canvas canvas, int x, int y) {

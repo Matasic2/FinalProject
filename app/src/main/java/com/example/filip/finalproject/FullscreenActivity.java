@@ -83,12 +83,24 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         vibe.vibrate(vibratepattern, -1);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (GameEngine.message != null && GameEngine.message.equals("You are about to leave the battle, tap again to continue")) {
+            FullscreenActivity.theActivity.backToMenu();
+        }
+        else {
+            GameEngine.message = "You are about to leave the battle, tap again to continue";
+        }
+        return;
+    }
 
     /*
     This will register the touch and send it to GameEngine for computing.
      */
     @Override
     public boolean onTouch (View view, MotionEvent event) {
+
+
         if (event.getAction() == MotionEvent.ACTION_UP) {
             GameEngine.tapProcessor((int) event.getX(), (int) event.getY()); //sends coordinates to GameEngine, which does everything.
         }
@@ -136,6 +148,6 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         super.onSaveInstanceState(savedInstanceState);
     }
     public void backToMenu (){
-        startActivity(new Intent(FullscreenActivity.this, SkirmishMenu.class));
+        startActivity(new Intent(FullscreenActivity.this, MainMenu.class));
     }
 }

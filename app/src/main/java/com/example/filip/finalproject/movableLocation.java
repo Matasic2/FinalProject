@@ -3,6 +3,7 @@ package com.example.filip.finalproject;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.graphics.Paint;
 import android.util.EventLog;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -206,9 +207,24 @@ public class movableLocation {
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.leave, o);
             icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
+        if (number == 26) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.hangar, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (number == 27) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.airlineposition, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
     }
     //draw yellow circles at given coordinates, +37 centers the image
     public void draw(Canvas canvas, int x, int y) {
         canvas.drawBitmap(icon, (x*GameEngine.squareLength) + displacement,(y*GameEngine.squareLength) + displacement, null);
+    }
+    public void draw(Canvas canvas, int x, int y, Paint paint) {
+        canvas.drawBitmap(icon, (x*GameEngine.squareLength) + displacement,(y*GameEngine.squareLength) + displacement, paint);
     }
 }

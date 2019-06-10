@@ -3,6 +3,7 @@ package com.example.filip.finalproject;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.graphics.Paint;
 import android.opengl.Visibility;
 import android.util.EventLog;
 import android.content.Context;
@@ -486,7 +487,11 @@ public class Units {
             canvas.drawBitmap(icon, coordinates[0] * GameEngine.squareLength, coordinates[1] * GameEngine.squareLength, null);
         }
     }
-
+    public void draw(Canvas canvas, Paint paint, float displacement) {
+        if (coordinates[0] != 125) {
+            canvas.drawBitmap(icon, coordinates[0] * GameEngine.squareLength + displacement, coordinates[1] * GameEngine.squareLength, paint);
+        }
+    }
     //Same as above, but draw then on given coordinates instead of unit's current coordinates.
     public void draw(Canvas canvas, int x, int y) {
         canvas.drawBitmap(icon, x * FullscreenActivity.scaleFactor, y * FullscreenActivity.scaleFactor, null);
