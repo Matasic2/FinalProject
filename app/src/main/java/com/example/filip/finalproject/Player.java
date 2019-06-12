@@ -27,4 +27,15 @@ public class Player {
             }
         }
     }
+
+    public void selectPlane(int index) {
+        if (hangar[index] != null) {hangar[index].select();}
+    }
+    public void removeFromHanger(Planes plane) {
+        for (int i = 0; i < hangar.length; i++) {
+            if (hangar[i] != null && hangar[i].equals(plane)) {
+                hangar[i] = null;
+            }
+        }
+    }
 }

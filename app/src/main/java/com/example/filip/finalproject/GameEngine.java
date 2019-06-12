@@ -15,8 +15,10 @@ public class GameEngine {
     public static Units lastUnit; //stores the last unit which made some action
     public static Units theUnit = null; // Selected unit, unlike the selected unit in GameView class this unit is the actual selected unit.
     public static SelectedUnit selected = null; // Selected unit, reference is not the same as the (selected) Unit itself.
+    public static Planes selectedPlane = null; //selected plane
     public static Units enemyTappedUnit = null; //same as above, but of opponent
     public static SelectedUnit enemySelected = null; // same as above, but for opponent
+    public static Planes[][] planeLines = new Planes[3][2];
     public static Units[][] BoardSprites = new Units[15][9]; //A 2D array of Units that stores the units for game engine and data processing, unlike GameView's Units[] this isn't involved in drawing units.
     public static Player green; //stores the reference to a player that is in charge of Green units
     public static Player red;//stores the reference to a player that is in charge of Red units
@@ -88,6 +90,42 @@ public class GameEngine {
                 GameView.showAir = !GameView.showAir;
                 playing.addPlane(new ReconPlane(GameView.theContext, playing));
             }
+
+            else if (x / squareLength > 2 && y / squareLength >= 10 && x / squareLength < 9 && selectedPlane == null) {
+                GameEngine.playing.selectPlane((x/squareLength) - 3);
+            }
+            else if (x/squareLength == 0 && GameEngine.playing == GameEngine.green && selectedPlane != null){
+                if (y/squareLength == 1 && planeLines[0][0] == null) {
+                    planeLines[0][0] = selectedPlane;
+                    green.removeFromHanger(selectedPlane);
+                }
+                if (y/squareLength == 4 && planeLines[1][0] == null) {
+                    planeLines[1][0] = selectedPlane;
+                    green.removeFromHanger(selectedPlane);
+                }
+                if (y/squareLength == 7 && planeLines[2][0] == null) {
+                    planeLines[2][0] = selectedPlane;
+                    green.removeFromHanger(selectedPlane);
+                }
+                else if (x/squareLength == 20 && GameEngine.playing == GameEngine.red && selectedPlane != null) {
+                    if (y / squareLength == 1 && planeLines[0][1] == null) {
+                        planeLines[0][1] = selectedPlane;
+                        red.removeFromHanger(selectedPlane);
+                    }
+                    if (y / squareLength == 4 && planeLines[1][1] == null) {
+                        planeLines[1][1] = selectedPlane;
+                        red.removeFromHanger(selectedPlane);
+                    }
+                    if (y / squareLength == 7 && planeLines[2][1] == null) {
+                        planeLines[2][1] = selectedPlane;
+                        red.removeFromHanger(selectedPlane);
+                    }
+                }
+            }
+            else if (selectedPlane != null){
+                GameEngine.selectedPlane.unselect();
+            }
+
         } else if (!GameView.showAir) {
             //un-selects the unit if the button is pressed.
             if (x / squareLength == 16 && y / squareLength == 1 && (selected != null || enemySelected != null)) {
@@ -139,6 +177,9 @@ public class GameEngine {
                 }
                 queue = new Units[0];
                 switchPlayer();
+                if (GameEngine.selectedPlane != null) {
+                    GameEngine.selectedPlane.unselect();
+                }
                 unselectAll();
                 if (playing.isHuman == false) {
                     AI.playTurn(red);

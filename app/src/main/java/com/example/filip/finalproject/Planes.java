@@ -2,6 +2,7 @@ package com.example.filip.finalproject;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 public class Planes {
@@ -21,5 +22,25 @@ public class Planes {
     }
     public void draw(Canvas canvas, int x, int y) {
         canvas.drawBitmap(icon, x * GameEngine.squareLength, y * GameEngine.squareLength, null);
+    }
+
+    public void select() {
+        GameEngine.selectedPlane = this;
+        getSelectedIcon();
+    }
+
+    public void getSelectedIcon() {
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inScaled = false;
+        Bitmap icontemp = BitmapFactory.decodeResource(GameView.theContext.getResources(), R.drawable.fitr, o);
+        this.icon = Bitmap.createScaledBitmap(icontemp, (int) (icontemp.getWidth() * FullscreenActivity.scaleFactor), (int) (icontemp.getHeight() * FullscreenActivity.scaleFactor), true);
+    }
+
+    public void unselect() {
+        GameEngine.selectedPlane = null;
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inScaled = false;
+        Bitmap icontemp = BitmapFactory.decodeResource(GameView.theContext.getResources(), R.drawable.fitg, o);
+        this.icon = Bitmap.createScaledBitmap(icontemp, (int) (icontemp.getWidth() * FullscreenActivity.scaleFactor), (int) (icontemp.getHeight() * FullscreenActivity.scaleFactor), true);
     }
 }

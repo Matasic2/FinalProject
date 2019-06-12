@@ -272,6 +272,27 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     }
                 }
 
+                //draw planes on the lines
+                for (int i = 0; i < GameEngine.planeLines.length; i++) {
+                    for (int j = 0; j < GameEngine.planeLines[i].length; j++) {
+                        if (GameEngine.planeLines[i][j] != null) {
+                            if (i == 0 && j == 0) {
+                                GameEngine.planeLines[i][j].draw(canvas, 0,1);
+                            } else if (i == 1 && j == 0) {
+                                GameEngine.planeLines[i][j].draw(canvas, 0,4);
+                            } else if (i == 2 && j == 0) {
+                                GameEngine.planeLines[i][j].draw(canvas, 0,7);
+                            } else if (i == 0 && j == 1) {
+                                GameEngine.planeLines[i][j].draw(canvas, 19,1);
+                            } else if (i == 1 && j == 1) {
+                                GameEngine.planeLines[i][j].draw(canvas, 19,4);
+                            } else if (i == 1 && j == 2) {
+                                GameEngine.planeLines[i][j].draw(canvas, 19,7);
+                            }
+                        }
+                    }
+                }
+
             } else {
                 grid.draw(canvas,showAir);  //draws the grid first, because that is the bottom layer.
                 if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("dev_mode")) {
