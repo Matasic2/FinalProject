@@ -91,34 +91,52 @@ public class GameEngine {
                 playing.addPlane(new ReconPlane(GameView.theContext, playing));
             }
 
-            else if (x / squareLength > 2 && y / squareLength >= 10 && x / squareLength < 9 && selectedPlane == null) {
-                GameEngine.playing.selectPlane((x/squareLength) - 3);
+            else if (x / squareLength > 3 && y / squareLength >= 10 && x / squareLength < 10 && selectedPlane == null) {
+                GameEngine.playing.selectPlane((x/squareLength) - 4);
             }
-            else if (x/squareLength == 0 && GameEngine.playing == GameEngine.green && selectedPlane != null){
+            else if ((x/squareLength == 0 || x/squareLength == 19 )&& GameEngine.playing == GameEngine.green && selectedPlane != null){
                 if (y/squareLength == 1 && planeLines[0][0] == null) {
-                    planeLines[0][0] = selectedPlane;
-                    green.removeFromHanger(selectedPlane);
+                    if (green.oilStorage > 0) {
+                        planeLines[0][0] = selectedPlane;
+                        green.removeFromHanger(selectedPlane);
+                        green.oilStorage--;
+                    }
                 }
                 if (y/squareLength == 4 && planeLines[1][0] == null) {
-                    planeLines[1][0] = selectedPlane;
-                    green.removeFromHanger(selectedPlane);
+                    if (green.oilStorage > 0) {
+                        planeLines[1][0] = selectedPlane;
+                        green.removeFromHanger(selectedPlane);
+                        green.oilStorage--;
+                    }
                 }
                 if (y/squareLength == 7 && planeLines[2][0] == null) {
-                    planeLines[2][0] = selectedPlane;
-                    green.removeFromHanger(selectedPlane);
+                    if (green.oilStorage > 0) {
+                        planeLines[2][0] = selectedPlane;
+                        green.removeFromHanger(selectedPlane);
+                        green.oilStorage--;
+                    }
                 }
-                else if (x/squareLength == 20 && GameEngine.playing == GameEngine.red && selectedPlane != null) {
-                    if (y / squareLength == 1 && planeLines[0][1] == null) {
+            }
+            else if (x/squareLength == 19 && GameEngine.playing == GameEngine.red && selectedPlane != null) {
+                if (y / squareLength == 1 && planeLines[0][1] == null) {
+                    if (red.oilStorage > 0) {
                         planeLines[0][1] = selectedPlane;
                         red.removeFromHanger(selectedPlane);
+                        red.oilStorage--;
                     }
-                    if (y / squareLength == 4 && planeLines[1][1] == null) {
+                }
+                if (y / squareLength == 4 && planeLines[1][1] == null) {
+                    if (red.oilStorage > 0) {
                         planeLines[1][1] = selectedPlane;
                         red.removeFromHanger(selectedPlane);
+                        red.oilStorage--;
                     }
-                    if (y / squareLength == 7 && planeLines[2][1] == null) {
+                }
+                if (y / squareLength == 7 && planeLines[2][1] == null) {
+                    if (red.oilStorage > 0) {
                         planeLines[2][1] = selectedPlane;
                         red.removeFromHanger(selectedPlane);
+                        red.oilStorage--;
                     }
                 }
             }
@@ -744,9 +762,56 @@ public class GameEngine {
 
     //switches the player when called
     public static void switchPlayer() {
+
+
         if (playing == green) {
+            for (int i = 0; i < playing.hangar.length; i++) {
+                if (playing.hangar[i] != null) {
+                    playing.hangar[i].HP += playing.hangar[i].healingRate;
+
+                    if (playing.hangar[i].HP > playing.hangar[i].maxHP) {
+                        playing.hangar[i].HP = playing.hangar[i].maxHP;
+                    }
+                }
+            }
+
+
+            for (int i = 0; i < 3; i++) {
+                if (planeLines[i][1] != null) {
+                    planeLines[i][1].attack(i,0, planeLines[i][1].airAttack,  planeLines[i][1].groundAttack);
+                    if (planeLines[i][0] != null) {
+                        planeLines[i][1].attack(i,1, planeLines[i][0].airAttack,  planeLines[i][0].groundAttack);
+                    }
+                    if (planeLines[i][1] != null) {
+                        planeLines[i][1].groundPlane();
+                        planeLines[i][1] = null;
+                    }
+                }
+            }
             playing = red;
         } else if (playing == red) {
+            for (int i = 0; i < playing.hangar.length; i++) {
+                if (playing.hangar[i] != null) {
+                    playing.hangar[i].HP += playing.hangar[i].healingRate;
+
+                    if (playing.hangar[i].HP > playing.hangar[i].maxHP) {
+                        playing.hangar[i].HP = playing.hangar[i].maxHP;
+                    }
+                }
+            }
+
+            for (int i = 0; i < 3; i++) {
+                if (planeLines[i][0] != null) {
+                    planeLines[i][0].attack(i,1, planeLines[i][0].airAttack,  planeLines[i][0].groundAttack);
+                    if (planeLines[i][1] != null) {
+                        planeLines[i][0].attack(i,0, planeLines[i][1].airAttack,  planeLines[i][1].groundAttack);
+                    }
+                    if (planeLines[i][0] != null) {
+                        planeLines[i][0].groundPlane();
+                        planeLines[i][0] = null;
+                    }
+                }
+            }
             playing = green;
         }
         // gives movement and attack to next player's units

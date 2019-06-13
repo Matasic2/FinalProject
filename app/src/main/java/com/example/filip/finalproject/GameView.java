@@ -255,18 +255,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }
                 //draw air line position for planes to place
                 for (int i = 0; i < 3; i++) {
-                    movableLocation airline = new movableLocation(theContext, 27);
-                    airline.draw(canvas, 0, 3 * i + 1);
+                        movableLocation airline = new movableLocation(theContext, 27);
+                        airline.draw(canvas, 0, 3 * i + 1);
+                        movableLocation airliner = new movableLocation(theContext, 28);
+                        airliner.draw(canvas, 17.8f, 3 * i + 1);
                 }
 
 
                 //draw hangar
                 movableLocation hangar = new movableLocation(theContext, 26);
-                hangar.draw(canvas, 3, 10);
+                hangar.draw(canvas, 4, 10);
                 if (GameEngine.playing != null) {
                     for (int i = 0; i < GameEngine.playing.hangar.length; i++){
                         if (GameEngine.playing.hangar[i] != null) {
-                            GameEngine.playing.hangar[i].draw(canvas,3 + i, 10);
+                            GameEngine.playing.hangar[i].draw(canvas,4 + i, 10);
                             GameEngine.message = "boo";
                         }
                     }
@@ -286,13 +288,35 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                                 GameEngine.planeLines[i][j].draw(canvas, 19,1);
                             } else if (i == 1 && j == 1) {
                                 GameEngine.planeLines[i][j].draw(canvas, 19,4);
-                            } else if (i == 1 && j == 2) {
+                            } else if (i == 2 && j == 1) {
                                 GameEngine.planeLines[i][j].draw(canvas, 19,7);
                             }
                         }
                     }
                 }
 
+                //draw oil left
+                Paint paint2 = new Paint();
+                paint2.setTextSize(60 * FullscreenActivity.scaleFactor);
+                paint2.setColor(Color.GRAY);
+                canvas.drawText("Oil : " + GameEngine.playing.oilStorage + " (+" + GameEngine.lastAddedResources[2] + ")", 50 * FullscreenActivity.scaleFactor, 1360 * FullscreenActivity.scaleFactor, paint2);
+
+                //draw info of selected plane
+
+                if (GameEngine.selectedPlane != null) {
+                    paint = new Paint();
+                    paint.setTextSize(36 * FullscreenActivity.scaleFactor);
+                    if (GameEngine.playing == GameEngine.green) {
+                        paint.setColor(Color.GREEN);
+                    } else if (GameEngine.playing == GameEngine.red) {
+                        paint.setColor(Color.RED);
+                    }
+
+                    canvas.drawText("Air attack :   " + GameEngine.selectedPlane.airAttack + " Air defence : " + GameEngine.selectedPlane.defence , 1350 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("Ground attack : " + GameEngine.selectedPlane.groundAttack,1350 * FullscreenActivity.scaleFactor, 1310 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("Health : " + GameEngine.selectedPlane.HP + "/" + GameEngine.selectedPlane.maxHP + " Repair : " + GameEngine.selectedPlane.healingRate, 1350 * FullscreenActivity.scaleFactor, 1360 * FullscreenActivity.scaleFactor, paint);
+
+                }
             } else {
                 grid.draw(canvas,showAir);  //draws the grid first, because that is the bottom layer.
                 if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("dev_mode")) {
