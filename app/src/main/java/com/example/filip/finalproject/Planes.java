@@ -16,16 +16,10 @@ public class Planes {
     public int maxHP; //Max HP of the unit
     public int healingRate; //how many health is gained after spending one turn in hangar
 
-    Planes(Context context, Player player, Bitmap icon, String name, int airAttack, int groundAttack, int defence, int maxHP, int healingRate) {
+    Planes(Context context, Player player, Bitmap icon, String name) {
         this.owner = player;
         this.icon = icon;
         this.planeType = name;
-        this.airAttack = airAttack;
-        this.groundAttack = groundAttack;
-        this.defence = defence;
-        this.HP = maxHP;
-        this.maxHP = maxHP;
-        this.healingRate = healingRate;
     }
 
     public void draw(Canvas canvas, int x, int y) {
@@ -48,6 +42,36 @@ public class Planes {
         }
     }
 
+    public void takeGroundDamage(int line) {
+        if (line == 0) {
+            for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                for (int j = 0; j < 4; j++) {
+                    if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
+                        this.HP -= GameEngine.BoardSprites[i][j].airAttack;
+                    }
+                }
+            }
+        }
+        if (line == 1) {
+            for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                for (int j = 3; j < 6; j++) {
+                    if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
+                        this.HP -= GameEngine.BoardSprites[i][j].airAttack;
+                    }
+                }
+            }
+        }
+        if (line == 2) {
+            for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                for (int j = 6; j < 9; j++) {
+                    if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
+                        this.HP -= GameEngine.BoardSprites[i][j].airAttack;
+                    }
+                }
+            }
+        }
+    }
+
     public void groundPlane() {
         for (int i = 0; i < owner.hangar.length; i++) {
             if (owner.hangar[i] == null) {
@@ -58,32 +82,62 @@ public class Planes {
     }
 
     public void getSelectedIcon() {
-        if (this.owner.equals(GameEngine.green)) {
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inScaled = false;
-            Bitmap icontemp = BitmapFactory.decodeResource(GameView.theContext.getResources(), R.drawable.fitgs, o);
-            this.icon = Bitmap.createScaledBitmap(icontemp, (int) (icontemp.getWidth() * FullscreenActivity.scaleFactor), (int) (icontemp.getHeight() * FullscreenActivity.scaleFactor), true);
-        } else {
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inScaled = false;
-            Bitmap icontemp = BitmapFactory.decodeResource(GameView.theContext.getResources(), R.drawable.fitrs, o);
-            this.icon = Bitmap.createScaledBitmap(icontemp, (int) (icontemp.getWidth() * FullscreenActivity.scaleFactor), (int) (icontemp.getHeight() * FullscreenActivity.scaleFactor), true);
+        if (planeType.equals("Fighter")) {
+            if (this.owner.equals(GameEngine.green)) {
+                BitmapFactory.Options o = new BitmapFactory.Options();
+                o.inScaled = false;
+                Bitmap icontemp = BitmapFactory.decodeResource(GameView.theContext.getResources(), R.drawable.fitgs, o);
+                this.icon = Bitmap.createScaledBitmap(icontemp, (int) (icontemp.getWidth() * FullscreenActivity.scaleFactor), (int) (icontemp.getHeight() * FullscreenActivity.scaleFactor), true);
+            } else {
+                BitmapFactory.Options o = new BitmapFactory.Options();
+                o.inScaled = false;
+                Bitmap icontemp = BitmapFactory.decodeResource(GameView.theContext.getResources(), R.drawable.fitrs, o);
+                this.icon = Bitmap.createScaledBitmap(icontemp, (int) (icontemp.getWidth() * FullscreenActivity.scaleFactor), (int) (icontemp.getHeight() * FullscreenActivity.scaleFactor), true);
+            }
+        } else if (planeType.equals("Bomber")) {
+            if (this.owner.equals(GameEngine.green)) {
+                BitmapFactory.Options o = new BitmapFactory.Options();
+                o.inScaled = false;
+                Bitmap icontemp = BitmapFactory.decodeResource(GameView.theContext.getResources(), R.drawable.bomgs, o);
+                this.icon = Bitmap.createScaledBitmap(icontemp, (int) (icontemp.getWidth() * FullscreenActivity.scaleFactor), (int) (icontemp.getHeight() * FullscreenActivity.scaleFactor), true);
+            } else {
+                BitmapFactory.Options o = new BitmapFactory.Options();
+                o.inScaled = false;
+                Bitmap icontemp = BitmapFactory.decodeResource(GameView.theContext.getResources(), R.drawable.bomrs, o);
+                this.icon = Bitmap.createScaledBitmap(icontemp, (int) (icontemp.getWidth() * FullscreenActivity.scaleFactor), (int) (icontemp.getHeight() * FullscreenActivity.scaleFactor), true);
+            }
         }
     }
 
     public void unselect() {
-        if (this.owner.equals(GameEngine.green)) {
-            GameEngine.selectedPlane = null;
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inScaled = false;
-            Bitmap icontemp = BitmapFactory.decodeResource(GameView.theContext.getResources(), R.drawable.fitg, o);
-            this.icon = Bitmap.createScaledBitmap(icontemp, (int) (icontemp.getWidth() * FullscreenActivity.scaleFactor), (int) (icontemp.getHeight() * FullscreenActivity.scaleFactor), true);
-        } else {
-            GameEngine.selectedPlane = null;
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inScaled = false;
-            Bitmap icontemp = BitmapFactory.decodeResource(GameView.theContext.getResources(), R.drawable.fitr, o);
-            this.icon = Bitmap.createScaledBitmap(icontemp, (int) (icontemp.getWidth() * FullscreenActivity.scaleFactor), (int) (icontemp.getHeight() * FullscreenActivity.scaleFactor), true);
+        if (planeType.equals("Fighter")) {
+            if (this.owner.equals(GameEngine.green)) {
+                GameEngine.selectedPlane = null;
+                BitmapFactory.Options o = new BitmapFactory.Options();
+                o.inScaled = false;
+                Bitmap icontemp = BitmapFactory.decodeResource(GameView.theContext.getResources(), R.drawable.fitg, o);
+                this.icon = Bitmap.createScaledBitmap(icontemp, (int) (icontemp.getWidth() * FullscreenActivity.scaleFactor), (int) (icontemp.getHeight() * FullscreenActivity.scaleFactor), true);
+            } else {
+                GameEngine.selectedPlane = null;
+                BitmapFactory.Options o = new BitmapFactory.Options();
+                o.inScaled = false;
+                Bitmap icontemp = BitmapFactory.decodeResource(GameView.theContext.getResources(), R.drawable.fitr, o);
+                this.icon = Bitmap.createScaledBitmap(icontemp, (int) (icontemp.getWidth() * FullscreenActivity.scaleFactor), (int) (icontemp.getHeight() * FullscreenActivity.scaleFactor), true);
+            }
+        } else if (planeType.equals("Bomber")) {
+            if (this.owner.equals(GameEngine.green)) {
+                GameEngine.selectedPlane = null;
+                BitmapFactory.Options o = new BitmapFactory.Options();
+                o.inScaled = false;
+                Bitmap icontemp = BitmapFactory.decodeResource(GameView.theContext.getResources(), R.drawable.bomg, o);
+                this.icon = Bitmap.createScaledBitmap(icontemp, (int) (icontemp.getWidth() * FullscreenActivity.scaleFactor), (int) (icontemp.getHeight() * FullscreenActivity.scaleFactor), true);
+            } else {
+                GameEngine.selectedPlane = null;
+                BitmapFactory.Options o = new BitmapFactory.Options();
+                o.inScaled = false;
+                Bitmap icontemp = BitmapFactory.decodeResource(GameView.theContext.getResources(), R.drawable.bomr, o);
+                this.icon = Bitmap.createScaledBitmap(icontemp, (int) (icontemp.getWidth() * FullscreenActivity.scaleFactor), (int) (icontemp.getHeight() * FullscreenActivity.scaleFactor), true);
+            }
         }
     }
 }

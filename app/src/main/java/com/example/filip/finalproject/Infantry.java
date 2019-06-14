@@ -13,6 +13,7 @@ public class Infantry extends Units {
     public static int GreenHP = 6; // HP value of Green's Infantry, this value can be changed
     public static int GreenMovement = 2; // Movement value of Green's Infantry, this value can be changed
     public static int GreenVisibility = 4; // Movement value of Green's Infantry, this value can be changed
+    public static int greenAirAttack = 1;
     
     //cost of Cavalry unit
     public static int foodPrice = 3;
@@ -30,13 +31,14 @@ public class Infantry extends Units {
     public static int RedHP = 6; // HP value of Red's Infantry, this value can be changed
     public static int RedMovement = 2; // Movement value of Red's Infantry, this value can be changed
     public static int RedVisibility = 4; // Movement value of Green's Infantry, this value can be changed
+    public static int redAirAttack = 1;
 
     Infantry(Context context, int x, int y, Player player) {
         super(context, x, y, player, "Infantry");
         if (player.color.equals("green")) {
-            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement, GreenVisibility);
+            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement, GreenVisibility, greenAirAttack);
         } else {
-            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement, RedVisibility);
+            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement, RedVisibility, redAirAttack);
         }
     }
 }

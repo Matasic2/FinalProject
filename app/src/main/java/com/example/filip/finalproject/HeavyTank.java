@@ -12,6 +12,7 @@ public class HeavyTank extends Units {
     public static int GreenDefence = 2; // Defence value of Green's Heavy tank, this value can be changed
     public static int GreenHP = 70; // HP value of Green's Heavy tank, this value can be changed
     public static int GreenMovement = 1; // Movement value of Green's Heavy tank, this value can be changed
+    public static int greenAirAttack = 0;
 
     //cost of Heavy tank unit
     public static int foodPrice = 10;
@@ -28,13 +29,14 @@ public class HeavyTank extends Units {
     public static int RedDefence = 2; // Defence value of Red's Heavy tank, this value can be changed
     public static int RedHP = 70; // HP value of Red's Heavy tank, this value can be changed
     public static int RedMovement = 1; // Movement value of Red's Heavy tank, this value can be changed
+    public static int redAirAttack = 0;
 
     HeavyTank(Context context, int x, int y, Player player) {
         super(context, x, y, player, "Heavy Tank");
         if (player.color.equals("green")) {
-            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement,8);
+            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement,8,greenAirAttack);
         } else {
-            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,8);
+            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,8,redAirAttack);
         }
     }
 }

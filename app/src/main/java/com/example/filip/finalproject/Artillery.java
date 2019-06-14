@@ -12,6 +12,7 @@ public class Artillery extends Units {
     public static int GreenHP = 6; // HP value of Green's artillery, this value can be changed
     public static int GreenMovement = 1; // Movement value of Green's artillery, this value can be changed
     public static int GreenVisibility = 4; // Movement value of Green's Infantry, this value can be changed
+    public static int greenAirAttack = 0;
 
     //cost of artillery unit
     public static int foodPrice = 7;
@@ -29,13 +30,14 @@ public class Artillery extends Units {
     public static int RedHP = 6; // HP value of Red's artillery, this value can be changed
     public static int RedMovement = 1; // Movement value of Red's artillery, this value can be changed
     public static int RedVisibility = 4; // Movement value of Green's Infantry, this value can be changed
+    public static int redAirAttack = 0;
 
     Artillery(Context context, int x, int y, Player player) {
         super(context, x, y, player, "Artillery");
         if (player.color.equals("green")) {
-            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement,GreenVisibility);
+            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement,GreenVisibility,greenAirAttack);
         } else {
-            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility);
+            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility, redAirAttack);
         }
     }
 }

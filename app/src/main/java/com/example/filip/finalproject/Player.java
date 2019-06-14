@@ -28,6 +28,15 @@ public class Player {
         }
     }
 
+    public boolean hangarHasEmptySlots() {
+        for (int i = 0; i < hangar.length; i++) {
+            if (hangar[i] == null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void selectPlane(int index) {
         if (hangar[index] != null) {hangar[index].select();}
     }

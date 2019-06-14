@@ -31,6 +31,7 @@ public class Units {
     public int maxHP; //Max HP of the unit
     public int movement; //Movement distance of the unit
     public int visibilityRange; //how far the unit can see
+    public int airAttack;
 
     //Two methods below are from previous versions of the code, I might need them again later.
      /*public Units(Bitmap bmp) {
@@ -59,7 +60,7 @@ public class Units {
        GameEngine.BoardSprites[coordinates[0]][coordinates[1]] = this;
    }*/
     //see above for meaning of these values
-    public void setParameters(int atc1, int atc2, int atc1r, int atc2r, int def, int hp, int maxhp, int mov, int visibility) {
+    public void setParameters(int atc1, int atc2, int atc1r, int atc2r, int def, int hp, int maxhp, int mov, int visibility, int airAttack) {
         this.attack1 = atc1;
         this.attack2 = atc2;
         this.attack1Range = atc1r;
@@ -69,6 +70,7 @@ public class Units {
         this.maxHP = maxhp;
         this.movement = mov;
         this.visibilityRange = visibility;
+        this.airAttack = airAttack;
     }
 
     //creates a new unit, initialize icon to it's unit type, attribute attack, defence and HP values, and set the owner. It also adds it to GaveView's units array and to GameEngine's Object[][] array.
@@ -142,13 +144,13 @@ public class Units {
         if (owner == GameEngine.green && unitType.equals("MGInfantry")) {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfg2, o);
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.aag, o);
             icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
         if (owner == GameEngine.red && unitType.equals("MGInfantry")) {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfr2, o);
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.aar, o);
             icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
         if (owner == GameEngine.green && unitType.equals("Heavy Tank")) {

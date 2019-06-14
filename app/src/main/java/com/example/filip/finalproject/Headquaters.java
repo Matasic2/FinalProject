@@ -12,6 +12,7 @@ public class Headquaters extends Units{
     public static int GreenDefence = 2; // Defence value of Green's HQ, this value can be changed
     public static int GreenHP = 20; // HP value of Green's HQ, this value can be changed
     public static int GreenMovement = 0; // Movement value of Green's HQ, this value can be changed
+    public static int greenAirAttack = 1;
 
 
     public static int RedAttack1 = 50; // Red HQ's first attack value, this value can be changed
@@ -21,13 +22,14 @@ public class Headquaters extends Units{
     public static int RedDefence = 2; // Defence value of Red's HQ, this value can be changed
     public static int RedHP = 20; // HP value of Red's HQ, this value can be changed
     public static int RedMovement = 0; // Movement value of Red's HQ, this value can be changed
+    public static int redAirAttack = 1;
 
     Headquaters(Context context, int x, int y, Player player) {
         super(context, x, y, player, "Headquarters");
         if (player.color.equals("green")) {
-            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement,3);
+            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement,3,greenAirAttack);
         } else {
-            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,3);
+            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,3,redAirAttack);
         }
 
     }

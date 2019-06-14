@@ -423,35 +423,38 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     canvas.drawText("" + Artillery.oilPrice, 1675 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
                 } else if (GameEngine.showFactory) {
                     if (GameEngine.playing == GameEngine.green) {
-                        movableLocation minf = new movableLocation(theContext, 20);
                         movableLocation arm = new movableLocation(theContext, 12);
-                        movableLocation htank = new movableLocation(theContext, 23);
-                        minf.draw(canvas, 7, 10);
-                        arm.draw(canvas, 9, 10);
-                        htank.draw(canvas, 11, 10);
+                        movableLocation fit = new movableLocation(theContext, 29);
+                        movableLocation bom = new movableLocation(theContext, 31);
+                        arm.draw(canvas, 7, 10);
+                        fit.draw(canvas, 9, 10);
+                        bom.draw(canvas, 11, 10);
                     }
                     if (GameEngine.playing == GameEngine.red) {
-                        movableLocation minf = new movableLocation(theContext, 21);
                         movableLocation arm = new movableLocation(theContext, 13);
-                        movableLocation htank = new movableLocation(theContext, 24);
-                        minf.draw(canvas, 7, 10);
-                        arm.draw(canvas, 9, 10);
-                        htank.draw(canvas, 11, 10);
+                        movableLocation fit = new movableLocation(theContext, 30);
+                        movableLocation bom = new movableLocation(theContext, 32);
+                        arm.draw(canvas, 7, 10);
+                        fit.draw(canvas, 9, 10);
+                        bom.draw(canvas, 11, 10);
                     }
                     Paint thePaint = new Paint();
                     thePaint.setTextSize(40 * FullscreenActivity.scaleFactor);
                     thePaint.setColor(Color.YELLOW);
-                    canvas.drawText("" + MGInfantry.foodPrice, 1000 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + Armor.foodPrice, 1255 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + HeavyTank.foodPrice, 1515 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+
+                    canvas.drawText("" + Armor.foodPrice, 1000 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                    canvas.drawText("" + ReconPlane.foodPrice, 1255 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                    canvas.drawText("" + Bomber.foodPrice, 1515 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+
                     thePaint.setColor(Color.argb(255, 204, 102, 0));
-                    canvas.drawText("" + MGInfantry.ironPrice, 950 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + Armor.ironPrice, 1215 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + HeavyTank.ironPrice, 1465 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                    canvas.drawText("" + Armor.ironPrice, 950 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                    canvas.drawText("" + ReconPlane.ironPrice, 1205 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                    canvas.drawText("" + Bomber.ironPrice, 1460 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+
                     thePaint.setColor(Color.GRAY);
-                    canvas.drawText("" + MGInfantry.oilPrice, 905 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + Armor.oilPrice, 1160 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + HeavyTank.oilPrice, 1400 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                    canvas.drawText("" + Armor.oilPrice, 900 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                    canvas.drawText("" + ReconPlane.oilPrice, 1155 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                    canvas.drawText("" + Bomber.oilPrice, 1405 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
 
 
                 } else {
@@ -556,8 +559,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     }
                     canvas.drawText("Close attack damage :   " + unitInfo[0] + " Range : " + unitInfo[1], 1950 * FullscreenActivity.scaleFactor, 1300 * FullscreenActivity.scaleFactor, paint);
                     canvas.drawText("Ranged attack damage : " + unitInfo[2] + "  Range : " + unitInfo[3], 1950 * FullscreenActivity.scaleFactor, 1340 * FullscreenActivity.scaleFactor, paint);
-                    canvas.drawText("Health : " + unitInfo[4] + " / " + unitInfo[5], 2100 * FullscreenActivity.scaleFactor, 1190 * FullscreenActivity.scaleFactor, paint);
-                    canvas.drawText("Unit's defence : " + unitInfo[6], 2100 * FullscreenActivity.scaleFactor, 1240 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("Health : " + unitInfo[4] + " / " + unitInfo[5], 2100 * FullscreenActivity.scaleFactor, 1175 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("Unit's defence : " + unitInfo[6], 2100 * FullscreenActivity.scaleFactor, 1220 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("Air attack : " + GameEngine.theUnit.airAttack, 2100 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, paint);
 
                     if (GameEngine.theUnit.movement != 0) {
                         canvas.drawText("This unit " + canMoveAndAttack[0], 1950 * FullscreenActivity.scaleFactor, 1380 * FullscreenActivity.scaleFactor, paint);
@@ -569,7 +573,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
                 //display info about opponent's selected unit
                 if (GameEngine.enemyTappedUnit != null) {
-                    GameEngine.enemyTappedUnit.draw(canvas, 1950, 830);
+                    GameEngine.enemyTappedUnit.draw(canvas, 1950, 850);
                     paint = new Paint();
                     paint.setTextSize(36 * FullscreenActivity.scaleFactor);
                     if (GameEngine.enemyTappedUnit.owner == GameEngine.red) {
@@ -599,8 +603,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     }
                     canvas.drawText("Close attack damage :   " + unitInfo[0] + " Range : " + unitInfo[1], 1950 * FullscreenActivity.scaleFactor, 1010 * FullscreenActivity.scaleFactor, paint);
                     canvas.drawText("Ranged attack damage : " + unitInfo[2] + "  Range : " + unitInfo[3], 1950 * FullscreenActivity.scaleFactor, 1050 * FullscreenActivity.scaleFactor, paint);
-                    canvas.drawText("Health : " + unitInfo[4] + " / " + unitInfo[5], 2100 * FullscreenActivity.scaleFactor, 900 * FullscreenActivity.scaleFactor, paint);
-                    canvas.drawText("Unit's defence : " + unitInfo[6], 2100 * FullscreenActivity.scaleFactor, 940 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("Health : " + unitInfo[4] + " / " + unitInfo[5], 2100 * FullscreenActivity.scaleFactor, 890 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("Unit's defence : " + unitInfo[6], 2100 * FullscreenActivity.scaleFactor, 930 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("Air attack : " + GameEngine.enemyTappedUnit.airAttack, 2100 * FullscreenActivity.scaleFactor, 970 * FullscreenActivity.scaleFactor, paint);
                     if (GameEngine.enemyTappedUnit.movement != 0) {
                         canvas.drawText("This unit " + canMoveAndAttack[0], 1950 * FullscreenActivity.scaleFactor, 1090 * FullscreenActivity.scaleFactor, paint);
                     } else {

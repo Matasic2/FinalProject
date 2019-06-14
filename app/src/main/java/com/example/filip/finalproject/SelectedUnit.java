@@ -103,7 +103,7 @@ public class SelectedUnit {
         if (GameEngine.BoardSprites[x/GameEngine.squareLength][y/GameEngine.squareLength] instanceof Units && player == GameEngine.green && unitType.equals("MGInfantry")) { //if selected unit is Green Cavalry, use cavgs (CAValry Green Selected) texture
             BitmapFactory.Options o = new BitmapFactory.Options();
             o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfgs, o);
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.aags, o);
             icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
             return;
         }
@@ -111,7 +111,7 @@ public class SelectedUnit {
         if (GameEngine.BoardSprites[x/GameEngine.squareLength][y/GameEngine.squareLength] instanceof Units && player == GameEngine.red &&  unitType.equals("MGInfantry")) { //if selected unit is Red Cavalry, use cavrs (CAValry Red Selected) texture
             BitmapFactory.Options o = new BitmapFactory.Options();
             o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.minfrs, o);
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.aars, o);
             icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
             return;
         }

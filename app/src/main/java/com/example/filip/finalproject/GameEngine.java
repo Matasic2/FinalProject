@@ -31,6 +31,8 @@ public class GameEngine {
     public static int[] lastCoordinates = new int[2]; //coordinates of last action
     public static Units[] queue = new Units[0]; // stores all units that will be deployed
     public static Player AIPlayer = null;
+    public static boolean[] fogOfWarIsRevealedForGreen = new boolean[3];
+    public static boolean[] fogOfWarIsRevealedForRed = new boolean[3];
 
 
     public static int[] lastAddedResources = new int[3]; //memorizes last added resources, to display next to storage
@@ -88,7 +90,6 @@ public class GameEngine {
         if (GameView.showAir) {
             if (x / squareLength == 18 && y / squareLength == 10) {
                 GameView.showAir = !GameView.showAir;
-                playing.addPlane(new ReconPlane(GameView.theContext, playing));
             }
 
             else if (x / squareLength > 3 && y / squareLength >= 10 && x / squareLength < 10 && selectedPlane == null) {
@@ -423,7 +424,7 @@ public class GameEngine {
                 lastUnit = null;
             }
             //buys new armor
-            if (x / squareLength == 9 && y / squareLength == 10 && showFactory) {
+            if (x / squareLength == 7 && y / squareLength == 10 && showFactory) {
                 if (playing.foodStorage >= Armor.foodPrice && playing.ironStorage >= Armor.ironPrice && playing.oilStorage >= Armor.oilPrice) {
                     if (playing == green) {
                         if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[2][2] != null && GameEngine.BoardSprites[2][2].owner == green)) {
@@ -448,9 +449,52 @@ public class GameEngine {
                 lastUnit = null;
             }
 
+            //playing.addPlane(new ReconPlane(GameView.theContext, playing));
+            //buys new fighter
+            if (x / squareLength == 9 && y / squareLength == 10 && showFactory) {
+                if (playing.foodStorage >= ReconPlane.foodPrice && playing.ironStorage >= ReconPlane.ironPrice && playing.oilStorage >= ReconPlane.oilPrice) {
+                    if (playing == green && green.hangarHasEmptySlots()) {
+                        playing.addPlane(new ReconPlane(GameView.theContext, playing));
+                        playing.foodStorage -= ReconPlane.foodPrice;
+                        playing.ironStorage -= ReconPlane.ironPrice;
+                        playing.oilStorage -= ReconPlane.oilPrice;
+                    }
+                    if ((playing == red) && red.hangarHasEmptySlots()) {
+                        playing.addPlane(new ReconPlane(GameView.theContext, playing));
+                        playing.foodStorage -= ReconPlane.foodPrice;
+                        playing.ironStorage -= ReconPlane.ironPrice;
+                        playing.oilStorage -= ReconPlane.oilPrice;
+                    }
+                    lastCoordinates[0] = 125;
+                    lastCoordinates[1] = 125;
+                    lastUnit = null;
+                }
+            }
 
-            //buys new Heavy Tank
-            if (x / squareLength == 11 && y / squareLength == 10 && showFactory) {
+
+            //buys new bomber
+        if (x / squareLength == 11 && y / squareLength == 10 && showFactory) {
+            if (playing.foodStorage >= Bomber.foodPrice && playing.ironStorage >= Bomber.ironPrice && playing.oilStorage >= Bomber.oilPrice) {
+                if (playing == green && green.hangarHasEmptySlots()) {
+                    playing.addPlane(new Bomber(GameView.theContext, playing));
+                    playing.foodStorage -= Bomber.foodPrice;
+                    playing.ironStorage -= Bomber.ironPrice;
+                    playing.oilStorage -= Bomber.oilPrice;
+                }
+                if ((playing == red) && red.hangarHasEmptySlots()) {
+                    playing.addPlane(new Bomber(GameView.theContext, playing));
+                    playing.foodStorage -= Bomber.foodPrice;
+                    playing.ironStorage -= Bomber.ironPrice;
+                    playing.oilStorage -= Bomber.oilPrice;
+                }
+                lastCoordinates[0] = 125;
+                lastCoordinates[1] = 125;
+                lastUnit = null;
+            }
+        }
+
+            //buys new Heavy Tank (UNUSED)
+            /*if (x / squareLength == 11 && y / squareLength == 10 && showFactory) {
                 if (playing.foodStorage >= HeavyTank.foodPrice && playing.ironStorage >= HeavyTank.ironPrice && playing.oilStorage >= HeavyTank.oilPrice) {
                     if (playing == green) {
                         if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[2][2] != null && GameEngine.BoardSprites[2][2].owner == green)) {
@@ -472,7 +516,7 @@ public class GameEngine {
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
                 lastUnit = null;
-            }
+            } */
 
             // If tap is outside the grid, do nothing.
             if (x / squareLength >= 15 || y / squareLength >= 9) {
@@ -591,6 +635,15 @@ public class GameEngine {
 
     //moves the unit to x and y
     public static void moveTo(Units u, int x, int y) {
+        if (u.unitType.equals("Armor")) {
+            if (u.owner.oilStorage <= 0) {
+                message = "No oil left to move armor unit";
+                return;
+            } else {
+                u.owner.oilStorage--;
+            }
+        }
+
         if (u.coordinates[0] == x && u.coordinates[1] == y) {
             return;
         }
@@ -762,34 +815,7 @@ public class GameEngine {
 
     //switches the player when called
     public static void switchPlayer() {
-
-
         if (playing == green) {
-            for (int i = 0; i < playing.hangar.length; i++) {
-                if (playing.hangar[i] != null) {
-                    playing.hangar[i].HP += playing.hangar[i].healingRate;
-
-                    if (playing.hangar[i].HP > playing.hangar[i].maxHP) {
-                        playing.hangar[i].HP = playing.hangar[i].maxHP;
-                    }
-                }
-            }
-
-
-            for (int i = 0; i < 3; i++) {
-                if (planeLines[i][1] != null) {
-                    planeLines[i][1].attack(i,0, planeLines[i][1].airAttack,  planeLines[i][1].groundAttack);
-                    if (planeLines[i][0] != null) {
-                        planeLines[i][1].attack(i,1, planeLines[i][0].airAttack,  planeLines[i][0].groundAttack);
-                    }
-                    if (planeLines[i][1] != null) {
-                        planeLines[i][1].groundPlane();
-                        planeLines[i][1] = null;
-                    }
-                }
-            }
-            playing = red;
-        } else if (playing == red) {
             for (int i = 0; i < playing.hangar.length; i++) {
                 if (playing.hangar[i] != null) {
                     playing.hangar[i].HP += playing.hangar[i].healingRate;
@@ -802,17 +828,62 @@ public class GameEngine {
 
             for (int i = 0; i < 3; i++) {
                 if (planeLines[i][0] != null) {
+                    planeLines[i][0].takeGroundDamage(i);
+                }
+                if (planeLines[i][1] != null) {
+                    planeLines[i][1].attack(i,0, planeLines[i][1].airAttack,  planeLines[i][1].groundAttack);
+                    if (planeLines[i][0] != null) {
+                        planeLines[i][1].attack(i,1, planeLines[i][0].airAttack,  planeLines[i][0].groundAttack);
+                    }
+                    if (planeLines[i][1] != null) {
+                        fogOfWarIsRevealedForRed[i] = true;
+                        planeLines[i][1].groundPlane();
+                        planeLines[i][1] = null;
+                    }
+                }
+            }
+            for (int i = 0; i < fogOfWarIsRevealedForGreen.length; i++) {
+                fogOfWarIsRevealedForGreen[i] = false;
+            }
+
+            playing = red;
+            if (planeLines[0][0] != null || planeLines[1][0] != null || planeLines[2][0] != null ) {
+                message = "Enemy planes spotted!";
+            }
+        } else if (playing == red) {
+            for (int i = 0; i < playing.hangar.length; i++) {
+                if (playing.hangar[i] != null) {
+                    playing.hangar[i].HP += playing.hangar[i].healingRate;
+
+                    if (playing.hangar[i].HP > playing.hangar[i].maxHP) {
+                        playing.hangar[i].HP = playing.hangar[i].maxHP;
+                    }
+                }
+            }
+
+            for (int i = 0; i < 3; i++) {
+                if (planeLines[i][1] != null) {
+                    planeLines[i][1].takeGroundDamage(i);
+                }
+                if (planeLines[i][0] != null) {
                     planeLines[i][0].attack(i,1, planeLines[i][0].airAttack,  planeLines[i][0].groundAttack);
                     if (planeLines[i][1] != null) {
                         planeLines[i][0].attack(i,0, planeLines[i][1].airAttack,  planeLines[i][1].groundAttack);
                     }
                     if (planeLines[i][0] != null) {
+                        fogOfWarIsRevealedForGreen[i] = true;
                         planeLines[i][0].groundPlane();
                         planeLines[i][0] = null;
                     }
                 }
             }
+            for (int i = 0; i < fogOfWarIsRevealedForGreen.length; i++) {
+                fogOfWarIsRevealedForRed[i] = false;
+            }
             playing = green;
+            if (planeLines[0][1] != null || planeLines[1][1] != null || planeLines[2][1] != null ) {
+                message ="Enemy planes spotted!";
+            }
         }
         // gives movement and attack to next player's units
         for (int i = 0; i < BoardSprites.length; i++) {
@@ -859,7 +930,9 @@ public class GameEngine {
         GameEngine.estimateResources();
         showMarket = false;
         showFactory = false;
-        message = "";
+        if (!message.equals("Enemy planes spotted!")) {
+            message = "";
+        }
     }
 
     //estimates the resources that will be given to playing player next turn
@@ -930,6 +1003,55 @@ public class GameEngine {
                 }
             }
         }
+
+        //reveal tiles that are scouted by planes
+        if (player == 0) {
+            if (fogOfWarIsRevealedForGreen[0]) {
+                for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        tile_is_visible[i][j] = true;
+                    }
+                }
+            }
+            if (fogOfWarIsRevealedForGreen[1]) {
+                for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                    for (int j = 3; j < 6; j++) {
+                        tile_is_visible[i][j] = true;
+                    }
+                }
+            }
+            if (fogOfWarIsRevealedForGreen[2]) {
+                for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                    for (int j = 6; j < 9; j++) {
+                        tile_is_visible[i][j] = true;
+                    }
+                }
+            }
+        }
+        if (player == 1) {
+            if (fogOfWarIsRevealedForRed[0]) {
+                for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        tile_is_visible[i][j] = true;
+                    }
+                }
+            }
+            if (fogOfWarIsRevealedForRed[1]) {
+                for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                    for (int j = 3; j < 6; j++) {
+                        tile_is_visible[i][j] = true;
+                    }
+                }
+            }
+            if (fogOfWarIsRevealedForRed[2]) {
+                for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                    for (int j = 6; j < 9; j++) {
+                        tile_is_visible[i][j] = true;
+                    }
+                }
+            }
+        }
+
         return tile_is_visible;
     }
 }
