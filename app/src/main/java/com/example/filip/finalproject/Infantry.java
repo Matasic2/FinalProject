@@ -17,7 +17,7 @@ public class Infantry extends Units {
     
     //cost of Cavalry unit
     public static int foodPrice = 3;
-    public static int ironPrice = 1;
+    public static int ironPrice = 0;
     public static int oilPrice = 0;
 
     //How much health will the unit gain if healed

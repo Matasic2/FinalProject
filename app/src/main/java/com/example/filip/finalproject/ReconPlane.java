@@ -12,7 +12,7 @@ public class ReconPlane extends Planes {
     public static int greenMaxHP = 20; //Max HP of the unit
     public static int greenRepairRate = 4;
 
-    public static int foodPrice = 1;
+    public static int foodPrice = 2;
     public static int ironPrice = 2;
     public static int oilPrice = 1;
 

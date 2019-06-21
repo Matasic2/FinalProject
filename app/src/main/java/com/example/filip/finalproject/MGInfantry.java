@@ -33,7 +33,7 @@ public class MGInfantry extends Units {
     public static int redAirAttack = 4;
 
     MGInfantry(Context context, int x, int y, Player player) {
-        super(context, x, y, player, "MGInfantry");
+        super(context, x, y, player, "Anti air");
         if (player.color.equals("green")) {
             this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement,3,greenAirAttack);
         } else {

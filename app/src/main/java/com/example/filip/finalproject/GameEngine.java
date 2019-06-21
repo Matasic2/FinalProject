@@ -8,7 +8,7 @@ import android.graphics.Canvas;
 // Class that will run the game and manage all the events.
 public class GameEngine {
 
-
+    public static int turnCount = 0;
     public static int squareLength = (int) (128  * FullscreenActivity.scaleFactor); //scales square length, dependent on scale factor
     public Bitmap image; // Image of the grid
     public Bitmap airImage; //air grid
@@ -87,6 +87,27 @@ public class GameEngine {
         //if (selected != null && x/squareLength  == selected.coordinates[0] && y / squareLength  == selected.coordinates[1]) {
         //    return;
         //}
+        if (GameView.showendTurnScreen) {
+            GameView.showendTurnScreen = false;
+
+            if (playing == red) {
+                if (planeLines[0][0] != null || planeLines[1][0] != null || planeLines[2][0] != null) {
+                    message = "Enemy planes spotted! ";
+                } else {
+                    message = "";
+                }
+            }
+
+            if (playing == green) {
+                if (planeLines[0][1] != null || planeLines[1][1] != null || planeLines[2][1] != null) {
+                    message = "Enemy planes spotted! ";
+                } else {
+                    message = "";
+                }
+            }
+            message += "Turn " + GameEngine.turnCount++ / 2;
+            return;
+        }
         if (GameView.showAir) {
             if (x / squareLength == 18 && y / squareLength == 10) {
                 GameView.showAir = !GameView.showAir;
@@ -169,7 +190,7 @@ public class GameEngine {
                         if (theUnit.unitType.equals("Artillery")) {
                             theUnit.HP += Artillery.healedBy;
                         }
-                        if (theUnit.unitType.equals("MGInfantry")) {
+                        if (theUnit.unitType.equals("Anti air")) {
                             theUnit.HP += MGInfantry.healedBy;
                         }
                         if (theUnit.unitType.equals("Heavy Tank")) {
@@ -195,6 +216,17 @@ public class GameEngine {
                     return;
                 }
                 queue = new Units[0];
+                if (playing.equals(red)) {
+                    message = "Green player's turn. Press anywhere to continue.";
+                } else {
+                    message = "Red player's turn. Press anywhere to continue.";
+                }
+                GameView.showendTurnScreen = true;
+                try {
+                    Thread.sleep(15); //syncing with other thread to avoid potential peeks into opponent's army
+                } catch (InterruptedException e) {
+
+                }
                 switchPlayer();
                 if (GameEngine.selectedPlane != null) {
                     GameEngine.selectedPlane.unselect();
@@ -299,7 +331,7 @@ public class GameEngine {
                         }
                     }
                 }
-                if (theUnit.unitType == "MGInfantry") {
+                if (theUnit.unitType == "Anti air") {
                     if (theUnit.defence == MGInfantry.GreenDefence) {
                         if (playing.ironStorage >= 1) {
                             theUnit.defence++;
@@ -310,7 +342,7 @@ public class GameEngine {
             }
 
 
-            //back to menu
+            //show air
             if (x / squareLength == 18 && y / squareLength == 5) {
                 GameView.showAir = true;
             }
@@ -847,9 +879,6 @@ public class GameEngine {
             }
 
             playing = red;
-            if (planeLines[0][0] != null || planeLines[1][0] != null || planeLines[2][0] != null ) {
-                message = "Enemy planes spotted!";
-            }
         } else if (playing == red) {
             for (int i = 0; i < playing.hangar.length; i++) {
                 if (playing.hangar[i] != null) {
@@ -881,9 +910,6 @@ public class GameEngine {
                 fogOfWarIsRevealedForRed[i] = false;
             }
             playing = green;
-            if (planeLines[0][1] != null || planeLines[1][1] != null || planeLines[2][1] != null ) {
-                message ="Enemy planes spotted!";
-            }
         }
         // gives movement and attack to next player's units
         for (int i = 0; i < BoardSprites.length; i++) {
@@ -930,9 +956,6 @@ public class GameEngine {
         GameEngine.estimateResources();
         showMarket = false;
         showFactory = false;
-        if (!message.equals("Enemy planes spotted!")) {
-            message = "";
-        }
     }
 
     //estimates the resources that will be given to playing player next turn

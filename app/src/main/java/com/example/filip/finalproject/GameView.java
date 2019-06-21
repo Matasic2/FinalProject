@@ -24,6 +24,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static SelectedUnit enemySelected = null; //opponent's selected unit
     public static Units[] units = new Units[0]; // Array of units that will be drawn, they don't have the physical location on board (In GameEngine class, BoardSprites does that).
     public static Resources[] resources = new Resources[0]; // Array of resources that will be drawn, they don't have the physical location on board (In GameEngine class, BoardResources does that).
+    public static boolean showendTurnScreen = false;
+
     //Starts the game thread
     public GameView(Context context) {
         super(context);
@@ -213,6 +215,21 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void draw (Canvas canvas) {
         super.draw(canvas);
         if (canvas != null) {
+            if (showendTurnScreen) {
+                Paint paint2 = new Paint();
+                paint2.setTextSize(80 * FullscreenActivity.scaleFactor);
+                if (GameEngine.playing.equals(GameEngine.red)) {
+                    paint2.setColor(Color.RED);
+                    canvas.drawText(GameEngine.message, 500 * FullscreenActivity.scaleFactor, 800 * FullscreenActivity.scaleFactor, paint2);
+                } else {
+                    paint2.setColor(Color.GREEN);
+                    canvas.drawText(GameEngine.message, 500 * FullscreenActivity.scaleFactor, 800 * FullscreenActivity.scaleFactor, paint2);
+                }
+                return;
+            }
+
+
+
             if (showAir) {
                 grid.draw(canvas,showAir);
                 movableLocation pointers12 = new movableLocation(theContext, 25);

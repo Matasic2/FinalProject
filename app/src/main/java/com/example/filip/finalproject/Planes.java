@@ -38,7 +38,33 @@ public class Planes {
             }
         }
         else {
-            return; //TODO: implement air attack
+            if (row == 0) {
+                for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
+                            GameEngine.DamageUnit(groundAttack, GameEngine.BoardSprites[i][j],i,j);
+                        }
+                    }
+                }
+            }
+            if (row == 1) {
+                for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                    for (int j = 3; j < 6; j++) {
+                        if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
+                            GameEngine.DamageUnit(groundAttack, GameEngine.BoardSprites[i][j],i,j);
+                        }
+                    }
+                }
+            }
+            if (row == 2) {
+                for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                    for (int j = 6; j < 9; j++) {
+                        if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
+                            GameEngine.DamageUnit(groundAttack, GameEngine.BoardSprites[i][j],i,j);
+                        }
+                    }
+                }
+            }
         }
     }
 
