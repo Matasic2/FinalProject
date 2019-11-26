@@ -18,7 +18,7 @@ public class Armor extends Units {
     //cost of Armor unit
     public static int foodPrice = 2;
     public static int ironPrice = 5;
-    public static int oilPrice = 6;
+    public static int oilPrice = 9;
 
     //How much health will the unit gain if healed
     public static int healedBy = 6;

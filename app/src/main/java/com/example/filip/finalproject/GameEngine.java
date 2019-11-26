@@ -40,6 +40,9 @@ public class GameEngine {
 
     //restarts board
     public static void restart(){
+        fogOfWarIsRevealedForGreen = new boolean[3];
+        fogOfWarIsRevealedForRed = new boolean[3];
+        planeLines = new Planes[3][2];
         lastUnit = null; //stores the last unit which made some action
         theUnit = null; // Selected unit, unlike the selected unit in GameView class this unit is the actual selected unit.
         selected = null; // Selected unit, reference is not the same as the (selected) Unit itself.
@@ -57,7 +60,26 @@ public class GameEngine {
         AI.units = new Units[0];
         AI.turn = 0;
         AI.aggresionLevel = 3;
+        turnCount = 0;
+
     }
+
+    public static void load() {
+        if (FullscreenActivity.memory != null && FullscreenActivity.memory.size() != 0) {
+            GameView.shouldDrawUI = false;
+            message = "I have data!";
+
+            for (int i = 0; i < FullscreenActivity.memory.size(); i++) {
+                int coord = FullscreenActivity.memory.get(i);
+                int y = coord % FullscreenActivity.widthfullscreen;
+                int x = coord  / FullscreenActivity.widthfullscreen;
+                tapProcessor(x,y);
+            }
+
+            GameView.shouldDrawUI = true;
+        }
+    }
+
     //Constructor that creates the unit and it's image, doesn't set it's coordinates. Mostly used by onDraw function in GameView
     public GameEngine(Bitmap grid, Bitmap airGrid) {
         image = grid;
@@ -583,9 +605,7 @@ public class GameEngine {
 
             //if user taps with unit selected on an empty square, move it TODO : make sure unit cannot move over another unit
             if (theUnit != null && BoardSprites[x / squareLength][y / squareLength] == null
-                    && (theUnit.movement >= getSquareDistance           //also check if unit is in range.
-                    (getCoordinates(theUnit)[0], x / squareLength,
-                            getCoordinates(theUnit)[1], y / squareLength))
+                    && getReachableTiles(getCoordinates(theUnit)[0],getCoordinates(theUnit)[1], theUnit.movement)[x / squareLength][y / squareLength]
                     && theUnit.hasMove == true) {
                 moveTo(theUnit, x / squareLength, y / squareLength); //and then move the unit, and un-select it.
                 //if unit has attack, don't un-select it yet.
@@ -956,6 +976,11 @@ public class GameEngine {
         GameEngine.estimateResources();
         showMarket = false;
         showFactory = false;
+        if (playing == green) {
+            message = "Green player's turn. Press anywhere to continue.";
+        } else {
+            message ="Red player's turn. Press anywhere to continue.";
+        }
     }
 
     //estimates the resources that will be given to playing player next turn
@@ -1077,5 +1102,35 @@ public class GameEngine {
 
         return tile_is_visible;
     }
-}
 
+    //helper recursive function
+    public static void getReachableTilesRecursive(int xCoord, int yCoord, int currentDistance, boolean[][] map) {
+        if (currentDistance < 0
+                || xCoord < 0 || yCoord < 0 || xCoord > 14 || yCoord > 8
+                || (BoardSprites[xCoord][yCoord] != null && BoardSprites[xCoord][yCoord].owner != playing)) {
+            return;
+        }
+        if (BoardSprites[xCoord][yCoord] == null) {
+            map[xCoord][yCoord] = true;
+        }
+        getReachableTilesRecursive(xCoord-1,yCoord,currentDistance - 1, map);
+        getReachableTilesRecursive(xCoord,yCoord-1,currentDistance - 1, map);
+        getReachableTilesRecursive(xCoord+1,yCoord,currentDistance - 1, map);
+        getReachableTilesRecursive(xCoord,yCoord+1,currentDistance - 1, map);
+    }
+
+    //gets all tiles that are reachable by a unit without skipping over enemy units
+    public static boolean[][] getReachableTiles(int xCoord, int yCoord, int range) {
+        boolean[][] tiles = new boolean[15][9];
+
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles[i].length; j++) {
+                tiles[i][j] = false;
+            }
+        }
+
+        getReachableTilesRecursive(xCoord, yCoord, range, tiles);
+        tiles[xCoord][yCoord] = false;
+        return tiles;
+    }
+}

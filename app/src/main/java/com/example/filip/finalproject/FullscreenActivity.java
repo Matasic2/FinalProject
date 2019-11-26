@@ -31,7 +31,8 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Vibrator;
 
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class FullscreenActivity extends Activity implements View.OnTouchListener{
 
@@ -42,6 +43,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     public static int heightscreen; //height of the screen
     public static int widthfullscreen; //width of the screen
     public static FullscreenActivity theActivity; //stores the reference of the activity
+    public static ArrayList<Integer> memory = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         myGameView.setOnTouchListener(this); //sets listener
         setContentView(myGameView); //sets context
         theActivity = this;
+        GameEngine.message = "Create";
     }
 
     //vibrates the phone
@@ -89,6 +92,9 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
             FullscreenActivity.theActivity.backToMenu();
         }
         else {
+            if (GameEngine.theUnit != null) {
+                GameEngine.theUnit = null;
+            }
             GameEngine.message = "You are about to leave the battle, tap again to continue";
         }
         return;
@@ -102,6 +108,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
 
 
         if (event.getAction() == MotionEvent.ACTION_UP) {
+            memory.add(new Integer((int) event.getX() * widthfullscreen + (int) event.getY()));
             GameEngine.tapProcessor((int) event.getX(), (int) event.getY()); //sends coordinates to GameEngine, which does everything.
         }
 
@@ -112,6 +119,14 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         super.onStart();
         MainThread.run = true;
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        MainThread.run = true;
+
+    }
+
     @Override
     protected void onPause(){
         super.onPause();

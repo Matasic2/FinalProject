@@ -20,7 +20,7 @@ public class AI {
         if (turn == 0) {
             addUnit(GameEngine.BoardSprites[12][6], "moveTo_8_7");
             Random rand = new Random();
-            AI.rng = rand.nextInt(100);
+            AI.rng = 30;
         }
         resetOrders(); //at the start of the every turn, decide what to do with all units
         turn++; //add turn to turn counter

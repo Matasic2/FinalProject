@@ -16,6 +16,7 @@ import android.graphics.Canvas;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
+    public static boolean shouldDrawUI = true;
     public static boolean showAir = false;
     public static Context theContext; //context of the View, required for adding textures to units in other classes.
     public static MainThread thread; //Game's thread.
@@ -189,6 +190,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             GameEngine.playing = GameEngine.green;
             GameEngine.estimateResources();
             thread.start(); // starts the tread
+
+        GameEngine.load();
     }
 
     //Destroys the (image of) board, also copied from internet.
@@ -214,7 +217,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw (Canvas canvas) {
         super.draw(canvas);
-        if (canvas != null) {
+        if (canvas != null && shouldDrawUI) {
             if (showendTurnScreen) {
                 Paint paint2 = new Paint();
                 paint2.setTextSize(80 * FullscreenActivity.scaleFactor);
@@ -515,12 +518,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
                 //draws yellow squares where selected unit can move.
                 if (GameEngine.theUnit != null && GameEngine.theUnit.hasMove == true) {
+                    int[] coordinates = GameEngine.getCoordinates(GameEngine.theUnit);
+                    boolean[][] reachableTiles = GameEngine.getReachableTiles(coordinates[0], coordinates[1], GameEngine.theUnit.movement);
                     for (int i = 0; i < GameEngine.BoardSprites.length; i++) { // TODO : optimize this
                         for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
-                            if (GameEngine.BoardSprites[i][j] == null &&
-                                    (GameEngine.theUnit.movement >= GameEngine.getSquareDistance           //also check if unit is in range.
-                                            (GameEngine.getCoordinates(GameEngine.theUnit)[0], i,
-                                                    GameEngine.getCoordinates(GameEngine.theUnit)[1], j))) {
+                            if (reachableTiles[i][j]) {
                                 movableLocation temp = new movableLocation(theContext);
                                 temp.draw(canvas, i, j);
                             }
