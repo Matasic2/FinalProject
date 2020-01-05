@@ -3,14 +3,26 @@ package com.example.filip.finalproject;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 
 // Class that will run the game and manage all the events.
 public class GameEngine {
 
+    public static int width = 15;
+    public static int heigth = 9;
+
+    public static int greenDeployX = 2;
+    public static int greenDeployY = 2;
+    public static int redDeployX = 12;
+    public static int redDeployY = 6;
+
     public static int turnCount = 0;
     public static int squareLength = (int) (128  * FullscreenActivity.scaleFactor); //scales square length, dependent on scale factor
     public Bitmap image; // Image of the grid
+    public Bitmap emptySquare;
     public Bitmap airImage; //air grid
     public static Units lastUnit; //stores the last unit which made some action
     public static Units theUnit = null; // Selected unit, unlike the selected unit in GameView class this unit is the actual selected unit.
@@ -37,7 +49,6 @@ public class GameEngine {
 
     public static int[] lastAddedResources = new int[3]; //memorizes last added resources, to display next to storage
 
-
     //restarts board
     public static void restart(){
         fogOfWarIsRevealedForGreen = new boolean[3];
@@ -50,7 +61,7 @@ public class GameEngine {
         enemySelected = null; // same as above, but for opponent
         BoardSprites = new Units[15][9]; //A 2D array of Units that stores the units for game engine and data processing, unlike GameView's Units[] this isn't involved in drawing units.
         playing = null; //player that makes moves
-        BoardResources = new Resources[15][9]; //a 2D array of Units that stores the resources in the game
+        BoardResources = new Resources[15][9]; //a 2D array of resources that stores the resources in the game
         showFactory = false; //shows factory units which can be purchased
         showMarket = false; //shows market units which can be purchased
         message = ""; //stores message to user
@@ -67,13 +78,13 @@ public class GameEngine {
     public static void load() {
         if (FullscreenActivity.memory != null && FullscreenActivity.memory.size() != 0) {
             GameView.shouldDrawUI = false;
-            message = "I have data!";
 
-            for (int i = 0; i < FullscreenActivity.memory.size(); i++) {
+            for (int i = 0; i < FullscreenActivity.memory.size(); i+=2) {
                 int coord = FullscreenActivity.memory.get(i);
                 int y = coord % FullscreenActivity.widthfullscreen;
                 int x = coord  / FullscreenActivity.widthfullscreen;
-                tapProcessor(x,y);
+                int mode = FullscreenActivity.memory.get(i+1);
+                tapProcessor(x,y,mode);
             }
 
             GameView.shouldDrawUI = true;
@@ -81,9 +92,14 @@ public class GameEngine {
     }
 
     //Constructor that creates the unit and it's image, doesn't set it's coordinates. Mostly used by onDraw function in GameView
-    public GameEngine(Bitmap grid, Bitmap airGrid) {
+    public GameEngine(Bitmap grid, Bitmap airGrid, Bitmap square,  int input_width, int input_heigth) {
         image = grid;
         airImage = airGrid;
+        emptySquare = square;
+        this.width = input_width;
+        this.heigth = input_heigth;
+        BoardSprites = new Units[width][heigth];
+        BoardResources = new Resources[width][heigth];
     }
 
     // updates board
@@ -94,17 +110,25 @@ public class GameEngine {
     //draws the board when grid.draw(canvas) is called in GameView function.
     public void draw(Canvas canvas, boolean air) {
         if (air) {
-            canvas.drawBitmap(airImage, 2.5f*GameEngine.squareLength, 0.0f, null);
+            canvas.drawBitmap(airImage, 2.5f*(GameEngine.squareLength + GameView.cameraX), 0.0f, null);
         }
         else {
-            canvas.drawBitmap(image, 0.0f, 0.0f, null);
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < heigth; j++) {
+                    canvas.drawBitmap(emptySquare, i * squareLength +  GameView.cameraX, j * squareLength +  GameView.cameraY, null);
+                }
+            }
+            //canvas.drawBitmap(image, GameView.cameraX, GameView.cameraY, null);
         }
     }
     /*
     A method that will process what happens with user's input (click/tap).
      */
-    public static void tapProcessor (int x, int y) {
+    public static void tapProcessor (int x, int y, int mode) {
 
+        if (x < 0 || y < 0) {
+            return;
+        }
         //This makes sure that unit gets tapped only once.
         //if (selected != null && x/squareLength  == selected.coordinates[0] && y / squareLength  == selected.coordinates[1]) {
         //    return;
@@ -131,402 +155,418 @@ public class GameEngine {
             return;
         }
         if (GameView.showAir) {
-            if (x / squareLength == 18 && y / squareLength == 10) {
-                GameView.showAir = !GameView.showAir;
-            }
-
-            else if (x / squareLength > 3 && y / squareLength >= 10 && x / squareLength < 10 && selectedPlane == null) {
-                GameEngine.playing.selectPlane((x/squareLength) - 4);
-            }
-            else if ((x/squareLength == 0 || x/squareLength == 19 )&& GameEngine.playing == GameEngine.green && selectedPlane != null){
-                if (y/squareLength == 1 && planeLines[0][0] == null) {
-                    if (green.oilStorage > 0) {
-                        planeLines[0][0] = selectedPlane;
-                        green.removeFromHanger(selectedPlane);
-                        green.oilStorage--;
-                    }
-                }
-                if (y/squareLength == 4 && planeLines[1][0] == null) {
-                    if (green.oilStorage > 0) {
-                        planeLines[1][0] = selectedPlane;
-                        green.removeFromHanger(selectedPlane);
-                        green.oilStorage--;
-                    }
-                }
-                if (y/squareLength == 7 && planeLines[2][0] == null) {
-                    if (green.oilStorage > 0) {
-                        planeLines[2][0] = selectedPlane;
-                        green.removeFromHanger(selectedPlane);
-                        green.oilStorage--;
-                    }
-                }
-            }
-            else if (x/squareLength == 19 && GameEngine.playing == GameEngine.red && selectedPlane != null) {
-                if (y / squareLength == 1 && planeLines[0][1] == null) {
-                    if (red.oilStorage > 0) {
-                        planeLines[0][1] = selectedPlane;
-                        red.removeFromHanger(selectedPlane);
-                        red.oilStorage--;
-                    }
-                }
-                if (y / squareLength == 4 && planeLines[1][1] == null) {
-                    if (red.oilStorage > 0) {
-                        planeLines[1][1] = selectedPlane;
-                        red.removeFromHanger(selectedPlane);
-                        red.oilStorage--;
-                    }
-                }
-                if (y / squareLength == 7 && planeLines[2][1] == null) {
-                    if (red.oilStorage > 0) {
-                        planeLines[2][1] = selectedPlane;
-                        red.removeFromHanger(selectedPlane);
-                        red.oilStorage--;
-                    }
-                }
-            }
-            else if (selectedPlane != null){
-                GameEngine.selectedPlane.unselect();
-            }
-
+            processAirTap(x,y);
         } else if (!GameView.showAir) {
             //un-selects the unit if the button is pressed.
-            if (x / squareLength == 16 && y / squareLength == 1 && (selected != null || enemySelected != null)) {
+            if (x / squareLength < 15 && y / squareLength < 9) {
+                ProcessGroundTap(x, y);
+            } else {
+                ProcessGroundUITap(x, y);
+            }
+        }
+    }
+
+    //process air input
+    public static void processAirTap(int x, int y) {
+        if (x / squareLength == 18 && y / squareLength == 10) {
+            GameView.showAir = !GameView.showAir;
+        }
+
+        else if (x / squareLength > 3 && y / squareLength >= 10 && x / squareLength < 10 && selectedPlane == null) {
+            GameEngine.playing.selectPlane((x/squareLength) - 4);
+        }
+        else if ((x/squareLength == 0 || x/squareLength == 19 )&& GameEngine.playing == GameEngine.green && selectedPlane != null){
+            if (y/squareLength == 1 && planeLines[0][0] == null) {
+                if (green.oilStorage > 0) {
+                    planeLines[0][0] = selectedPlane;
+                    green.removeFromHanger(selectedPlane);
+                    green.oilStorage--;
+                }
+            }
+            if (y/squareLength == 4 && planeLines[1][0] == null) {
+                if (green.oilStorage > 0) {
+                    planeLines[1][0] = selectedPlane;
+                    green.removeFromHanger(selectedPlane);
+                    green.oilStorage--;
+                }
+            }
+            if (y/squareLength == 7 && planeLines[2][0] == null) {
+                if (green.oilStorage > 0) {
+                    planeLines[2][0] = selectedPlane;
+                    green.removeFromHanger(selectedPlane);
+                    green.oilStorage--;
+                }
+            }
+        }
+        else if (x/squareLength == 19 && GameEngine.playing == GameEngine.red && selectedPlane != null) {
+            if (y / squareLength == 1 && planeLines[0][1] == null) {
+                if (red.oilStorage > 0) {
+                    planeLines[0][1] = selectedPlane;
+                    red.removeFromHanger(selectedPlane);
+                    red.oilStorage--;
+                }
+            }
+            if (y / squareLength == 4 && planeLines[1][1] == null) {
+                if (red.oilStorage > 0) {
+                    planeLines[1][1] = selectedPlane;
+                    red.removeFromHanger(selectedPlane);
+                    red.oilStorage--;
+                }
+            }
+            if (y / squareLength == 7 && planeLines[2][1] == null) {
+                if (red.oilStorage > 0) {
+                    planeLines[2][1] = selectedPlane;
+                    red.removeFromHanger(selectedPlane);
+                    red.oilStorage--;
+                }
+            }
+        }
+        else if (selectedPlane != null){
+            GameEngine.selectedPlane.unselect();
+        }
+
+    }
+
+    public static void ProcessGroundUITap(int x, int y) {
+        if (x / squareLength == 16 && y / squareLength == 1 && (selected != null || enemySelected != null)) {
+            unselectAll();
+            return;
+        }
+
+        //heal the unit if the button is pressed
+        if (x / squareLength == 18 && y / squareLength == 1 && selected != null) {
+            if (theUnit.HP != theUnit.maxHP) {
+                if (theUnit.hasAttack && theUnit.hasMove) {
+                    if (theUnit.unitType.equals("Armor")) {
+                        theUnit.HP += Armor.healedBy;
+                    }
+                    if (theUnit.unitType.equals("Cavalry")) {
+                        theUnit.HP += Cavalry.healedBy;
+                    }
+                    if (theUnit.unitType.equals("Infantry")) {
+                        theUnit.HP += Infantry.healedBy;
+                    }
+                    if (theUnit.unitType.equals("Artillery")) {
+                        theUnit.HP += Artillery.healedBy;
+                    }
+                    if (theUnit.unitType.equals("Anti air")) {
+                        theUnit.HP += MGInfantry.healedBy;
+                    }
+                    if (theUnit.unitType.equals("Heavy Tank")) {
+                        theUnit.HP += HeavyTank.healedBy;
+                    }
+                    theUnit.hasAttack = false;
+                    theUnit.hasMove = false;
+                }
+                if (theUnit.HP > theUnit.maxHP) {
+                    theUnit.HP = theUnit.maxHP;
+                }
+            }
+            unselectFriendly();
+        }
+
+        //switches active player if the button is pressed.
+        if (x / squareLength == 16 && y / squareLength == 3) {
+            if (queue.length != 0 && message != "Any undeployed unit will be removed, tap again to continue") {
+                message = "Any undeployed unit will be removed, tap again to continue";
+                showFactory = false;
+                showMarket = false;
                 unselectAll();
                 return;
             }
-
-            //heal the unit if the button is pressed
-            if (x / squareLength == 18 && y / squareLength == 1 && selected != null) {
-                if (theUnit.HP != theUnit.maxHP) {
-                    if (theUnit.hasAttack && theUnit.hasMove) {
-                        theUnit.HP++;
-                        if (theUnit.unitType.equals("Armor")) {
-                            theUnit.HP += Armor.healedBy;
-                        }
-                        if (theUnit.unitType.equals("Cavalry")) {
-                            theUnit.HP += Cavalry.healedBy;
-                        }
-                        if (theUnit.unitType.equals("Infantry")) {
-                            theUnit.HP += Infantry.healedBy;
-                        }
-                        if (theUnit.unitType.equals("Artillery")) {
-                            theUnit.HP += Artillery.healedBy;
-                        }
-                        if (theUnit.unitType.equals("Anti air")) {
-                            theUnit.HP += MGInfantry.healedBy;
-                        }
-                        if (theUnit.unitType.equals("Heavy Tank")) {
-                            theUnit.HP += HeavyTank.healedBy;
-                        }
-                        theUnit.hasAttack = false;
-                        theUnit.hasMove = false;
-                    }
-                    if (theUnit.HP > theUnit.maxHP) {
-                        theUnit.HP = theUnit.maxHP;
-                    }
-                }
-                unselectFriendly();
+            queue = new Units[0];
+            if (playing.equals(red)) {
+                message = "Green player's turn. Press anywhere to continue.";
+            } else {
+                message = "Red player's turn. Press anywhere to continue.";
             }
+            GameView.showendTurnScreen = true;
+            try {
+                Thread.sleep(15); //syncing with other thread to avoid potential peeks into opponent's army
+            } catch (InterruptedException e) {
 
-            //switches active player if the button is pressed.
-            if (x / squareLength == 16 && y / squareLength == 3) {
-                if (queue.length != 0 && message != "Any undeployed unit will be removed, tap again to continue") {
-                    message = "Any undeployed unit will be removed, tap again to continue";
-                    showFactory = false;
-                    showMarket = false;
-                    unselectAll();
-                    return;
-                }
-                queue = new Units[0];
-                if (playing.equals(red)) {
-                    message = "Green player's turn. Press anywhere to continue.";
-                } else {
-                    message = "Red player's turn. Press anywhere to continue.";
-                }
-                GameView.showendTurnScreen = true;
-                try {
-                    Thread.sleep(15); //syncing with other thread to avoid potential peeks into opponent's army
-                } catch (InterruptedException e) {
-
-                }
-                switchPlayer();
-                if (GameEngine.selectedPlane != null) {
-                    GameEngine.selectedPlane.unselect();
-                }
-                unselectAll();
-                if (playing.isHuman == false) {
-                    AI.playTurn(red);
-                }
-                return;
             }
-
-            //deploy
-            if (selected == null && (((x / squareLength == 2 && y / squareLength == 2) && (playing == green && BoardSprites[2][2] == null)) ||
-                    (((x / squareLength == 12 && y / squareLength == 6) && (playing == red && BoardSprites[12][6] == null))))) {
-                GameEngine.showMarket = !GameEngine.showMarket;
-                if (showFactory == true) {
-                    showFactory = false;
-                }
-                return;
+            switchPlayer();
+            if (GameEngine.selectedPlane != null) {
+                GameEngine.selectedPlane.unselect();
             }
-
-            //Undo
-            if (x / squareLength == 18 && y / squareLength == 3 && theUnit != null && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
-                if (lastUnit == null) {
-                    BoardSprites[theUnit.coordinates[0]][theUnit.coordinates[1]] = null;
-                    theUnit.coordinates[0] = lastCoordinates[0];
-                    theUnit.coordinates[1] = lastCoordinates[1];
-                    BoardSprites[lastCoordinates[0]][lastCoordinates[1]] = theUnit;
-                    theUnit.brightenIcon();
-                    theUnit.hasMove = true;
-                    unselectFriendly();
-                    lastCoordinates[0] = 125;
-                    lastCoordinates[1] = 125;
-                    return;
-                } else {
-
-                    Units u = BoardSprites[lastCoordinates[0]][lastCoordinates[1]];
-                    for (int i = 0; i < GameView.units.length; i++) {
-                        if (GameView.units[i] == u) {
-                            GameView.removeSprite(i);
-                        }
-                    }
-
-                    BoardSprites[lastCoordinates[0]][lastCoordinates[1]] = lastUnit;
-                    lastUnit.coordinates[0] = lastCoordinates[0];
-                    lastUnit.coordinates[1] = lastCoordinates[1];
-
-                    Units[] toReturn = new Units[GameView.units.length + 1];
-                    for (int k = 0; k < GameView.units.length; k++) {
-                        toReturn[k] = GameView.units[k];
-                    }
-                    toReturn[toReturn.length - 1] = lastUnit;
-                    GameView.units = toReturn;
-
-                    theUnit.brightenIcon();
-                    theUnit.hasAttack = true;
-                    unselectAll();
-                    lastCoordinates[0] = 125;
-                    lastCoordinates[1] = 125;
-                }
+            unselectAll();
+            if (playing.isHuman == false) {
+                AI.playTurn(red);
             }
+            return;
+        }
 
-            //upgrade
-            if (x / squareLength == 16 && y / squareLength == 5 && theUnit != null) {
-                if (theUnit.unitType == "Infantry") {
-                    if (theUnit.defence == Infantry.GreenDefence) {
-                        if (playing.ironStorage > 0) {
-                            theUnit.defence++;
-                            playing.ironStorage -= 1;
-                        }
-                    }
-                }
-                if (theUnit.unitType == "Cavalry") {
-                    if (theUnit.defence == Cavalry.GreenDefence) {
-                        if (playing.ironStorage >= 0) {
-                            theUnit.defence++;
-                            playing.ironStorage -= 1;
-                        }
-                    }
-                }
-                if (theUnit.unitType == "Artillery") {
-                    if (theUnit.defence == Artillery.GreenDefence) {
-                        if (playing.ironStorage > 1) {
-                            theUnit.defence++;
-                            playing.ironStorage -= 2;
-                        }
-                    }
-                }
+        //deploy
+        if (selected == null && (((x / squareLength == 2 && y / squareLength == 2) && (playing == green && BoardSprites[2][2] == null)) ||
+                (((x / squareLength == 12 && y / squareLength == 6) && (playing == red && BoardSprites[12][6] == null))))) {
+            GameEngine.showMarket = !GameEngine.showMarket;
+            if (showFactory == true) {
+                showFactory = false;
+            }
+            return;
+        }
+
+        //Undo
+        if (x / squareLength == 18 && y / squareLength == 3 && theUnit != null && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
+            if (lastUnit == null) {
+                BoardSprites[theUnit.coordinates[0]][theUnit.coordinates[1]] = null;
+                theUnit.coordinates[0] = lastCoordinates[0];
+                theUnit.coordinates[1] = lastCoordinates[1];
+                BoardSprites[lastCoordinates[0]][lastCoordinates[1]] = theUnit;
                 if (theUnit.unitType == "Armor") {
-                    if (theUnit.defence == Armor.GreenDefence) {
-                        if (playing.ironStorage > 4) {
-                            theUnit.defence++;
-                            playing.ironStorage -= 5;
-                        }
-                    }
+                    playing.oilStorage++;
                 }
-                if (theUnit.unitType == "Headquarters") {
-                    if (theUnit.defence == Headquaters.GreenDefence) {
-                        if (playing.ironStorage > 3) {
-                            theUnit.defence++;
-                            playing.ironStorage -= 4;
-                        }
-                    }
-                }
-                if (theUnit.unitType == "Anti air") {
-                    if (theUnit.defence == MGInfantry.GreenDefence) {
-                        if (playing.ironStorage >= 1) {
-                            theUnit.defence++;
-                            playing.ironStorage -= 1;
-                        }
-                    }
-                }
-            }
-
-
-            //show air
-            if (x / squareLength == 18 && y / squareLength == 5) {
-                GameView.showAir = true;
-            }
-            //switches market visibility if the button is pressed.
-            if (x / squareLength == 5 && y / squareLength == 10) {
-                GameEngine.showMarket = !GameEngine.showMarket;
-                if (showFactory == true) {
-                    showFactory = false;
-                }
+                theUnit.brightenIcon();
+                theUnit.hasMove = true;
+                unselectFriendly();
+                lastCoordinates[0] = 125;
+                lastCoordinates[1] = 125;
                 return;
-            }
-            //switches factory visibility if the button is pressed.
-            if (x / squareLength == 5 && y / squareLength == 9) {
-                GameEngine.showFactory = !GameEngine.showFactory;
-                if (showMarket == true) {
-                    showMarket = false;
-                }
-                return;
-            }
-            //buys new cavalry
-            if (x / squareLength == 7 && y / squareLength == 10 && showMarket) {
-                if (playing.foodStorage >= Cavalry.foodPrice) {
-                    if (playing == green) {
-                        if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[2][2] != null && GameEngine.BoardSprites[2][2].owner == green)) {
-                            new Cavalry(GameView.theContext, 2, 2, playing);
-                            playing.foodStorage -= Cavalry.foodPrice;
-                        }
-                    }
-                    if ((playing == red)) {
-                        if (GameEngine.BoardSprites[12][6] == null || (GameEngine.BoardSprites[12][6] != null && GameEngine.BoardSprites[12][6].owner == red)) {
-                            new Cavalry(GameView.theContext, 12, 6, playing);
-                            playing.foodStorage -= Cavalry.foodPrice;
-                        }
-                    }
+            } else {
 
+                Units u = BoardSprites[lastCoordinates[0]][lastCoordinates[1]];
+                for (int i = 0; i < GameView.units.length; i++) {
+                    if (GameView.units[i] == u) {
+                        GameView.removeSprite(i);
+                    }
+                }
+
+                BoardSprites[lastCoordinates[0]][lastCoordinates[1]] = lastUnit;
+                lastUnit.coordinates[0] = lastCoordinates[0];
+                lastUnit.coordinates[1] = lastCoordinates[1];
+
+                Units[] toReturn = new Units[GameView.units.length + 1];
+                for (int k = 0; k < GameView.units.length; k++) {
+                    toReturn[k] = GameView.units[k];
+                }
+                toReturn[toReturn.length - 1] = lastUnit;
+                GameView.units = toReturn;
+
+                theUnit.brightenIcon();
+                theUnit.hasAttack = true;
+                unselectAll();
+                lastCoordinates[0] = 125;
+                lastCoordinates[1] = 125;
+            }
+        }
+
+        //upgrade
+        if (x / squareLength == 16 && y / squareLength == 5 && theUnit != null) {
+            if (theUnit.unitType == "Infantry") {
+                if (theUnit.defence == Infantry.GreenDefence) {
+                    if (playing.ironStorage > 0) {
+                        theUnit.defence++;
+                        playing.ironStorage -= 1;
+                    }
+                }
+            }
+            if (theUnit.unitType == "Cavalry") {
+                if (theUnit.defence == Cavalry.GreenDefence) {
+                    if (playing.ironStorage >= 0) {
+                        theUnit.defence++;
+                        playing.ironStorage -= 1;
+                    }
+                }
+            }
+            if (theUnit.unitType == "Artillery") {
+                if (theUnit.defence == Artillery.GreenDefence) {
+                    if (playing.ironStorage > 1) {
+                        theUnit.defence++;
+                        playing.ironStorage -= 2;
+                    }
+                }
+            }
+            if (theUnit.unitType == "Armor") {
+                if (theUnit.defence == Armor.GreenDefence) {
+                    if (playing.ironStorage > 4) {
+                        theUnit.defence++;
+                        playing.ironStorage -= 5;
+                    }
+                }
+            }
+            if (theUnit.unitType == "Headquarters") {
+                if (theUnit.defence == Headquaters.GreenDefence) {
+                    if (playing.ironStorage > 3) {
+                        theUnit.defence++;
+                        playing.ironStorage -= 4;
+                    }
+                }
+            }
+            if (theUnit.unitType == "Anti air") {
+                if (theUnit.defence == MGInfantry.GreenDefence) {
+                    if (playing.ironStorage >= 1) {
+                        theUnit.defence++;
+                        playing.ironStorage -= 1;
+                    }
+                }
+            }
+        }
+
+
+        //show air
+        if (x / squareLength == 18 && y / squareLength == 5) {
+            GameView.showAir = true;
+        }
+        //switches market visibility if the button is pressed.
+        if (x / squareLength == 5 && y / squareLength == 10) {
+            GameEngine.showMarket = !GameEngine.showMarket;
+            if (showFactory == true) {
+                showFactory = false;
+            }
+            return;
+        }
+        //switches factory visibility if the button is pressed.
+        if (x / squareLength == 5 && y / squareLength == 9) {
+            GameEngine.showFactory = !GameEngine.showFactory;
+            if (showMarket == true) {
+                showMarket = false;
+            }
+            return;
+        }
+        //buys new cavalry
+        if (x / squareLength == 7 && y / squareLength == 10 && showMarket) {
+            if (playing.foodStorage >= Cavalry.foodPrice) {
+                if (playing == green) {
+                    if (GameEngine.BoardSprites[greenDeployX][greenDeployY] == null || (GameEngine.BoardSprites[greenDeployX][greenDeployY] != null && GameEngine.BoardSprites[greenDeployX][greenDeployY].owner == green)) {
+                        new Cavalry(GameView.theContext, greenDeployX, greenDeployY, playing);
+                        playing.foodStorage -= Cavalry.foodPrice;
+                    }
+                }
+                if ((playing == red)) {
+                    if (GameEngine.BoardSprites[redDeployX][redDeployY] == null || (GameEngine.BoardSprites[redDeployX][redDeployY] != null && GameEngine.BoardSprites[redDeployX][redDeployY].owner == red)) {
+                        new Cavalry(GameView.theContext, redDeployX, redDeployY, playing);
+                        playing.foodStorage -= Cavalry.foodPrice;
+                    }
+                }
+
+            }
+            lastCoordinates[0] = 125;
+            lastCoordinates[1] = 125;
+            lastUnit = null;
+        }
+        //buys new infantry
+        if (x / squareLength == 9 && y / squareLength == 10 && showMarket) {
+            if (playing.foodStorage >= Infantry.foodPrice && playing.ironStorage >= Infantry.ironPrice) {
+                if (playing == green) {
+                    if (GameEngine.BoardSprites[greenDeployX][greenDeployY] == null || (GameEngine.BoardSprites[greenDeployX][greenDeployY] != null && GameEngine.BoardSprites[greenDeployX][greenDeployY].owner == green)) {
+                        new Infantry(GameView.theContext, greenDeployX, greenDeployY, playing);
+                        playing.foodStorage -= Infantry.foodPrice;
+                        playing.ironStorage -= Infantry.ironPrice;
+                    }
+                }
+                if (playing == red) {
+                    if (GameEngine.BoardSprites[redDeployX][redDeployY] == null || (GameEngine.BoardSprites[redDeployX][redDeployY] != null && GameEngine.BoardSprites[redDeployX][redDeployY].owner == red)) {
+                        new Infantry(GameView.theContext, redDeployX, redDeployY, playing);
+                        playing.foodStorage -= Infantry.foodPrice;
+                        playing.ironStorage -= Infantry.ironPrice;
+                    }
+                }
+            }
+            if (playing.foodStorage < Infantry.foodPrice) {
+                showMarket = false;
+            }
+            lastCoordinates[0] = 125;
+            lastCoordinates[1] = 125;
+            lastUnit = null;
+        }
+        //buys new MGInfantry
+        if (x / squareLength == 11 && y / squareLength == 10 && showMarket) {
+            if (playing.foodStorage >= MGInfantry.foodPrice && playing.ironStorage >= MGInfantry.ironPrice && playing.oilStorage >= MGInfantry.oilPrice) {
+                if (playing == green) {
+                    if (GameEngine.BoardSprites[greenDeployX][greenDeployY] == null || (GameEngine.BoardSprites[greenDeployX][greenDeployY] != null && GameEngine.BoardSprites[greenDeployX][greenDeployY].owner == green)) {
+                        new MGInfantry(GameView.theContext, greenDeployX, greenDeployY, playing);
+                        playing.foodStorage -= MGInfantry.foodPrice;
+                        playing.ironStorage -= MGInfantry.ironPrice;
+                        playing.oilStorage -= MGInfantry.oilPrice;
+                    }
+                }
+                if ((playing == red)) {
+                    if (GameEngine.BoardSprites[redDeployX][redDeployY] == null || (GameEngine.BoardSprites[redDeployX][redDeployY] != null && GameEngine.BoardSprites[redDeployX][redDeployY].owner == red)) {
+                        new MGInfantry(GameView.theContext, redDeployX, redDeployY, playing);
+                        playing.foodStorage -= MGInfantry.foodPrice;
+                        playing.ironStorage -= MGInfantry.ironPrice;
+                        playing.oilStorage -= MGInfantry.oilPrice;
+                    }
+                }
+            }
+            lastCoordinates[0] = 125;
+            lastCoordinates[1] = 125;
+            lastUnit = null;
+        }
+        //buys new artillery
+        if (x / squareLength == 13 && y / squareLength == 10 && showMarket) {
+            if (playing.foodStorage >= Artillery.foodPrice && playing.ironStorage >= Artillery.ironPrice) {
+                if (playing == green) {
+                    if (GameEngine.BoardSprites[greenDeployX][greenDeployY] == null || (GameEngine.BoardSprites[greenDeployX][greenDeployY] != null && GameEngine.BoardSprites[greenDeployX][greenDeployY].owner == green)) {
+                        new Artillery(GameView.theContext, greenDeployX, greenDeployY, playing);
+                        playing.foodStorage -= Artillery.foodPrice;
+                        playing.ironStorage -= Artillery.ironPrice;
+                    }
+                }
+                if ((playing == red)) {
+                    if (GameEngine.BoardSprites[redDeployX][redDeployY] == null || (GameEngine.BoardSprites[redDeployX][redDeployY] != null && GameEngine.BoardSprites[redDeployX][redDeployY].owner == red)) {
+                        new Artillery(GameView.theContext, redDeployX, redDeployY, playing);
+                        playing.foodStorage -= Artillery.foodPrice;
+                        playing.ironStorage -= Artillery.ironPrice;
+                    }
+                }
+
+            }
+            lastCoordinates[0] = 125;
+            lastCoordinates[1] = 125;
+            lastUnit = null;
+        }
+        //buys new armor
+        if (x / squareLength == 7 && y / squareLength == 10 && showFactory) {
+            if (playing.foodStorage >= Armor.foodPrice && playing.ironStorage >= Armor.ironPrice && playing.oilStorage >= Armor.oilPrice) {
+                if (playing == green) {
+                    if (GameEngine.BoardSprites[greenDeployX][greenDeployY] == null || (GameEngine.BoardSprites[greenDeployX][greenDeployY] != null && GameEngine.BoardSprites[greenDeployX][greenDeployY].owner == green)) {
+                        new Armor(GameView.theContext, greenDeployX, greenDeployY, playing);
+                        playing.foodStorage -= Armor.foodPrice;
+                        playing.ironStorage -= Armor.ironPrice;
+                        playing.oilStorage -= Armor.oilPrice;
+                    }
+                }
+                if ((playing == red)) {
+                    if (GameEngine.BoardSprites[12][6] == null || (GameEngine.BoardSprites[12][6] != null && GameEngine.BoardSprites[12][6].owner == red)) {
+                        new Armor(GameView.theContext, 12, 6, playing);
+                        playing.foodStorage -= Armor.foodPrice;
+                        playing.ironStorage -= Armor.ironPrice;
+                        playing.oilStorage -= Armor.oilPrice;
+                    }
+                }
+
+            }
+            lastCoordinates[0] = 125;
+            lastCoordinates[1] = 125;
+            lastUnit = null;
+        }
+
+        //playing.addPlane(new ReconPlane(GameView.theContext, playing));
+        //buys new fighter
+        if (x / squareLength == 9 && y / squareLength == 10 && showFactory) {
+            if (playing.foodStorage >= ReconPlane.foodPrice && playing.ironStorage >= ReconPlane.ironPrice && playing.oilStorage >= ReconPlane.oilPrice) {
+                if (playing == green && green.hangarHasEmptySlots()) {
+                    playing.addPlane(new ReconPlane(GameView.theContext, playing));
+                    playing.foodStorage -= ReconPlane.foodPrice;
+                    playing.ironStorage -= ReconPlane.ironPrice;
+                    playing.oilStorage -= ReconPlane.oilPrice;
+                }
+                if ((playing == red) && red.hangarHasEmptySlots()) {
+                    playing.addPlane(new ReconPlane(GameView.theContext, playing));
+                    playing.foodStorage -= ReconPlane.foodPrice;
+                    playing.ironStorage -= ReconPlane.ironPrice;
+                    playing.oilStorage -= ReconPlane.oilPrice;
                 }
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
                 lastUnit = null;
             }
-            //buys new infantry
-            if (x / squareLength == 9 && y / squareLength == 10 && showMarket) {
-                if (playing.foodStorage >= Infantry.foodPrice && playing.ironStorage >= Infantry.ironPrice) {
-                    if (playing == green) {
-                        if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[2][2] != null && GameEngine.BoardSprites[2][2].owner == green)) {
-                            new Infantry(GameView.theContext, 2, 2, playing);
-                            playing.foodStorage -= Infantry.foodPrice;
-                            playing.ironStorage -= Infantry.ironPrice;
-                        }
-                    }
-                    if (playing == red) {
-                        if (GameEngine.BoardSprites[12][6] == null || (GameEngine.BoardSprites[12][6] != null && GameEngine.BoardSprites[12][6].owner == red)) {
-                            new Infantry(GameView.theContext, 12, 6, playing);
-                            playing.foodStorage -= Infantry.foodPrice;
-                            playing.ironStorage -= Infantry.ironPrice;
-                        }
-                    }
-                }
-                if (playing.foodStorage < Infantry.foodPrice) {
-                    showMarket = false;
-                }
-                lastCoordinates[0] = 125;
-                lastCoordinates[1] = 125;
-                lastUnit = null;
-            }
-            //buys new MGInfantry
-            if (x / squareLength == 11 && y / squareLength == 10 && showMarket) {
-                if (playing.foodStorage >= MGInfantry.foodPrice && playing.ironStorage >= MGInfantry.ironPrice && playing.oilStorage >= MGInfantry.oilPrice) {
-                    if (playing == green) {
-                        if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[2][2] != null && GameEngine.BoardSprites[2][2].owner == green)) {
-                            new MGInfantry(GameView.theContext, 2, 2, playing);
-                            playing.foodStorage -= MGInfantry.foodPrice;
-                            playing.ironStorage -= MGInfantry.ironPrice;
-                            playing.oilStorage -= MGInfantry.oilPrice;
-                        }
-                    }
-                    if ((playing == red)) {
-                        if (GameEngine.BoardSprites[12][6] == null || (GameEngine.BoardSprites[12][6] != null && GameEngine.BoardSprites[12][6].owner == red)) {
-                            new MGInfantry(GameView.theContext, 12, 6, playing);
-                            playing.foodStorage -= MGInfantry.foodPrice;
-                            playing.ironStorage -= MGInfantry.ironPrice;
-                            playing.oilStorage -= MGInfantry.oilPrice;
-                        }
-                    }
-                }
-                lastCoordinates[0] = 125;
-                lastCoordinates[1] = 125;
-                lastUnit = null;
-            }
-            //buys new artillery
-            if (x / squareLength == 13 && y / squareLength == 10 && showMarket) {
-                if (playing.foodStorage >= Artillery.foodPrice && playing.ironStorage >= Artillery.ironPrice) {
-                    if (playing == green) {
-                        if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[2][2] != null && GameEngine.BoardSprites[2][2].owner == green)) {
-                            new Artillery(GameView.theContext, 2, 2, playing);
-                            playing.foodStorage -= Artillery.foodPrice;
-                            playing.ironStorage -= Artillery.ironPrice;
-                        }
-                    }
-                    if ((playing == red)) {
-                        if (GameEngine.BoardSprites[12][6] == null || (GameEngine.BoardSprites[12][6] != null && GameEngine.BoardSprites[12][6].owner == red)) {
-                            new Artillery(GameView.theContext, 12, 6, playing);
-                            playing.foodStorage -= Artillery.foodPrice;
-                            playing.ironStorage -= Artillery.ironPrice;
-                        }
-                    }
-
-                }
-                lastCoordinates[0] = 125;
-                lastCoordinates[1] = 125;
-                lastUnit = null;
-            }
-            //buys new armor
-            if (x / squareLength == 7 && y / squareLength == 10 && showFactory) {
-                if (playing.foodStorage >= Armor.foodPrice && playing.ironStorage >= Armor.ironPrice && playing.oilStorage >= Armor.oilPrice) {
-                    if (playing == green) {
-                        if (GameEngine.BoardSprites[2][2] == null || (GameEngine.BoardSprites[2][2] != null && GameEngine.BoardSprites[2][2].owner == green)) {
-                            new Armor(GameView.theContext, 2, 2, playing);
-                            playing.foodStorage -= Armor.foodPrice;
-                            playing.ironStorage -= Armor.ironPrice;
-                            playing.oilStorage -= Armor.oilPrice;
-                        }
-                    }
-                    if ((playing == red)) {
-                        if (GameEngine.BoardSprites[12][6] == null || (GameEngine.BoardSprites[12][6] != null && GameEngine.BoardSprites[12][6].owner == red)) {
-                            new Armor(GameView.theContext, 12, 6, playing);
-                            playing.foodStorage -= Armor.foodPrice;
-                            playing.ironStorage -= Armor.ironPrice;
-                            playing.oilStorage -= Armor.oilPrice;
-                        }
-                    }
-
-                }
-                lastCoordinates[0] = 125;
-                lastCoordinates[1] = 125;
-                lastUnit = null;
-            }
-
-            //playing.addPlane(new ReconPlane(GameView.theContext, playing));
-            //buys new fighter
-            if (x / squareLength == 9 && y / squareLength == 10 && showFactory) {
-                if (playing.foodStorage >= ReconPlane.foodPrice && playing.ironStorage >= ReconPlane.ironPrice && playing.oilStorage >= ReconPlane.oilPrice) {
-                    if (playing == green && green.hangarHasEmptySlots()) {
-                        playing.addPlane(new ReconPlane(GameView.theContext, playing));
-                        playing.foodStorage -= ReconPlane.foodPrice;
-                        playing.ironStorage -= ReconPlane.ironPrice;
-                        playing.oilStorage -= ReconPlane.oilPrice;
-                    }
-                    if ((playing == red) && red.hangarHasEmptySlots()) {
-                        playing.addPlane(new ReconPlane(GameView.theContext, playing));
-                        playing.foodStorage -= ReconPlane.foodPrice;
-                        playing.ironStorage -= ReconPlane.ironPrice;
-                        playing.oilStorage -= ReconPlane.oilPrice;
-                    }
-                    lastCoordinates[0] = 125;
-                    lastCoordinates[1] = 125;
-                    lastUnit = null;
-                }
-            }
+        }
 
 
-            //buys new bomber
+        //buys new bomber
         if (x / squareLength == 11 && y / squareLength == 10 && showFactory) {
             if (playing.foodStorage >= Bomber.foodPrice && playing.ironStorage >= Bomber.ironPrice && playing.oilStorage >= Bomber.oilPrice) {
                 if (playing == green && green.hangarHasEmptySlots()) {
@@ -547,7 +587,7 @@ public class GameEngine {
             }
         }
 
-            //buys new Heavy Tank (UNUSED)
+        //buys new Heavy Tank (UNUSED)
             /*if (x / squareLength == 11 && y / squareLength == 10 && showFactory) {
                 if (playing.foodStorage >= HeavyTank.foodPrice && playing.ironStorage >= HeavyTank.ironPrice && playing.oilStorage >= HeavyTank.oilPrice) {
                     if (playing == green) {
@@ -572,104 +612,107 @@ public class GameEngine {
                 lastUnit = null;
             } */
 
-            // If tap is outside the grid, do nothing.
-            if (x / squareLength >= 15 || y / squareLength >= 9) {
+    }
+
+    public  static void ProcessGroundTap(int x, int y) {
+        x -= GameView.cameraX;
+        y -= GameView.cameraY;
+        // If tap is outside the grid, do nothing.
+        if (x / squareLength >= width || y / squareLength >= heigth) {
+            return;
+        }
+
+        //if user taps on empty square with no units selected, do nothing
+        if (selected == null && BoardSprites[x / squareLength][y / squareLength] == null) {
+            return;
+        }
+
+        //If user taps on a unit, select it, or display info on enemy unit.
+        if (BoardSprites[x / squareLength][y / squareLength] != null) {
+            if (BoardSprites[x / squareLength][y / squareLength].owner == playing) {
+                theUnit = BoardSprites[x / squareLength][y / squareLength];
+                selected = new SelectedUnit(GameView.theContext, x, y, theUnit.owner, theUnit.unitType);
+                message = theUnit.unitType + " at " + ((x / squareLength) + c) + ", " + ((y / squareLength) + c);
+                showMarket = false;
+                showFactory = false;
+                lastCoordinates[0] = 125;
+                lastCoordinates[1] = 125;
+                lastUnit = null;
+                return;
+            } else if (BoardSprites[x / squareLength][y / squareLength].owner != playing && getFogOfWar(playing)[x / squareLength][y / squareLength]) {
+                enemyTappedUnit = BoardSprites[x / squareLength][y / squareLength];
+                enemySelected = new SelectedUnit(GameView.theContext, x, y, BoardSprites[x / squareLength][y / squareLength].owner, BoardSprites[x / squareLength][y / squareLength].unitType);
+                lastCoordinates[0] = 125;
+                lastCoordinates[1] = 125;
+                lastUnit = null;
+            }
+        }
+
+        //if user taps with unit selected on an empty square, move it TODO : make sure unit cannot move over another unit
+        if (theUnit != null && BoardSprites[x / squareLength][y / squareLength] == null
+                && getReachableTiles(getCoordinates(theUnit)[0],getCoordinates(theUnit)[1], theUnit.movement)[x / squareLength][y / squareLength]
+                && theUnit.hasMove == true) {
+            moveTo(theUnit, x / squareLength, y / squareLength); //and then move the unit, and un-select it.
+            //if unit has attack, don't un-select it yet.
+            if (theUnit.hasAttack) {
+                theUnit.hasMove = false;
                 return;
             }
-
-            //if user taps on empty square with no units selected, do nothing
-            if (selected == null && BoardSprites[x / squareLength][y / squareLength] == null) {
+            //if units doesn't have an attack, un-select it
+            if (!(theUnit.hasAttack)) {
+                theUnit.hasMove = false;
+                checkAction(theUnit);
                 return;
             }
+        }
 
-            //If user taps on a unit, select it, or display info on enemy unit.
-            if (BoardSprites[x / squareLength][y / squareLength] != null) {
-                if (BoardSprites[x / squareLength][y / squareLength].owner == playing) {
-                    theUnit = BoardSprites[x / squareLength][y / squareLength];
-                    selected = new SelectedUnit(GameView.theContext, x, y, theUnit.owner, theUnit.unitType);
-                    message = theUnit.unitType + " at " + ((x / squareLength) + c) + ", " + ((y / squareLength) + c);
-                    showMarket = false;
-                    showFactory = false;
-                    lastCoordinates[0] = 125;
-                    lastCoordinates[1] = 125;
-                    lastUnit = null;
-                    return;
-                } else if (BoardSprites[x / squareLength][y / squareLength].owner != playing) {
-                    enemyTappedUnit = BoardSprites[x / squareLength][y / squareLength];
-                    enemySelected = new SelectedUnit(GameView.theContext, x, y, BoardSprites[x / squareLength][y / squareLength].owner, BoardSprites[x / squareLength][y / squareLength].unitType);
-                    lastCoordinates[0] = 125;
-                    lastCoordinates[1] = 125;
-                    lastUnit = null;
-                }
-            }
-
-            //if user taps with unit selected on an empty square, move it TODO : make sure unit cannot move over another unit
-            if (theUnit != null && BoardSprites[x / squareLength][y / squareLength] == null
-                    && getReachableTiles(getCoordinates(theUnit)[0],getCoordinates(theUnit)[1], theUnit.movement)[x / squareLength][y / squareLength]
-                    && theUnit.hasMove == true) {
-                moveTo(theUnit, x / squareLength, y / squareLength); //and then move the unit, and un-select it.
-                //if unit has attack, don't un-select it yet.
-                if (theUnit.hasAttack) {
-                    theUnit.hasMove = false;
-                    return;
-                }
-                //if units doesn't have an attack, un-select it
-                if (!(theUnit.hasAttack)) {
-                    theUnit.hasMove = false;
-                    checkAction(theUnit);
-                    return;
-                }
-            }
-
-            //if player taps with unit selected on an opponent's unit, attack it
-            if (theUnit != null && BoardSprites[x / squareLength][y / squareLength] != null &&
-                    BoardSprites[x / squareLength][y / squareLength].owner != theUnit.owner &&
-                    (theUnit.attack1Range >= getSquareDistance           //and check if unit is in range of first (stronger) attack.
-                            (getCoordinates(theUnit)[0], x / squareLength,
-                                    getCoordinates(theUnit)[1], y / squareLength))
-                    && theUnit.hasAttack == true) {
-                DamageUnit(theUnit.attack1, BoardSprites[x / squareLength][y / squareLength], x / squareLength, y / squareLength); //and then move the unit, and un-select it.
-                //if unit has a move, don't un-select it yet.
-                if (theUnit == null) {
-                    return;
-                }
-                if (theUnit != null && theUnit.hasMove) {
-                    theUnit.hasAttack = false;
-                    return;
-                }
-                //if units doesn't have a move, un-select it
-                if (theUnit != null && !theUnit.hasMove) {
-                    theUnit.hasAttack = false;
-                    checkAction(theUnit);
-                    return;
-                }
-            }
-
-            //if user taps with unit selected on an opponent's unit, attack it
-            if (theUnit != null && BoardSprites[x / squareLength][y / squareLength] != null &&
-                    BoardSprites[x / squareLength][y / squareLength].owner != theUnit.owner &&
-                    (theUnit.attack2Range >= getSquareDistance           //and check if unit is in range of second (weaker) attack.
-                            (getCoordinates(theUnit)[0], x / squareLength,
-                                    getCoordinates(theUnit)[1], y / squareLength))
-                    && theUnit.hasAttack == true) {
-                DamageUnit(theUnit.attack2, BoardSprites[x / squareLength][y / squareLength], x / squareLength, y / squareLength);
-                if (theUnit != null && theUnit.hasMove) {
-                    theUnit.hasAttack = false;
-                    checkAction(theUnit);
-                    return;
-                }
-                if (theUnit != null && !theUnit.hasMove) {
-                    theUnit.hasAttack = false;
-                    checkAction(theUnit);
-                    return;
-                }
-            }
-
-            //If user taps on a square that is out of range while some unit is selected, do nothing (this could be changed later)
-            if (selected != null) {
+        //if player taps with unit selected on an opponent's unit, attack it
+        if (theUnit != null && BoardSprites[x / squareLength][y / squareLength] != null &&
+                BoardSprites[x / squareLength][y / squareLength].owner != theUnit.owner &&
+                (theUnit.attack1Range >= getSquareDistance           //and check if unit is in range of first (stronger) attack.
+                        (getCoordinates(theUnit)[0], x / squareLength,
+                                getCoordinates(theUnit)[1], y / squareLength))
+                && theUnit.hasAttack == true) {
+            DamageUnit(theUnit.attack1, BoardSprites[x / squareLength][y / squareLength], x / squareLength, y / squareLength); //and then move the unit, and un-select it.
+            //if unit has a move, don't un-select it yet.
+            if (theUnit == null) {
                 return;
             }
+            if (theUnit != null && theUnit.hasMove) {
+                theUnit.hasAttack = false;
+                return;
+            }
+            //if units doesn't have a move, un-select it
+            if (theUnit != null && !theUnit.hasMove) {
+                theUnit.hasAttack = false;
+                checkAction(theUnit);
+                return;
+            }
+        }
 
+        //if user taps with unit selected on an opponent's unit, attack it
+        if (theUnit != null && BoardSprites[x / squareLength][y / squareLength] != null &&
+                BoardSprites[x / squareLength][y / squareLength].owner != theUnit.owner &&
+                (theUnit.attack2Range >= getSquareDistance           //and check if unit is in range of second (weaker) attack.
+                        (getCoordinates(theUnit)[0], x / squareLength,
+                                getCoordinates(theUnit)[1], y / squareLength))
+                && theUnit.hasAttack == true) {
+            DamageUnit(theUnit.attack2, BoardSprites[x / squareLength][y / squareLength], x / squareLength, y / squareLength);
+            if (theUnit != null && theUnit.hasMove) {
+                theUnit.hasAttack = false;
+                checkAction(theUnit);
+                return;
+            }
+            if (theUnit != null && !theUnit.hasMove) {
+                theUnit.hasAttack = false;
+                checkAction(theUnit);
+                return;
+            }
+        }
+
+        //If user taps on a square that is out of range while some unit is selected, do nothing (this could be changed later)
+        if (selected != null) {
+            return;
         }
     }
 
@@ -700,10 +743,10 @@ public class GameEngine {
             return;
         }
         boolean isAtStartingPosition = false;
-        if (u.owner == green && u.coordinates[0] == 2 && u.coordinates[1] == 2 && green.isHuman) {
+        if (u.owner == green && u.coordinates[0] == greenDeployX && u.coordinates[1] == greenDeployY && green.isHuman) {
             isAtStartingPosition = true;
         }
-        if (u.owner == red && u.coordinates[0] == 12 && u.coordinates[1] == 6 && red.isHuman) {
+        if (u.owner == red && u.coordinates[0] == redDeployX && u.coordinates[1] == redDeployY && red.isHuman) {
             isAtStartingPosition = true;
         }
         int a = 0, b = 0;
@@ -801,14 +844,14 @@ public class GameEngine {
             return;
         }
         if (playing == green) {
-            BoardSprites[2][2] = GameEngine.queue[0];
-            GameEngine.queue[0].coordinates[0] = 2;
-            GameEngine.queue[0].coordinates[1] = 2;
+            BoardSprites[greenDeployX][greenDeployY] = GameEngine.queue[0];
+            GameEngine.queue[0].coordinates[0] = greenDeployX;
+            GameEngine.queue[0].coordinates[1] = greenDeployY;
         }
         if (playing == red) {
-            BoardSprites[12][6] = GameEngine.queue[0];
-            GameEngine.queue[0].coordinates[0] = 12;
-            GameEngine.queue[0].coordinates[1] = 6;
+            BoardSprites[redDeployX][redDeployY] = GameEngine.queue[0];
+            GameEngine.queue[0].coordinates[0] = redDeployX;
+            GameEngine.queue[0].coordinates[1] = redDeployY;
         }
         Units []toReturn = new Units[GameEngine.queue.length - 1];
         for (int k = 1; k < GameEngine.queue.length; k++) {
@@ -941,9 +984,23 @@ public class GameEngine {
                 }
                 if (BoardSprites[i][j] != null && BoardSprites[i][j].owner != playing) {
                     if (BoardSprites[i][j].hasAttack && BoardSprites[i][j].hasMove) {
-                        BoardSprites[i][j].HP++;
                         if (BoardSprites[i][j].unitType.equals("Armor")) {
-                            BoardSprites[i][j].HP++;
+                            BoardSprites[i][j].HP += Armor.healedBy;
+                        }
+                        else if (BoardSprites[i][j].unitType.equals("Cavalry")) {
+                            BoardSprites[i][j].HP += Cavalry.healedBy;
+                        }
+                        else if (BoardSprites[i][j].unitType.equals("Infantry")) {
+                            BoardSprites[i][j].HP += Infantry.healedBy;
+                        }
+                        else if (BoardSprites[i][j].unitType.equals("Artillery")) {
+                            BoardSprites[i][j].HP += Artillery.healedBy;
+                        }
+                        else if (BoardSprites[i][j].unitType.equals("Anti air")) {
+                            BoardSprites[i][j].HP += MGInfantry.healedBy;
+                        }
+                        else if (BoardSprites[i][j].unitType.equals("Heavy Tank")) {
+                            BoardSprites[i][j].HP += HeavyTank.healedBy;
                         }
                         BoardSprites[i][j].hasAttack = false;
                         BoardSprites[i][j].hasMove = false;
@@ -1011,15 +1068,25 @@ public class GameEngine {
         GameEngine.lastAddedResources[2] = addedoil;
     }
 
-    public static boolean[][] getFogOfWar(int player) {
-        boolean[][] tile_is_visible = new boolean[15][9];
+    public static boolean[][] getFogOfWar(Player player) {
+        boolean[][] tile_is_visible = new boolean[width][heigth];
+
+        if (GameView.removeFogOfWar) {
+            for (int i = 0; i < tile_is_visible.length; i++) {
+                for (int j = 0; j < tile_is_visible[i].length; j++) {
+                    tile_is_visible[i][j] = true;
+                }
+            }
+            return tile_is_visible;
+        }
+
         for (int i = 0; i < tile_is_visible.length; i++) {
             for (int j = 0; j < tile_is_visible[i].length; j++) {
                 tile_is_visible[i][j] = false;
             }
         }
         //green player
-        if (player == 0) {
+        if (player == green) {
             for (int i = 0; i < BoardSprites.length; i++) {
                 for (int j = 0; j < BoardSprites[i].length; j++) {
                     if (BoardSprites[i][j] != null && BoardSprites[i][j].owner.color.equals("green")) {
@@ -1036,7 +1103,7 @@ public class GameEngine {
         }
 
         //red player
-        if (player == 1) {
+        if (player == red) {
             for (int i = 0; i < BoardSprites.length; i++) {
                 for (int j = 0; j < BoardSprites[i].length; j++) {
                     if (BoardSprites[i][j] != null && BoardSprites[i][j].owner.color.equals("red")) {
@@ -1053,7 +1120,7 @@ public class GameEngine {
         }
 
         //reveal tiles that are scouted by planes
-        if (player == 0) {
+        if (player == green) {
             if (fogOfWarIsRevealedForGreen[0]) {
                 for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
                     for (int j = 0; j < 4; j++) {
@@ -1076,7 +1143,7 @@ public class GameEngine {
                 }
             }
         }
-        if (player == 1) {
+        if (player == red) {
             if (fogOfWarIsRevealedForRed[0]) {
                 for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
                     for (int j = 0; j < 4; j++) {
@@ -1106,7 +1173,7 @@ public class GameEngine {
     //helper recursive function
     public static void getReachableTilesRecursive(int xCoord, int yCoord, int currentDistance, boolean[][] map) {
         if (currentDistance < 0
-                || xCoord < 0 || yCoord < 0 || xCoord > 14 || yCoord > 8
+                || xCoord < 0 || yCoord < 0 || xCoord > width - 1 || yCoord > heigth - 1
                 || (BoardSprites[xCoord][yCoord] != null && BoardSprites[xCoord][yCoord].owner != playing)) {
             return;
         }
@@ -1121,7 +1188,7 @@ public class GameEngine {
 
     //gets all tiles that are reachable by a unit without skipping over enemy units
     public static boolean[][] getReachableTiles(int xCoord, int yCoord, int range) {
-        boolean[][] tiles = new boolean[15][9];
+        boolean[][] tiles = new boolean[width][heigth];
 
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[i].length; j++) {

@@ -6,6 +6,8 @@ import android.widget.Button;
 import android.view.View;
 import android.content.Intent;
 
+import java.util.ArrayList;
+
 public class ScenarioMenu extends AppCompatActivity {
 
     @Override
@@ -17,6 +19,7 @@ public class ScenarioMenu extends AppCompatActivity {
             public void onClick(View view) {
                 MainMenu.scenario = "Somme";
                 startActivity(new Intent(ScenarioMenu.this, FullscreenActivity.class)); //creates new scenario "Somme"
+                FullscreenActivity.memory = new ArrayList<>();
             }
         });
 

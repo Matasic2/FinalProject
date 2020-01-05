@@ -13,6 +13,7 @@ public class movableLocation {
 
     public Bitmap icon; //adds icon
     public int displacement = 0; //displacement of the icon, used if the icon has to be centered
+    public boolean isHUDelement = false; // HUD elements should not move when camera moves
 
     public movableLocation(Context context) {
 
@@ -42,7 +43,9 @@ public class movableLocation {
     }
 
     //adds texture to the object, icon depends on number inputed
-    public movableLocation(Context context, int number) {
+    public movableLocation(Context context, int number, boolean isHUD) {
+        this.isHUDelement = isHUD;
+
 
         if (number == 0) {
             BitmapFactory.Options o = new Options(); //get resource
@@ -252,12 +255,16 @@ public class movableLocation {
     }
     //draw yellow circles at given coordinates, +37 centers the image
     public void draw(Canvas canvas, int x, int y) {
-        canvas.drawBitmap(icon, (x*GameEngine.squareLength) + displacement,(y*GameEngine.squareLength) + displacement, null);
+        if (isHUDelement) {
+            canvas.drawBitmap(icon, (x*GameEngine.squareLength) + displacement,(y*GameEngine.squareLength) + displacement, null);
+        } else {
+            canvas.drawBitmap(icon, (x * GameEngine.squareLength) + displacement + GameView.cameraX, (y * GameEngine.squareLength) + displacement + GameView.cameraY, null);
+        }
     }
     public void draw(Canvas canvas, float x, int y) {
-        canvas.drawBitmap(icon, (x*GameEngine.squareLength) + displacement,(y*GameEngine.squareLength) + displacement, null);
+        canvas.drawBitmap(icon, (x*GameEngine.squareLength) + GameView.cameraX + displacement,(y*GameEngine.squareLength) + displacement + GameView.cameraY, null);
     }
     public void draw(Canvas canvas, int x, int y, Paint paint) {
-        canvas.drawBitmap(icon, (x*GameEngine.squareLength) + displacement,(y*GameEngine.squareLength) + displacement, paint);
+        canvas.drawBitmap(icon, (x*GameEngine.squareLength) + GameView.cameraX + displacement,(y*GameEngine.squareLength) + displacement + GameView.cameraY , paint);
     }
 }

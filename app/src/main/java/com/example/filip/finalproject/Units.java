@@ -208,6 +208,8 @@ public class Units {
         this.movement = u.movement;
         this.coordinates[0] = 125;
         this.coordinates[1] = 125;
+        this.visibilityRange = u.visibilityRange; //how far the unit can see
+        this.airAttack = u.airAttack;
 
 
         //these if statements get the icon of constructed unit
@@ -486,7 +488,7 @@ public class Units {
     //draws the unit when unit[i].draw(canvas) is called in GameView function.
     public void draw(Canvas canvas) {
         if (coordinates[0] != 125) {
-            canvas.drawBitmap(icon, coordinates[0] * GameEngine.squareLength, coordinates[1] * GameEngine.squareLength, null);
+            canvas.drawBitmap(icon, coordinates[0] * GameEngine.squareLength + GameView.cameraX, coordinates[1] * GameEngine.squareLength + GameView.cameraY, null);
         }
     }
     public void draw(Canvas canvas, Paint paint, float displacement) {

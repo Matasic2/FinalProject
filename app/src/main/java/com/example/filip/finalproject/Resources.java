@@ -58,7 +58,7 @@ public class Resources {
         }
 
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(icon, coordinates[0] * GameEngine.squareLength, coordinates[1] * GameEngine.squareLength, null);
+        canvas.drawBitmap(icon, coordinates[0] * GameEngine.squareLength + GameView.cameraX, coordinates[1] * GameEngine.squareLength + GameView.cameraY, null);
     }
     public void draw(Canvas canvas,Paint paint, float displacement) {
         canvas.drawBitmap(icon, coordinates[0] * GameEngine.squareLength + displacement, coordinates[1] * GameEngine.squareLength , paint);

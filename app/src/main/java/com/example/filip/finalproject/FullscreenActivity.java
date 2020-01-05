@@ -45,6 +45,9 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     public static FullscreenActivity theActivity; //stores the reference of the activity
     public static ArrayList<Integer> memory = new ArrayList<>();
 
+    public static int lastDownX = 0;
+    public static int lastDownY = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -109,9 +112,22 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
 
         if (event.getAction() == MotionEvent.ACTION_UP) {
             memory.add(new Integer((int) event.getX() * widthfullscreen + (int) event.getY()));
-            GameEngine.tapProcessor((int) event.getX(), (int) event.getY()); //sends coordinates to GameEngine, which does everything.
+            GameEngine.tapProcessor((int) event.getX(), (int) event.getY(),1); //sends coordinates to GameEngine, which does everything.
+            lastDownX = -1;
+            lastDownY = -1;
         }
 
+        else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            lastDownX = (int) event.getX() - GameView.cameraX;
+            lastDownY = (int) event.getY() - GameView.cameraY;
+        }
+        else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+
+            // TODO : Spremi u memoriu za spremanje aktivnosti
+           // memory.add(new Integer((int) event.getX() * widthfullscreen + (int) event.getY()));
+            GameView.targetCameraX = (int) event.getX() - lastDownX;
+            GameView.targetCameraY = (int) event.getY() - lastDownY;
+        }
         return true;
     }
     @Override

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.ArrayList;
+
 public class SkirmishMenu extends AppCompatActivity {
 
     @Override
@@ -17,6 +19,7 @@ public class SkirmishMenu extends AppCompatActivity {
             public void onClick(View view) {
                 MainMenu.scenario = "Skirmish";
                 startActivity(new Intent(SkirmishMenu.this, FullscreenActivity.class)); //new player vs player skirmish
+                FullscreenActivity.memory = new ArrayList<>();
             }
         });
         Button button5 = (Button) findViewById(R.id.button5);
@@ -24,6 +27,15 @@ public class SkirmishMenu extends AppCompatActivity {
             public void onClick(View view) {
                 MainMenu.scenario = "Skirmish vs AI";
                 startActivity(new Intent(SkirmishMenu.this, FullscreenActivity.class)); // new player vs AI skirmish
+                FullscreenActivity.memory = new ArrayList<>();
+            }
+        });
+        Button button6 = (Button) findViewById(R.id.button6);
+        button6.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                MainMenu.scenario = "Skirmish vs AI_cheating";
+                startActivity(new Intent(SkirmishMenu.this, FullscreenActivity.class)); // new player vs AI skirmish
+                FullscreenActivity.memory = new ArrayList<>();
             }
         });
     }

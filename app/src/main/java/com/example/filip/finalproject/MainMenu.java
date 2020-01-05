@@ -6,7 +6,8 @@ import android.widget.Button;
 import android.view.View;
 import android.content.Intent;
 
-public class MainMenu extends AppCompatActivity {
+
+public class MainMenu extends AppCompatActivity  {
 
     //developer mode, should be set false on releases
     public static boolean ENABLE_DEV_MODE = true;
@@ -39,5 +40,20 @@ public class MainMenu extends AppCompatActivity {
                 }
             });
         }
+
+        Button switchFOW = (Button) findViewById(R.id.switch1); //button that changes if fog of war is visible
+        switchFOW.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                GameView.removeFogOfWar = !GameView.removeFogOfWar;
+            }
+        });
     }
+
+    //@Override
+    //public void onClick (View v) {
+    //    GameView.removeFogOfWar = !GameView.removeFogOfWar;
+    //}
 }

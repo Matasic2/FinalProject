@@ -13,6 +13,9 @@ public class MainThread extends Thread {
     public GameView gameView;
     public static Canvas canvas;
     public static boolean run;
+    public static boolean isRendering = false;
+
+    public long previousTime = 0;
 
     public MainThread(SurfaceHolder surfaceHolder, GameView gameView) {
 
@@ -24,27 +27,42 @@ public class MainThread extends Thread {
 
     @Override
     public void run() {
-
         while (run) {
-            try {
-                canvas = this.surfaceHolder.lockCanvas();
-                synchronized (surfaceHolder) {
-                    this.gameView.update();
-                    this.gameView.draw(canvas);
+            GameView.cameraY = GameView.targetCameraY;
+            GameView.cameraX = GameView.targetCameraX;
+
+            //adjust camera
+            if (GameEngine.width > 15) {
+                if (GameView.cameraX > 0) {
+                    GameView.cameraX = 0;
                 }
-            } catch (Exception e) {
+                if (GameView.cameraX < (15 - GameEngine.width) * GameEngine.squareLength) {
+                    GameView.cameraX = (15 - GameEngine.width) * GameEngine.squareLength;
+                }
             }
-            finally {
-                if (canvas != null) {
-                    try {
-                        surfaceHolder.unlockCanvasAndPost(canvas);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+            if (GameEngine.width > 9) {
+                if (GameView.cameraY > 0) {
+                    GameView.cameraY = 0;
                 }
+                if (GameView.cameraY < (9 - GameEngine.heigth) * GameEngine.squareLength) {
+                    GameView.cameraY = (9 - GameEngine.heigth ) * GameEngine.squareLength;
+                }
+            }
+
+            //TODO: dodaj da kamera ne moze preko mape
+
+            synchronized (surfaceHolder) {
+                this.gameView.update();
+                canvas = surfaceHolder.lockCanvas();
+                isRendering = true;
+                this.gameView.draw(canvas);
+                isRendering = false;
+            }
+            if (this.canvas != null) {
+                surfaceHolder.unlockCanvasAndPost(canvas);
+                previousTime = System.currentTimeMillis();
             }
         }
+        isRendering = false;
     }
-
-
 }

@@ -8,7 +8,7 @@ public class Bomber extends  Planes{
 
 
     public static int greenAirAttack =  4;//Damage done by first attack.
-    public static int greenGroundAttack = 3; // Damage done by second attack, usually does less damage but has higher range then first attack.
+    public static int greenGroundAttack = 4; // Damage done by second attack, usually does less damage but has higher range then first attack.
     public static int greenDefence = 2; //Unit's defence value. Damage to HP is calculated by HP -= (damage - defence). For example, if unit has 3hp, 1 defence and gets attacked by unit which has 2 attack damage, new HP will be 2.
     public static int greenMaxHP = 25; //Max HP of the unit
     public static int greenRepairRate = 4;
@@ -18,7 +18,7 @@ public class Bomber extends  Planes{
     public static int oilPrice = 5;
 
     public static int redAirAttack =  4;//Damage done by first attack.
-    public static int redGroundAttack = 3; // Damage done by second attack, usually does less damage but has higher range then first attack.
+    public static int redGroundAttack = 4; // Damage done by second attack, usually does less damage but has higher range then first attack.
     public static int redDefence = 2; //Unit's defence value. Damage to HP is calculated by HP -= (damage - defence). For example, if unit has 3hp, 1 defence and gets attacked by unit which has 2 attack damage, new HP will be 2.
     public static int redMaxHP = 25; //Max HP of the unit
     public static int redRepairRate = 4;

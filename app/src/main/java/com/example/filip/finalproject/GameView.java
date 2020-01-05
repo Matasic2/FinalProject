@@ -27,6 +27,53 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static Resources[] resources = new Resources[0]; // Array of resources that will be drawn, they don't have the physical location on board (In GameEngine class, BoardResources does that).
     public static boolean showendTurnScreen = false;
 
+    public static int cameraX = 0;
+    public static int cameraY = 0;
+    public static int targetCameraX = 0;
+    public static int targetCameraY = 0;
+
+
+    public static boolean removeFogOfWar = false; //removing fog of war
+
+
+
+
+    //UI elements TODO : cleanup
+    public movableLocation pointers;
+    public movableLocation pointers1;
+    public movableLocation pointers2;
+    public movableLocation pointers7;
+    public movableLocation pointers8;
+    public movableLocation pointers12;
+    public movableLocation airline;
+    public movableLocation airliner;
+    public movableLocation hangar;
+    public movableLocation pointers9;
+    public movableLocation temp;
+    public movableLocation temp2;
+    public movableLocation pointers3;
+    public movableLocation pointers35;
+    public movableLocation pointers4;
+    public movableLocation pointers5;
+    public movableLocation pointers6;
+
+    public movableLocation pointers99;
+
+    public movableLocation infr;
+    public movableLocation cavr;
+    public movableLocation artr;
+    public movableLocation mgr;
+    public movableLocation inf;
+    public movableLocation cav;
+    public movableLocation art;
+    public movableLocation mg;
+    public movableLocation arm;
+    public movableLocation fit;
+    public movableLocation bom;
+    public movableLocation armr;
+    public movableLocation fitr;
+    public movableLocation bomr;
+
     //Starts the game thread
     public GameView(Context context) {
         super(context);
@@ -34,7 +81,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         thread = new MainThread(getHolder(), this);
         setFocusable(true);
-
     }
 
     //not used
@@ -49,10 +95,48 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         grid = null;
         units = new Units[0];
         resources = new Resources[0];
+        theContext = this.getContext(); // Stores the context, see the variable comment above
+
+
+        pointers = new movableLocation(theContext, 0, false);
+        pointers1 = new movableLocation(theContext, 1, false);
+        pointers2 = new movableLocation(theContext, 2, false);
+        pointers7 = new movableLocation(theContext, 17, false);
+        pointers8 = new movableLocation(theContext, 18, false);
+        pointers12 = new movableLocation(theContext, 25, true);
+        airline = new movableLocation(theContext, 27, true);
+        airliner = new movableLocation(theContext, 28, true);
+        hangar = new movableLocation(theContext, 26, true);
+        pointers9 = new movableLocation(theContext, 19, true);
+        temp = new movableLocation(theContext);
+        temp2 = new movableLocation(theContext, 15, false);
+        pointers3 = new movableLocation(theContext, 3, true);
+        pointers35 = new movableLocation(theContext, 14, true);
+        pointers4 = new movableLocation(theContext, 4, true);
+        pointers5 = new movableLocation(theContext, 5, true);
+        pointers6 = new movableLocation(theContext, 16, true);
+
+        pointers99 = new movableLocation(theContext, 22, true);
+
+        infr = new movableLocation(theContext, 9, true);
+        cavr = new movableLocation(theContext, 10, true);
+        artr = new movableLocation(theContext, 11, true);
+        mgr = new movableLocation(theContext, 21, true);
+        inf = new movableLocation(theContext, 6, true);
+        cav = new movableLocation(theContext, 7, true);
+        art = new movableLocation(theContext, 8, true);
+        mg = new movableLocation(theContext, 20, true);
+        arm = new movableLocation(theContext, 12, true);
+        fit = new movableLocation(theContext, 29, true);
+        bom = new movableLocation(theContext, 31, true);
+        armr = new movableLocation(theContext, 13, true);
+        fitr = new movableLocation(theContext, 30, true);
+        bomr = new movableLocation(theContext, 32, true);
+
         GameEngine.restart();
         GameEngine.green = new Player("green", true);
         GameEngine.red = new Player("red", true);
-        if (MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("dev_mode")) {
+        if (MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("Skirmish vs AI_cheating") ||  MainMenu.scenario.equals("dev_mode")) {
             GameEngine.red.isHuman = false;
             GameEngine.AIPlayer = GameEngine.red;
         }
@@ -62,59 +146,72 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         map = Bitmap.createScaledBitmap(map, (int) (map.getWidth() * FullscreenActivity.scaleFactor), (int) (map.getHeight() * FullscreenActivity.scaleFactor), true);
         Bitmap mapAir = BitmapFactory.decodeResource(this.getResources(), R.mipmap.grid_air, o);
         mapAir = Bitmap.createScaledBitmap(mapAir, (int) (mapAir.getWidth() * FullscreenActivity.scaleFactor), (int) (mapAir.getHeight() * FullscreenActivity.scaleFactor), true);
-        grid = new GameEngine(map,mapAir); // these lines create the board.
-        theContext = this.getContext(); // Stores the context, see the variable comment above
+        Bitmap square = BitmapFactory.decodeResource(this.getResources(), R.mipmap.square, o);
+        square =  Bitmap.createScaledBitmap(square, (int) (square.getWidth() * FullscreenActivity.scaleFactor), (int) (square.getHeight() * FullscreenActivity.scaleFactor), true);
+
+
 
             //skirmish
-            if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") ||  MainMenu.scenario.equals("dev_mode")) {
+            if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") ||  MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
                 // next lines generate green's "natural resources" (the resources which are expected to be controlled by green player).
-                new Food(theContext, 1, 0, 1, 1);
+                grid = new GameEngine(map,mapAir,square, 21, 11); // these lines create the board.
+                grid.redDeployX = 17;
+                grid.redDeployY = 8;
+
+;               new Food(theContext, 1, 0, 1, 1);
                 new Food(theContext, 2, 1, 1, 1);
                 new Food(theContext, 1, 2, 1, 1);
-                new Food(theContext, 2, 7, 1, 7);
-                new Food(theContext, 1, 8, 1, 7);
-                new Food(theContext, 5, 1, 6, 1);
-
-                new oil(theContext, 6, 0, 6, 1);
-                new oil(theContext, 1, 6, 1, 7);
                 new oil(theContext, 0, 1, 1, 1);
 
-                new Iron(theContext, 0, 7, 1, 7);
-                new Iron(theContext, 6, 2, 6, 1);
+                new Food(theContext, 2, 6, 1, 6);
+                new Food(theContext, 1, 7, 1, 6);
+                new oil(theContext, 1, 5, 1, 6);
+                new Iron(theContext, 0, 6, 1, 6);
+
+                new Food(theContext, 7, 1, 8, 1);
+                new oil(theContext, 8, 0, 8, 1);
+                new Iron(theContext, 8, 2, 8, 1);
 
                 // next lines generate red's "natural resources" (the resources which are expected to be controlled by red player).
-                new Food(theContext, 13, 8, 13, 7);
-                new Food(theContext, 12, 7, 13, 7);
-                new Food(theContext, 13, 6, 13, 7);
-                new Food(theContext, 12, 1, 13, 1);
-                new Food(theContext, 13, 0, 13, 1);
-                new Food(theContext, 9, 7, 8, 7);
+                new Food(theContext, 18, 10, 18, 9);
+                new Food(theContext, 17, 9, 18, 9);
+                new Food(theContext, 18, 8, 18, 9);
+                new oil(theContext, 19, 9, 18, 9);
 
-                new oil(theContext, 8, 8, 8, 7);
-                new oil(theContext, 13, 2, 13, 1);
-                new oil(theContext, 14, 7, 13, 7);
+                new Food(theContext, 17, 4, 18, 4);
+                new Food(theContext, 18, 3, 18, 4);
+                new Iron(theContext, 19, 4, 18, 4);
+                new oil(theContext, 18, 5, 18, 4);
 
-                new Iron(theContext, 14, 1, 13, 1);
-                new Iron(theContext, 8, 6, 8, 7);
+                new Food(theContext, 13, 9, 12, 9);
+                new oil(theContext, 12, 10, 12, 9);
+                new Iron(theContext, 12, 8, 12, 9);
 
-                if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") ) {
+                //contested resources, the ones which both players should have equal chances to collect. Will probably be main area for battles.
+                new Iron(theContext, 9, 5, 10, 5);
+                new Iron(theContext, 11, 5, 10, 5);
+                new oil(theContext, 10, 4, 10, 5);
+                new oil(theContext, 10, 6, 10, 5);
+
+
+                if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") ||  MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
                     new Headquaters(theContext, 1, 1, GameEngine.green);
-                    new Headquaters(theContext, 13, 7, GameEngine.red);
+                    new Headquaters(theContext, 18, 9, GameEngine.red);
 
                     // These for loops create starting units.
-                    for (int i = 0; i < 2; i++) {
+                    for (int i = 0; i < 0; i++) {
                         new Infantry(theContext, 2, i * 2, GameEngine.green);
                     }
 
-                    for (int i = 0; i < 1; i++) {
+                    for (int i = 0; i < 0; i++) {
                         new Infantry(theContext, 12, 6, GameEngine.red);
                     }
 
-                    for (int i = 0; i < 0; i++) {
-                        new Cavalry(theContext, 1, i * 2, GameEngine.green);
+                    for (int i = 0; i < 1; i++) {
+                        new Cavalry(theContext, 2, 2, GameEngine.green);
                     }
-                    for (int i = 0; i < 0; i++) {
-                        new Cavalry(theContext, 12, i * 2, GameEngine.red);
+                    for (int i = 0; i < 1; i++) {
+                        new Cavalry(theContext, 17, 8, GameEngine.red);
                     }
 
                     for (int i = 0; i < 0; i++) {
@@ -124,22 +221,26 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         new Artillery(theContext, 13, i, GameEngine.red);
                     }
                 }
-                else if (MainMenu.scenario.equals("dev_mode")){
-                    AI.addUnit(new Cavalry(theContext, 7, 3, GameEngine.red),"moveTo_6_1");
 
-                    AI.addUnit(new Artillery(theContext, 12, 5, GameEngine.red),"MoveTo_2_2");
-                    new Artillery(theContext, 2, 5, GameEngine.green);
-                    AI.turn = 18;
-                    AI.rng = 40;
-                    GameEngine.red.foodStorage = 9;
-                    GameEngine.red.ironStorage = 3;
-                    GameEngine.red.oilStorage = 1;
-                    GameEngine.message = Integer.toString(AI.turn);
-                }
+            }
+
+            else if (MainMenu.scenario.equals("dev_mode")){
+                AI.addUnit(new Cavalry(theContext, 10, 3, GameEngine.red),"moveTo_6_1");
+
+                //AI.addUnit(new Armor(theContext, 6, 2, GameEngine.red),"moveTo_2_2");
+                new Cavalry(theContext, 5, 4, GameEngine.green);
+                new Cavalry(theContext, 6, 3, GameEngine.green);
+                AI.turn = 18;
+                AI.rng = 40;
+                GameEngine.red.foodStorage = 0;
+                GameEngine.red.ironStorage = 0;
+                GameEngine.red.oilStorage = 0;
+                GameEngine.message = Integer.toString(AI.turn);
             }
 
             //Somme mission
             else if (MainMenu.scenario.equals("Somme")) {
+                grid = new GameEngine(map,mapAir,square, 15, 9); // these lines create the board.
                 new Food(theContext, 1, 1, 1, 2);
                 new Food(theContext, 0, 2, 1, 2);
                 new Food(theContext, 1, 3, 1, 2);
@@ -191,12 +292,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             GameEngine.estimateResources();
             thread.start(); // starts the tread
 
-        GameEngine.load();
+        GameEngine.load(); //load previous game if exists
+        if ( MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
+            AI.isCheating = true;
+        } else {
+            AI.isCheating = false;
+        }
     }
 
     //Destroys the (image of) board, also copied from internet.
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        shouldDrawUI = false;
         boolean retry = true;
         while (retry) {
             try {
@@ -206,6 +313,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
             retry = false;
         }
+        shouldDrawUI = true;
     }
 
     // updates the grid, not sure if this is necessary.
@@ -232,16 +340,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
 
 
-
             if (showAir) {
-                grid.draw(canvas,showAir);
-                movableLocation pointers12 = new movableLocation(theContext, 25);
-                pointers12.draw(canvas,18,10);
+                grid.draw(canvas, showAir);
+                pointers12.draw(canvas, 18, 10);
 
                 Paint paint = new Paint();
                 paint.setAlpha(100);
                 for (int i = 0; i < resources.length; i++) {
-                    resources[i].draw(canvas,paint, GameEngine.squareLength * 2.5f); //draws the units from units array found in GameView class.
+                    resources[i].draw(canvas, paint, GameEngine.squareLength * 2.5f); //draws the units from units array found in GameView class.
                 }
 
                 for (int i = 0; i < units.length; i++) {
@@ -253,21 +359,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 //draws fog of war
                 boolean[][] fog_of_war;
                 if (GameEngine.playing.equals(GameEngine.green)) {
-                    fog_of_war = GameEngine.getFogOfWar(0);
+                    fog_of_war = GameEngine.getFogOfWar(GameEngine.green);
                 } else {
-                    fog_of_war = GameEngine.getFogOfWar(1);
+                    fog_of_war = GameEngine.getFogOfWar(GameEngine.red);
                 }
                 for (int i = 0; i < fog_of_war.length; i++) {
                     for (int j = 0; j < fog_of_war[i].length; j++) {
                         if (!fog_of_war[i][j]) {
                             paint.setColor(Color.argb(100, 80, 80, 80));
-                            Rect rectangle = new Rect((int)((i + 2.5) * GameEngine.squareLength),
-                                    (int)((j) * GameEngine.squareLength),
-                                    (int)((i + 3.5) * GameEngine.squareLength),
-                                    (int)((j + 1) * GameEngine.squareLength));
+                            Rect rectangle = new Rect((int) ((i + 2.5) * GameEngine.squareLength),
+                                    (int) ((j) * GameEngine.squareLength),
+                                    (int) ((i + 3.5) * GameEngine.squareLength),
+                                    (int) ((j + 1) * GameEngine.squareLength));
                             canvas.drawRect(rectangle, paint);
-                        }
-                        else if(fog_of_war[i][j] && GameEngine.BoardSprites[i][j] != null && !GameEngine.BoardSprites[i][j].owner.equals(GameEngine.playing)) {
+                        } else if (fog_of_war[i][j] && GameEngine.BoardSprites[i][j] != null && !GameEngine.BoardSprites[i][j].owner.equals(GameEngine.playing)) {
                             paint.setAlpha(100);
                             GameEngine.BoardSprites[i][j].draw(canvas, paint, GameEngine.squareLength * 2.5f);
                         }
@@ -275,20 +380,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }
                 //draw air line position for planes to place
                 for (int i = 0; i < 3; i++) {
-                        movableLocation airline = new movableLocation(theContext, 27);
-                        airline.draw(canvas, 0, 3 * i + 1);
-                        movableLocation airliner = new movableLocation(theContext, 28);
-                        airliner.draw(canvas, 17.8f, 3 * i + 1);
+                    airline.draw(canvas, 0, 3 * i + 1);
+                    airliner.draw(canvas, 17.8f, 3 * i + 1);
                 }
 
 
                 //draw hangar
-                movableLocation hangar = new movableLocation(theContext, 26);
                 hangar.draw(canvas, 4, 10);
                 if (GameEngine.playing != null) {
-                    for (int i = 0; i < GameEngine.playing.hangar.length; i++){
+                    for (int i = 0; i < GameEngine.playing.hangar.length; i++) {
                         if (GameEngine.playing.hangar[i] != null) {
-                            GameEngine.playing.hangar[i].draw(canvas,4 + i, 10);
+                            GameEngine.playing.hangar[i].draw(canvas, 4 + i, 10);
                             GameEngine.message = "boo";
                         }
                     }
@@ -299,17 +401,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     for (int j = 0; j < GameEngine.planeLines[i].length; j++) {
                         if (GameEngine.planeLines[i][j] != null) {
                             if (i == 0 && j == 0) {
-                                GameEngine.planeLines[i][j].draw(canvas, 0,1);
+                                GameEngine.planeLines[i][j].draw(canvas, 0, 1);
                             } else if (i == 1 && j == 0) {
-                                GameEngine.planeLines[i][j].draw(canvas, 0,4);
+                                GameEngine.planeLines[i][j].draw(canvas, 0, 4);
                             } else if (i == 2 && j == 0) {
-                                GameEngine.planeLines[i][j].draw(canvas, 0,7);
+                                GameEngine.planeLines[i][j].draw(canvas, 0, 7);
                             } else if (i == 0 && j == 1) {
-                                GameEngine.planeLines[i][j].draw(canvas, 19,1);
+                                GameEngine.planeLines[i][j].draw(canvas, 19, 1);
                             } else if (i == 1 && j == 1) {
-                                GameEngine.planeLines[i][j].draw(canvas, 19,4);
+                                GameEngine.planeLines[i][j].draw(canvas, 19, 4);
                             } else if (i == 2 && j == 1) {
-                                GameEngine.planeLines[i][j].draw(canvas, 19,7);
+                                GameEngine.planeLines[i][j].draw(canvas, 19, 7);
                             }
                         }
                     }
@@ -332,40 +434,25 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         paint.setColor(Color.RED);
                     }
 
-                    canvas.drawText("Air attack :   " + GameEngine.selectedPlane.airAttack + " Air defence : " + GameEngine.selectedPlane.defence , 1350 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, paint);
-                    canvas.drawText("Ground attack : " + GameEngine.selectedPlane.groundAttack,1350 * FullscreenActivity.scaleFactor, 1310 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("Air attack :   " + GameEngine.selectedPlane.airAttack + " Air defence : " + GameEngine.selectedPlane.defence, 1350 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("Ground attack : " + GameEngine.selectedPlane.groundAttack, 1350 * FullscreenActivity.scaleFactor, 1310 * FullscreenActivity.scaleFactor, paint);
                     canvas.drawText("Health : " + GameEngine.selectedPlane.HP + "/" + GameEngine.selectedPlane.maxHP + " Repair : " + GameEngine.selectedPlane.healingRate, 1350 * FullscreenActivity.scaleFactor, 1360 * FullscreenActivity.scaleFactor, paint);
 
                 }
             } else {
-                grid.draw(canvas,showAir);  //draws the grid first, because that is the bottom layer.
-                if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("dev_mode")) {
-                    movableLocation pointers = new movableLocation(theContext, 0);
-                    movableLocation pointers1 = new movableLocation(theContext, 1);
-                    movableLocation pointers2 = new movableLocation(theContext, 2);
-                    pointers.draw(canvas, 1, 7);
-                    pointers.draw(canvas, 13, 1);
-                    pointers1.draw(canvas, 6, 1);
-                    pointers2.draw(canvas, 8, 7);
+                grid.draw(canvas, showAir);  //draws the grid first, because that is the bottom layer.
+                if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("dev_mode") || MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
+                    //draws markers
+                    pointers.draw(canvas, 1, 6);
+                    pointers.draw(canvas, 18, 4);
+                    pointers1.draw(canvas, 8, 1);
+                    pointers2.draw(canvas, 12, 9);
+
+                    pointers.draw(canvas, 10, 5);
+
+                    pointers7.draw(canvas, GameEngine.greenDeployX, GameEngine.greenDeployY);
+                    pointers8.draw(canvas, GameEngine.redDeployX, GameEngine.redDeployY);
                 }
-                movableLocation pointers3 = new movableLocation(theContext, 3);
-                movableLocation pointers35 = new movableLocation(theContext, 14);
-                movableLocation pointers4 = new movableLocation(theContext, 4);
-                movableLocation pointers5 = new movableLocation(theContext, 5);
-                movableLocation pointers6 = new movableLocation(theContext, 16);
-                movableLocation pointers7 = new movableLocation(theContext, 17);
-                movableLocation pointers8 = new movableLocation(theContext, 18);
-                movableLocation pointers99 = new movableLocation(theContext, 22);
-                movableLocation pointers12 = new movableLocation(theContext, 25);
-                pointers3.draw(canvas, 16, 1);
-                pointers35.draw(canvas, 18, 1);
-                pointers4.draw(canvas, 16, 3);
-                pointers5.draw(canvas, 5, 10);
-                pointers6.draw(canvas, 18, 3);
-                pointers7.draw(canvas, 2, 2);
-                pointers8.draw(canvas, 12, 6);
-                pointers99.draw(canvas, 5, 9);
-                pointers12.draw(canvas, 18, 5);
 
                 Paint newPaint = new Paint();
                 newPaint.setTextSize(65 * FullscreenActivity.scaleFactor);
@@ -373,41 +460,137 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
                 if (GameEngine.theUnit != null) {
                     //upgrade
-                    movableLocation pointers9 = new movableLocation(theContext, 19);
                     pointers9.draw(canvas, 16, 5);
                     if (GameEngine.theUnit.unitType == "Infantry") {
                         if (GameEngine.theUnit.defence == Infantry.GreenDefence) {
                             canvas.drawText("1", ((16 * 128) * FullscreenActivity.scaleFactor + 52 * FullscreenActivity.scaleFactor), ((5 * 128) * FullscreenActivity.scaleFactor + 84 * FullscreenActivity.scaleFactor), newPaint);
                         }
                     }
-                    if (GameEngine.theUnit.unitType == "Cavalry") {
+                    else if (GameEngine.theUnit.unitType == "Cavalry") {
                         if (GameEngine.theUnit.defence == Cavalry.GreenDefence) {
                             canvas.drawText("1", ((16 * 128) * FullscreenActivity.scaleFactor + 52 * FullscreenActivity.scaleFactor), ((5 * 128) * FullscreenActivity.scaleFactor + 84 * FullscreenActivity.scaleFactor), newPaint);
                         }
                     }
-                    if (GameEngine.theUnit.unitType == "Artillery") {
+                    else if (GameEngine.theUnit.unitType == "Artillery") {
                         if (GameEngine.theUnit.defence == Artillery.GreenDefence) {
                             canvas.drawText("2", ((16 * 128) * FullscreenActivity.scaleFactor + 52 * FullscreenActivity.scaleFactor), ((5 * 128) * FullscreenActivity.scaleFactor + 84 * FullscreenActivity.scaleFactor), newPaint);
                         }
                     }
-                    if (GameEngine.theUnit.unitType == "Armor") {
+                    else if (GameEngine.theUnit.unitType == "Armor") {
                         if (GameEngine.theUnit.defence == Armor.GreenDefence) {
                             canvas.drawText("5", ((16 * 128) * FullscreenActivity.scaleFactor + 52 * FullscreenActivity.scaleFactor), ((5 * 128) * FullscreenActivity.scaleFactor + 84 * FullscreenActivity.scaleFactor), newPaint);
                         }
                     }
-                    if (GameEngine.theUnit.unitType == "Headquarters") {
+                    else if (GameEngine.theUnit.unitType == "Headquarters") {
                         if (GameEngine.theUnit.defence == Headquaters.GreenDefence) {
                             canvas.drawText("4", ((16 * 128) * FullscreenActivity.scaleFactor + 52 * FullscreenActivity.scaleFactor), ((5 * 128) * FullscreenActivity.scaleFactor + 84 * FullscreenActivity.scaleFactor), newPaint);
                         }
                     }
                 }
 
+                for (int i = 0; i < resources.length; i++) {
+                    int x = resources[i].coordinates[0];
+                    int y = resources[i].coordinates[1];
+                    resources[i].draw(canvas); //draws the units from units array found in GameView class.
+                }
+
+                for (int i = 0; i < units.length; i++) {
+                    int x = units[i].coordinates[0];
+                    int y = units[i].coordinates[1];
+                    if (x == 125 || y == 125) {
+                        continue;
+                    }
+                    units[i].draw(canvas); //draws the units from units array found in GameView class.
+                }
+
+                if (GameEngine.selected != null) { //If no units are selected yet, do nothing
+                    GameEngine.selected.draw(canvas); //If they are, draw it.
+                }
+
+                if (GameEngine.enemySelected != null) { //If no units are selected yet, do nothing
+                    GameEngine.enemySelected.draw(canvas); //If they are, draw it.
+                }
+
+                //draws yellow squares where selected unit can move.
+                if (GameEngine.theUnit != null && GameEngine.theUnit.hasMove == true) {
+                    int[] coordinates = GameEngine.getCoordinates(GameEngine.theUnit);
+                    boolean[][] reachableTiles = GameEngine.getReachableTiles(coordinates[0], coordinates[1], GameEngine.theUnit.movement);
+                    for (int i = 0; i < GameEngine.BoardSprites.length; i++) { // TODO : optimize this
+                        for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
+                            if (reachableTiles[i][j]) {
+                                temp.draw(canvas, i, j);
+                            }
+                        }
+                    }
+                }
+
+                //draws targets.
+                if (GameEngine.theUnit != null && GameEngine.theUnit.hasAttack == true) {
+                    for (int i = 0; i < GameEngine.BoardSprites.length; i++) { // TODO : optimize this
+                        for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
+                            if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != GameEngine.playing &&
+                                    (GameEngine.theUnit.attack2Range >= GameEngine.getSquareDistance
+                                            (GameEngine.getCoordinates(GameEngine.theUnit)[0], i,
+                                                    GameEngine.getCoordinates(GameEngine.theUnit)[1], j))) {
+
+                                temp2.draw(canvas, i, j);
+                            }
+                        }
+                    }
+                }
+
+                //draws fog of war
+                boolean[][] fog_of_war = new boolean[0][0];
+
+                if (!removeFogOfWar) {
+
+                    Paint paint = new Paint();
+
+                    if (GameEngine.playing.equals(GameEngine.green)) {
+                        fog_of_war = GameEngine.getFogOfWar(GameEngine.green);
+                    } else {
+                        fog_of_war = GameEngine.getFogOfWar(GameEngine.red);
+                    }
+                    for (int i = 0; i < fog_of_war.length; i++) {
+                        for (int j = 0; j < fog_of_war[i].length; j++) {
+                            if (!fog_of_war[i][j]) {
+                                paint.setColor(Color.argb(255, 80, 80, 80));
+                                Rect rectangle = new Rect(i * GameEngine.squareLength + cameraX,
+                                        j * GameEngine.squareLength + cameraY,
+                                        (i + 1) * GameEngine.squareLength + cameraX,
+                                        (j + 1) * GameEngine.squareLength + cameraY);
+                                canvas.drawRect(rectangle, paint);
+                            }
+                        }
+                    }
+                }
+
+
+                newPaint = new Paint();
+                newPaint.setColor(Color.argb(255, 10, 10, 10));
+                Rect rectangle = new Rect(0,
+                        1152,
+                        3000,
+                        1500);
+                canvas.drawRect(rectangle,newPaint);
+                rectangle = new Rect (1920,
+                        0,
+                        3000,
+                        2000);
+                canvas.drawRect(rectangle,newPaint);
+
+                //draws HUD elements
+                pointers3.draw(canvas, 16, 1);
+                pointers35.draw(canvas, 18, 1);
+                pointers4.draw(canvas, 16, 3);
+                pointers5.draw(canvas, 5, 10);
+                pointers6.draw(canvas, 18, 3);
+                pointers99.draw(canvas, 5, 9);
+                pointers12.draw(canvas, 18, 5);
+
                 if (GameEngine.showMarket) {
                     if (GameEngine.playing == GameEngine.green) {
-                        movableLocation inf = new movableLocation(theContext, 6);
-                        movableLocation cav = new movableLocation(theContext, 7);
-                        movableLocation art = new movableLocation(theContext, 8);
-                        movableLocation mg = new movableLocation(theContext, 20);
+
                         cav.draw(canvas, 7, 10);
                         inf.draw(canvas, 9, 10);
                         mg.draw(canvas, 11, 10);
@@ -415,14 +598,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
                     }
                     if (GameEngine.playing == GameEngine.red) {
-                        movableLocation inf = new movableLocation(theContext, 9);
-                        movableLocation cav = new movableLocation(theContext, 10);
-                        movableLocation art = new movableLocation(theContext, 11);
-                        movableLocation mg = new movableLocation(theContext, 21);
-                        cav.draw(canvas, 7, 10);
-                        inf.draw(canvas, 9, 10);
-                        mg.draw(canvas, 11, 10);
-                        art.draw(canvas, 13, 10);
+
+                        cavr.draw(canvas, 7, 10);
+                        infr.draw(canvas, 9, 10);
+                        mgr.draw(canvas, 11, 10);
+                        artr.draw(canvas, 13, 10);
                     }
                     Paint thePaint = new Paint();
                     thePaint.setTextSize(40 * FullscreenActivity.scaleFactor);
@@ -443,20 +623,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     canvas.drawText("" + Artillery.oilPrice, 1675 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
                 } else if (GameEngine.showFactory) {
                     if (GameEngine.playing == GameEngine.green) {
-                        movableLocation arm = new movableLocation(theContext, 12);
-                        movableLocation fit = new movableLocation(theContext, 29);
-                        movableLocation bom = new movableLocation(theContext, 31);
+
                         arm.draw(canvas, 7, 10);
                         fit.draw(canvas, 9, 10);
                         bom.draw(canvas, 11, 10);
                     }
                     if (GameEngine.playing == GameEngine.red) {
-                        movableLocation arm = new movableLocation(theContext, 13);
-                        movableLocation fit = new movableLocation(theContext, 30);
-                        movableLocation bom = new movableLocation(theContext, 32);
-                        arm.draw(canvas, 7, 10);
-                        fit.draw(canvas, 9, 10);
-                        bom.draw(canvas, 11, 10);
+
+                        armr.draw(canvas, 7, 10);
+                        fitr.draw(canvas, 9, 10);
+                        bomr.draw(canvas, 11, 10);
                     }
                     Paint thePaint = new Paint();
                     thePaint.setTextSize(40 * FullscreenActivity.scaleFactor);
@@ -467,7 +643,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     canvas.drawText("" + Bomber.foodPrice, 1515 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
 
                     thePaint.setColor(Color.argb(255, 204, 102, 0));
-                    canvas.drawText("" + Armor.ironPrice, 950 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                    canvas.drawText("" + Armor.ironPrice, 960 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
                     canvas.drawText("" + ReconPlane.ironPrice, 1205 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
                     canvas.drawText("" + Bomber.ironPrice, 1460 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
 
@@ -475,7 +651,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     canvas.drawText("" + Armor.oilPrice, 900 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
                     canvas.drawText("" + ReconPlane.oilPrice, 1155 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
                     canvas.drawText("" + Bomber.oilPrice, 1405 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-
 
                 } else {
                     Paint thePaint = new Paint();
@@ -489,21 +664,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     canvas.drawText(GameEngine.message, 800 * FullscreenActivity.scaleFactor, 1330 * FullscreenActivity.scaleFactor, thePaint);
                 }
 
-                for (int i = 0; i < resources.length; i++) {
-                    resources[i].draw(canvas); //draws the units from units array found in GameView class.
-                }
 
-                for (int i = 0; i < units.length; i++) {
-                    units[i].draw(canvas); //draws the units from units array found in GameView class.
-                }
-
-                if (GameEngine.selected != null) { //If no units are selected yet, do nothing
-                    GameEngine.selected.draw(canvas); //If they are, draw it.
-                }
-
-                if (GameEngine.enemySelected != null) { //If no units are selected yet, do nothing
-                    GameEngine.enemySelected.draw(canvas); //If they are, draw it.
-                }
 
                 //bottom five lines draw the text that displays the tap coordinates, should be removed in final version.
                 Paint paint = new Paint();
@@ -515,36 +676,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     paint.setColor(Color.RED);
                 }
                 canvas.drawText(Player.print(GameEngine.playing) + " is playing", 2000 * FullscreenActivity.scaleFactor, 70 * FullscreenActivity.scaleFactor, paint);
-
-                //draws yellow squares where selected unit can move.
-                if (GameEngine.theUnit != null && GameEngine.theUnit.hasMove == true) {
-                    int[] coordinates = GameEngine.getCoordinates(GameEngine.theUnit);
-                    boolean[][] reachableTiles = GameEngine.getReachableTiles(coordinates[0], coordinates[1], GameEngine.theUnit.movement);
-                    for (int i = 0; i < GameEngine.BoardSprites.length; i++) { // TODO : optimize this
-                        for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
-                            if (reachableTiles[i][j]) {
-                                movableLocation temp = new movableLocation(theContext);
-                                temp.draw(canvas, i, j);
-                            }
-                        }
-                    }
-                }
-
-                //draws targets.
-                if (GameEngine.theUnit != null && GameEngine.theUnit.hasAttack == true) {
-                    for (int i = 0; i < GameEngine.BoardSprites.length; i++) { // TODO : optimize this
-                        for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
-                            if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != GameEngine.playing &&
-                                    (GameEngine.theUnit.attack2Range >= GameEngine.getSquareDistance
-                                            (GameEngine.getCoordinates(GameEngine.theUnit)[0], i,
-                                                    GameEngine.getCoordinates(GameEngine.theUnit)[1], j))) {
-                                movableLocation temp = new movableLocation(theContext, 15);
-                                temp.draw(canvas, i, j);
-                            }
-                        }
-                    }
-                }
-
 
                 //display info about player's selected unit
                 if (GameEngine.theUnit != null) {
@@ -650,23 +781,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 paint2.setColor(Color.GRAY);
                 canvas.drawText("Oil storage : " + GameEngine.playing.oilStorage + " (+" + GameEngine.lastAddedResources[2] + ")", 50 * FullscreenActivity.scaleFactor, 1200 * FullscreenActivity.scaleFactor, paint2);
 
-
-                //draws fog of war
-                boolean[][] fog_of_war;
-                if (GameEngine.playing.equals(GameEngine.green)) {
-                    fog_of_war = GameEngine.getFogOfWar(0);
-                } else {
-                    fog_of_war = GameEngine.getFogOfWar(1);
-                }
-                for (int i = 0; i < fog_of_war.length; i++) {
-                    for (int j = 0; j < fog_of_war[i].length; j++) {
-                        if (!fog_of_war[i][j]) {
-                            paint.setColor(Color.argb(255, 80, 80, 80));
-                            Rect rectangle = new Rect(i * GameEngine.squareLength, j * GameEngine.squareLength, (i + 1) * GameEngine.squareLength, (j + 1) * GameEngine.squareLength);
-                            canvas.drawRect(rectangle, paint);
-                        }
-                    }
-                }
             }
         }
     }
@@ -682,5 +796,4 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
         units = toReplace;
     }
-
 }

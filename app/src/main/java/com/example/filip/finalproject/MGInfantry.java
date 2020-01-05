@@ -6,7 +6,7 @@ public class MGInfantry extends Units {
 
     // TODO : fix these comments
     public static int GreenAttack1 = 8; // Green Machine Gun Infantry's first attack value, this value can be changed
-    public static int GreenAttack2 = 3; //  Green  Machine Gun Infantry's first attack value, this value can be changed
+    public static int GreenAttack2 = 5; //  Green  Machine Gun Infantry's first attack value, this value can be changed
     public static int GreenFirstAttackRange = 1; //  Green  Machine Gun Infantry's first attack range, this value can be changed
     public static int GreenSecondAttackRange = 4; //  Green  Machine Gun Infantry's second attack value, this value can be changed
     public static int GreenDefence = 1; // Defence value of Green's  Machine Gun Infantry, this value can be changed
@@ -24,7 +24,7 @@ public class MGInfantry extends Units {
     public static int healedBy = 2;
 
     public static int RedAttack1 = 8; // Red  Machine Gun Infantry's first attack value, this value can be changed
-    public static int RedAttack2 = 3; //  Red  Machine Gun Infantry's first attack value, this value can be changed
+    public static int RedAttack2 = 5; //  Red  Machine Gun Infantry's first attack value, this value can be changed
     public static int RedFirstAttackRange = 1; //  Red  Machine Gun Infantry's first attack range, this value can be changed
     public static int RedSecondAttackRange = 4; //  Red  Machine Gun Infantry's second attack value, this value can be changed
     public static int RedDefence = 1; // Defence value of Red's  Machine Gun Infantry, this value can be changed
