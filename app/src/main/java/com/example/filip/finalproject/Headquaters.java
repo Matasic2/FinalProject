@@ -10,10 +10,12 @@ public class Headquaters extends Units{
     public static int GreenFirstAttackRange = 1; //  Green HQ's first attack range, this value can be changed
     public static int GreenSecondAttackRange = 5; //  Green HQ's second attack value, this value can be changed
     public static int GreenDefence = 2; // Defence value of Green's HQ, this value can be changed
-    public static int GreenHP = 20; // HP value of Green's HQ, this value can be changed
+    public static int GreenHP = 30; // HP value of Green's HQ, this value can be changed
     public static int GreenMovement = 0; // Movement value of Green's HQ, this value can be changed
     public static int GreenVisibility = 6; // Movement value of Green's Infantry, this value can be changed
     public static int greenAirAttack = 1;
+
+    public static int healedBy = 4;
 
 
     public static int RedAttack1 = 50; // Red HQ's first attack value, this value can be changed
@@ -21,7 +23,7 @@ public class Headquaters extends Units{
     public static int RedFirstAttackRange = 1; //  Red HQ's first attack range, this value can be changed
     public static int RedSecondAttackRange = 5; //  Red HQ's second attack value, this value can be changed
     public static int RedDefence = 2; // Defence value of Red's HQ, this value can be changed
-    public static int RedHP = 20; // HP value of Red's HQ, this value can be changed
+    public static int RedHP = 30; // HP value of Red's HQ, this value can be changed
     public static int RedMovement = 0; // Movement value of Red's HQ, this value can be changed
     public static int RedVisibility = 6; // Movement value of Green's Infantry, this value can be changed
     public static int redAirAttack = 1;
@@ -29,9 +31,9 @@ public class Headquaters extends Units{
     Headquaters(Context context, int x, int y, Player player) {
         super(context, x, y, player, "Headquarters");
         if (player.color.equals("green")) {
-            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement,GreenVisibility,greenAirAttack);
+            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement,GreenVisibility,greenAirAttack, healedBy);
         } else {
-            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility,redAirAttack);
+            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility,redAirAttack, healedBy);
         }
 
     }

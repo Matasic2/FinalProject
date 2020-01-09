@@ -39,17 +39,21 @@ public class MainThread extends Thread {
                 if (GameView.cameraX < (15 - GameEngine.width) * GameEngine.squareLength) {
                     GameView.cameraX = (15 - GameEngine.width) * GameEngine.squareLength;
                 }
+            } else {
+                GameView.cameraX = 0;
             }
-            if (GameEngine.width > 9) {
+            if (GameEngine.heigth > 9) {
                 if (GameView.cameraY > 0) {
                     GameView.cameraY = 0;
                 }
                 if (GameView.cameraY < (9 - GameEngine.heigth) * GameEngine.squareLength) {
                     GameView.cameraY = (9 - GameEngine.heigth ) * GameEngine.squareLength;
                 }
+            } else {
+                GameView.cameraY = 0;
             }
 
-            //TODO: dodaj da kamera ne moze preko mape
+            //GameEngine.message = GameView.cameraX + " " + GameView.cameraY;
 
             synchronized (surfaceHolder) {
                 this.gameView.update();

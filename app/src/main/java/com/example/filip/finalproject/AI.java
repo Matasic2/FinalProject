@@ -88,7 +88,7 @@ public class AI {
         boolean hasEnoughFood = true;
         while (AIPlayer.foodStorage >= 2 && GameEngine.BoardSprites[12][6] == null) {
 
-            if (hasEnoughFood && (turn == 1 || makeUnitFor13_1 || makeUnitFor8_7) && AIPlayer.foodStorage >= Cavalry.foodPrice) {
+            if (hasEnoughFood && (turn == 1 || makeUnitFor13_1 || makeUnitFor8_7) && AIPlayer.foodStorage >= Cavalry.redFoodPrice) {
                 if (turn  == 1){
                     buyCavalry(AIPlayer, "moveTo_13_1");
                 }
@@ -101,21 +101,21 @@ public class AI {
                     buyCavalry(AIPlayer, "moveTo_8_7");
                 }
             }
-            else if (AIPlayer.oilStorage >= Armor.oilPrice && AIPlayer.ironStorage >= Armor.ironPrice && AIPlayer.foodStorage >= Armor.foodPrice && viableUnits[4]) {
+            else if (AIPlayer.oilStorage >= Armor.redOilPrice && AIPlayer.ironStorage >= Armor.redIronPrice && AIPlayer.foodStorage >= Armor.redFoodPrice && viableUnits[4]) {
                 buyArmor(AIPlayer, "moveTo_2_2");
             }
-            else if (AIPlayer.ironStorage >= Artillery.ironPrice && AIPlayer.foodStorage >= Artillery.foodPrice && viableUnits[2]) {
+            else if (AIPlayer.ironStorage >= Artillery.redIronPrice && AIPlayer.foodStorage >= Artillery.redFoodPrice && viableUnits[2]) {
                 buyArtillery(AIPlayer, "moveTo_2_2");
             }
 
             //mass inf, cav if enemy has 2 cannons
-            else if (AIPlayer.foodStorage >= Infantry.foodPrice && turn != 1 && GameEngine.BoardSprites[12][6] == null && rng < 50 && viableUnits[0]) {
+            else if (AIPlayer.foodStorage >= Infantry.redFoodPrice && turn != 1 && GameEngine.BoardSprites[12][6] == null && rng < 50 && viableUnits[0]) {
                 buyInfantry(AIPlayer, "moveTo_2_2");
                 if (AIPlayer.foodStorage < 2) {
                     hasEnoughFood = false;
                 }
             }
-            else if (AIPlayer.foodStorage >= Cavalry.foodPrice && turn != 1 && GameEngine.BoardSprites[12][6] == null && rng < 50 && viableUnits[1]) {
+            else if (AIPlayer.foodStorage >= Cavalry.redFoodPrice && turn != 1 && GameEngine.BoardSprites[12][6] == null && rng < 50 && viableUnits[1]) {
                 if (GameEngine.BoardSprites[6][1] == null || GameEngine.BoardSprites[6][1].owner != AIPlayer) {
                     buyCavalry(AIPlayer, "moveTo_6_1");
                 }
@@ -128,7 +128,7 @@ public class AI {
             }
 
             //mass cav
-            else if (AIPlayer.foodStorage >= Cavalry.foodPrice && turn != 1 && GameEngine.BoardSprites[12][6] == null && rng > 60 && viableUnits[1]) {
+            else if (AIPlayer.foodStorage >= Cavalry.redFoodPrice && turn != 1 && GameEngine.BoardSprites[12][6] == null && rng > 60 && viableUnits[1]) {
                 if (GameEngine.BoardSprites[6][1] == null || GameEngine.BoardSprites[6][1].owner != AIPlayer) {
                     buyCavalry(AIPlayer, "moveTo_6_1");
                 }
@@ -141,7 +141,7 @@ public class AI {
             }
 
             //fake inf into cav
-            else if (AIPlayer.foodStorage >= Cavalry.foodPrice && turn != 1 && GameEngine.BoardSprites[12][6] == null && rng >= 50 && rng <= 60) {
+            else if (AIPlayer.foodStorage >= Cavalry.redFoodPrice && turn != 1 && GameEngine.BoardSprites[12][6] == null && rng >= 50 && rng <= 60) {
                 if (turn == 2) {
                     buyInfantry(AIPlayer, "moveTo_2_2");
                     if (AIPlayer.foodStorage < 2) {
@@ -170,10 +170,10 @@ public class AI {
     }
     //buys and plays Infantry
     public static boolean buyInfantry(Player AIPlayer, String order){
-        if (GameEngine.BoardSprites[12][6] != null || AIPlayer.foodStorage < Infantry.foodPrice) {
+        if (GameEngine.BoardSprites[12][6] != null || AIPlayer.foodStorage < Infantry.redFoodPrice) {
             return false;
         }
-        AIPlayer.foodStorage -= Infantry.foodPrice;
+        AIPlayer.foodStorage -= Infantry.redFoodPrice;
         Units temp = new Infantry(GameView.theContext, 12, 6, AIPlayer);
         addUnit(temp,order);
         playUnit(temp,order);
@@ -181,10 +181,10 @@ public class AI {
     }
     //buys and plays Cavalry
     public static boolean buyCavalry(Player AIPlayer, String order) {
-        if (GameEngine.BoardSprites[12][6] != null || AIPlayer.foodStorage < Cavalry.foodPrice) {
+        if (GameEngine.BoardSprites[12][6] != null || AIPlayer.foodStorage < Cavalry.redFoodPrice) {
             return false;
         }
-        AIPlayer.foodStorage -= Cavalry.foodPrice;
+        AIPlayer.foodStorage -= Cavalry.redFoodPrice;
         Units temp = new Cavalry(GameView.theContext, 12, 6, AIPlayer);
         addUnit(temp,order);
         playUnit(temp,order);
@@ -192,11 +192,11 @@ public class AI {
     }
     //buys and plays Artillery
     public static boolean buyArtillery(Player AIPlayer, String order) {
-        if (GameEngine.BoardSprites[12][6] != null || AIPlayer.foodStorage < Artillery.foodPrice) {
+        if (GameEngine.BoardSprites[12][6] != null || AIPlayer.foodStorage < Artillery.redFoodPrice) {
             return false;
         }
-        AIPlayer.foodStorage -= Artillery.foodPrice;
-        AIPlayer.ironStorage -= Artillery.ironPrice;
+        AIPlayer.foodStorage -= Artillery.redFoodPrice;
+        AIPlayer.ironStorage -= Artillery.redIronPrice;
         Units temp = new Artillery(GameView.theContext, 12, 6, AIPlayer);
         addUnit(temp,order);
         playUnit(temp,order);
@@ -204,12 +204,12 @@ public class AI {
     }
     //buys and plays Armor
     public static boolean buyArmor(Player AIPlayer, String order){
-        if (GameEngine.BoardSprites[12][6] != null || AIPlayer.foodStorage < Armor.foodPrice || AIPlayer.ironStorage < Armor.ironPrice || AIPlayer.oilStorage < Armor.oilPrice) {
+        if (GameEngine.BoardSprites[12][6] != null || AIPlayer.foodStorage < Armor.redFoodPrice || AIPlayer.ironStorage < Armor.redIronPrice || AIPlayer.oilStorage < Armor.redOilPrice) {
             return false;
         }
-        AIPlayer.foodStorage -= Armor.foodPrice;
-        AIPlayer.ironStorage -= Armor.ironPrice;
-        AIPlayer.oilStorage -= Armor.oilPrice;
+        AIPlayer.foodStorage -= Armor.redFoodPrice;
+        AIPlayer.ironStorage -= Armor.redIronPrice;
+        AIPlayer.oilStorage -= Armor.redOilPrice;
         Units temp = new Armor(GameView.theContext, 12, 6, AIPlayer);
         addUnit(temp,order);
         playUnit(temp,order);

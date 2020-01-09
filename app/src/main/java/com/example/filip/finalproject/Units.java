@@ -32,6 +32,7 @@ public class Units {
     public int movement; //Movement distance of the unit
     public int visibilityRange; //how far the unit can see
     public int airAttack;
+    public int healRate;
 
     //Two methods below are from previous versions of the code, I might need them again later.
      /*public Units(Bitmap bmp) {
@@ -60,7 +61,7 @@ public class Units {
        GameEngine.BoardSprites[coordinates[0]][coordinates[1]] = this;
    }*/
     //see above for meaning of these values
-    public void setParameters(int atc1, int atc2, int atc1r, int atc2r, int def, int hp, int maxhp, int mov, int visibility, int airAttack) {
+    public void setParameters(int atc1, int atc2, int atc1r, int atc2r, int def, int hp, int maxhp, int mov, int visibility, int airAttack, int healRate) {
         this.attack1 = atc1;
         this.attack2 = atc2;
         this.attack1Range = atc1r;
@@ -71,6 +72,7 @@ public class Units {
         this.movement = mov;
         this.visibilityRange = visibility;
         this.airAttack = airAttack;
+        this.healRate = healRate;
     }
 
     //creates a new unit, initialize icon to it's unit type, attribute attack, defence and HP values, and set the owner. It also adds it to GaveView's units array and to GameEngine's Object[][] array.
@@ -169,6 +171,11 @@ public class Units {
         //sets the starting coordinates of the unit
         coordinates[0] = x;
         coordinates[1] = y;
+
+        //if x and y are 125, its a temporary unit so don't add it.
+        if (x == 125 || y == 125) {
+            return;
+        }
 
         //adds the unit to GameView.units array, which stores units that have to be drawn.
         Units[] toReturn = new Units[GameView.units.length + 1];
@@ -499,6 +506,10 @@ public class Units {
     //Same as above, but draw then on given coordinates instead of unit's current coordinates.
     public void draw(Canvas canvas, int x, int y) {
         canvas.drawBitmap(icon, x * FullscreenActivity.scaleFactor, y * FullscreenActivity.scaleFactor, null);
+    }
+
+    public void draw(Canvas canvas, double xx, double yy) {
+        canvas.drawBitmap(icon, (int) xx * FullscreenActivity.scaleFactor, (int) yy * FullscreenActivity.scaleFactor, null);
     }
 
     //get unit's distance to the point

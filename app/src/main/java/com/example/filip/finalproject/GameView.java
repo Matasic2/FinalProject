@@ -39,40 +39,40 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 
     //UI elements TODO : cleanup
-    public movableLocation pointers;
-    public movableLocation pointers1;
-    public movableLocation pointers2;
-    public movableLocation pointers7;
-    public movableLocation pointers8;
-    public movableLocation pointers12;
-    public movableLocation airline;
-    public movableLocation airliner;
-    public movableLocation hangar;
-    public movableLocation pointers9;
-    public movableLocation temp;
-    public movableLocation temp2;
-    public movableLocation pointers3;
-    public movableLocation pointers35;
-    public movableLocation pointers4;
-    public movableLocation pointers5;
-    public movableLocation pointers6;
+    public static movableLocation pointers;
+    public static movableLocation pointers1;
+    public static movableLocation pointers2;
+    public static movableLocation pointers7;
+    public static movableLocation pointers8;
+    public static movableLocation pointers12;
+    public static movableLocation airline;
+    public static movableLocation airliner;
+    public static movableLocation hangar;
+    public static movableLocation pointers9;
+    public static movableLocation temp;
+    public static movableLocation temp2;
+    public static movableLocation pointers3;
+    public static movableLocation pointers35;
+    public static movableLocation pointers4;
+    public static movableLocation pointers5;
+    public static movableLocation pointers6;
 
-    public movableLocation pointers99;
+    public static movableLocation pointers99;
 
-    public movableLocation infr;
-    public movableLocation cavr;
-    public movableLocation artr;
-    public movableLocation mgr;
-    public movableLocation inf;
-    public movableLocation cav;
-    public movableLocation art;
-    public movableLocation mg;
-    public movableLocation arm;
-    public movableLocation fit;
-    public movableLocation bom;
-    public movableLocation armr;
-    public movableLocation fitr;
-    public movableLocation bomr;
+    public static movableLocation infr;
+    public static movableLocation cavr;
+    public static movableLocation artr;
+    public static movableLocation mgr;
+    public static movableLocation inf;
+    public static movableLocation cav;
+    public static movableLocation art;
+    public static movableLocation mg;
+    public static movableLocation arm;
+    public static movableLocation fit;
+    public static movableLocation bom;
+    public static movableLocation armr;
+    public static movableLocation fitr;
+    public static movableLocation bomr;
 
     //Starts the game thread
     public GameView(Context context) {
@@ -140,7 +140,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             GameEngine.red.isHuman = false;
             GameEngine.AIPlayer = GameEngine.red;
         }
-        BitmapFactory.Options o = new Options();
+
+
+
+        BitmapFactory.Options o = new BitmapFactory.Options();
         o.inScaled = false;
         Bitmap map = BitmapFactory.decodeResource(this.getResources(), R.mipmap.grid_land, o);
         map = Bitmap.createScaledBitmap(map, (int) (map.getWidth() * FullscreenActivity.scaleFactor), (int) (map.getHeight() * FullscreenActivity.scaleFactor), true);
@@ -149,82 +152,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         Bitmap square = BitmapFactory.decodeResource(this.getResources(), R.mipmap.square, o);
         square =  Bitmap.createScaledBitmap(square, (int) (square.getWidth() * FullscreenActivity.scaleFactor), (int) (square.getHeight() * FullscreenActivity.scaleFactor), true);
 
-
-
             //skirmish
             if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") ||  MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
-                // next lines generate green's "natural resources" (the resources which are expected to be controlled by green player).
-                grid = new GameEngine(map,mapAir,square, 21, 11); // these lines create the board.
-                grid.redDeployX = 17;
-                grid.redDeployY = 8;
-
-;               new Food(theContext, 1, 0, 1, 1);
-                new Food(theContext, 2, 1, 1, 1);
-                new Food(theContext, 1, 2, 1, 1);
-                new oil(theContext, 0, 1, 1, 1);
-
-                new Food(theContext, 2, 6, 1, 6);
-                new Food(theContext, 1, 7, 1, 6);
-                new oil(theContext, 1, 5, 1, 6);
-                new Iron(theContext, 0, 6, 1, 6);
-
-                new Food(theContext, 7, 1, 8, 1);
-                new oil(theContext, 8, 0, 8, 1);
-                new Iron(theContext, 8, 2, 8, 1);
-
-                // next lines generate red's "natural resources" (the resources which are expected to be controlled by red player).
-                new Food(theContext, 18, 10, 18, 9);
-                new Food(theContext, 17, 9, 18, 9);
-                new Food(theContext, 18, 8, 18, 9);
-                new oil(theContext, 19, 9, 18, 9);
-
-                new Food(theContext, 17, 4, 18, 4);
-                new Food(theContext, 18, 3, 18, 4);
-                new Iron(theContext, 19, 4, 18, 4);
-                new oil(theContext, 18, 5, 18, 4);
-
-                new Food(theContext, 13, 9, 12, 9);
-                new oil(theContext, 12, 10, 12, 9);
-                new Iron(theContext, 12, 8, 12, 9);
-
-                //contested resources, the ones which both players should have equal chances to collect. Will probably be main area for battles.
-                new Iron(theContext, 9, 5, 10, 5);
-                new Iron(theContext, 11, 5, 10, 5);
-                new oil(theContext, 10, 4, 10, 5);
-                new oil(theContext, 10, 6, 10, 5);
 
 
-                if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") ||  MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
-                    new Headquaters(theContext, 1, 1, GameEngine.green);
-                    new Headquaters(theContext, 18, 9, GameEngine.red);
+                int map_mode = 1;
+                Map.generateMap(map_mode, map, mapAir, square);
 
-                    // These for loops create starting units.
-                    for (int i = 0; i < 0; i++) {
-                        new Infantry(theContext, 2, i * 2, GameEngine.green);
-                    }
-
-                    for (int i = 0; i < 0; i++) {
-                        new Infantry(theContext, 12, 6, GameEngine.red);
-                    }
-
-                    for (int i = 0; i < 1; i++) {
-                        new Cavalry(theContext, 2, 2, GameEngine.green);
-                    }
-                    for (int i = 0; i < 1; i++) {
-                        new Cavalry(theContext, 17, 8, GameEngine.red);
-                    }
-
-                    for (int i = 0; i < 0; i++) {
-                        new Artillery(theContext, 14, 8, GameEngine.green);
-                    }
-                    for (int i = 0; i < 0; i++) {
-                        new Artillery(theContext, 13, i, GameEngine.red);
-                    }
-                }
-
-            }
-
-            else if (MainMenu.scenario.equals("dev_mode")){
+            }  else if (MainMenu.scenario.equals("dev_mode")){
                 AI.addUnit(new Cavalry(theContext, 10, 3, GameEngine.red),"moveTo_6_1");
 
                 //AI.addUnit(new Armor(theContext, 6, 2, GameEngine.red),"moveTo_2_2");
@@ -443,13 +378,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 grid.draw(canvas, showAir);  //draws the grid first, because that is the bottom layer.
                 if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("dev_mode") || MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
                     //draws markers
-                    pointers.draw(canvas, 1, 6);
-                    pointers.draw(canvas, 18, 4);
-                    pointers1.draw(canvas, 8, 1);
-                    pointers2.draw(canvas, 12, 9);
 
-                    pointers.draw(canvas, 10, 5);
-
+                    Map.drawMapFeatures(canvas);
                     pointers7.draw(canvas, GameEngine.greenDeployX, GameEngine.greenDeployY);
                     pointers8.draw(canvas, GameEngine.redDeployX, GameEngine.redDeployY);
                 }
@@ -606,51 +536,89 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     }
                     Paint thePaint = new Paint();
                     thePaint.setTextSize(40 * FullscreenActivity.scaleFactor);
-                    thePaint.setColor(Color.YELLOW);
-                    canvas.drawText("" + Cavalry.foodPrice, 1000 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + Infantry.foodPrice, 1255 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + MGInfantry.foodPrice, 1515 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + Artillery.foodPrice, 1770 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    thePaint.setColor(Color.argb(255, 204, 102, 0));
-                    canvas.drawText("" + Cavalry.ironPrice, 950 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + Infantry.ironPrice, 1205 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + MGInfantry.ironPrice, 1465 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + Artillery.ironPrice, 1720 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    thePaint.setColor(Color.GRAY);
-                    canvas.drawText("" + Cavalry.oilPrice, 905 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + Infantry.oilPrice, 1160 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + MGInfantry.oilPrice, 1420 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + Artillery.oilPrice, 1675 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                    if (GameEngine.playing == GameEngine.green) {
+                        thePaint.setColor(Color.YELLOW);
+                        canvas.drawText("" + Cavalry.greenFoodPrice, 1000 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + Infantry.greenFoodPrice, 1255 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + MGInfantry.foodPrice, 1515 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + Artillery.greenFoodPrice, 1770 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        thePaint.setColor(Color.argb(255, 204, 102, 0));
+                        canvas.drawText("" + Cavalry.greenIronPrice, 950 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + Infantry.greenIronPrice, 1205 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + MGInfantry.ironPrice, 1465 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + Artillery.greenIronPrice, 1720 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        thePaint.setColor(Color.GRAY);
+                        canvas.drawText("" + Cavalry.greenOilPrice, 905 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + Infantry.greenOilPrice, 1160 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + MGInfantry.oilPrice, 1420 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + Artillery.greenOilPrice, 1675 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                    } else if (GameEngine.playing == GameEngine.red) {
+                        thePaint.setColor(Color.YELLOW);
+                        canvas.drawText("" + Cavalry.redFoodPrice, 1000 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + Infantry.redFoodPrice, 1255 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + MGInfantry.foodPrice, 1515 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + Artillery.redFoodPrice, 1770 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        thePaint.setColor(Color.argb(255, 204, 102, 0));
+                        canvas.drawText("" + Cavalry.redIronPrice, 950 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + Infantry.redIronPrice, 1205 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + MGInfantry.ironPrice, 1465 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + Artillery.redIronPrice, 1720 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        thePaint.setColor(Color.GRAY);
+                        canvas.drawText("" + Cavalry.redOilPrice, 905 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + Infantry.redOilPrice, 1160 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + MGInfantry.oilPrice, 1420 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + Artillery.redOilPrice, 1675 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                    }
+
                 } else if (GameEngine.showFactory) {
                     if (GameEngine.playing == GameEngine.green) {
 
                         arm.draw(canvas, 7, 10);
                         fit.draw(canvas, 9, 10);
                         bom.draw(canvas, 11, 10);
+
+                        Paint thePaint = new Paint();
+                        thePaint.setTextSize(40 * FullscreenActivity.scaleFactor);
+                        thePaint.setColor(Color.YELLOW);
+
+                        canvas.drawText("" + Armor.greenFoodPrice, 1000 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + ReconPlane.foodPrice, 1255 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + Bomber.foodPrice, 1515 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+
+                        thePaint.setColor(Color.argb(255, 204, 102, 0));
+                        canvas.drawText("" + Armor.greenIronPrice, 960 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + ReconPlane.ironPrice, 1205 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + Bomber.ironPrice, 1460 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+
+                        thePaint.setColor(Color.GRAY);
+                        canvas.drawText("" + Armor.greenOilPrice, 900 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + ReconPlane.oilPrice, 1155 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + Bomber.oilPrice, 1405 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
                     }
                     if (GameEngine.playing == GameEngine.red) {
+
+                        Paint thePaint = new Paint();
+                        thePaint.setTextSize(40 * FullscreenActivity.scaleFactor);
+                        thePaint.setColor(Color.YELLOW);
+
+                        canvas.drawText("" + Armor.redFoodPrice, 1000 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + ReconPlane.foodPrice, 1255 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + Bomber.foodPrice, 1515 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+
+                        thePaint.setColor(Color.argb(255, 204, 102, 0));
+                        canvas.drawText("" + Armor.redIronPrice, 960 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + ReconPlane.ironPrice, 1205 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + Bomber.ironPrice, 1460 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+
+                        thePaint.setColor(Color.GRAY);
+                        canvas.drawText("" + Armor.redOilPrice, 900 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + ReconPlane.oilPrice, 1155 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
+                        canvas.drawText("" + Bomber.oilPrice, 1405 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
 
                         armr.draw(canvas, 7, 10);
                         fitr.draw(canvas, 9, 10);
                         bomr.draw(canvas, 11, 10);
                     }
-                    Paint thePaint = new Paint();
-                    thePaint.setTextSize(40 * FullscreenActivity.scaleFactor);
-                    thePaint.setColor(Color.YELLOW);
-
-                    canvas.drawText("" + Armor.foodPrice, 1000 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + ReconPlane.foodPrice, 1255 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + Bomber.foodPrice, 1515 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-
-                    thePaint.setColor(Color.argb(255, 204, 102, 0));
-                    canvas.drawText("" + Armor.ironPrice, 960 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + ReconPlane.ironPrice, 1205 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + Bomber.ironPrice, 1460 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-
-                    thePaint.setColor(Color.GRAY);
-                    canvas.drawText("" + Armor.oilPrice, 900 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + ReconPlane.oilPrice, 1155 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
-                    canvas.drawText("" + Bomber.oilPrice, 1405 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, thePaint);
 
                 } else {
                     Paint thePaint = new Paint();
@@ -781,6 +749,228 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 paint2.setColor(Color.GRAY);
                 canvas.drawText("Oil storage : " + GameEngine.playing.oilStorage + " (+" + GameEngine.lastAddedResources[2] + ")", 50 * FullscreenActivity.scaleFactor, 1200 * FullscreenActivity.scaleFactor, paint2);
 
+            }
+
+            if (GameEngine.loadoutMenu) {
+                Paint newPaint = new Paint();
+                newPaint.setColor(Color.argb(255, 10, 10, 10));
+                Rect rectangle = new Rect(895,
+                        500,
+                        1850,
+                        1200);
+                canvas.drawRect(rectangle,newPaint);
+
+                //buy and cancel
+                pointers5.draw(canvas, 8,8);
+                pointers3.draw(canvas, 10,8);
+
+
+                //display info about unit
+                Units temp = null;
+                if (GameEngine.loadoutMenuUnit == "Cavalry") {
+                    temp = new Cavalry(theContext, 125, 125, GameEngine.playing);
+                }
+                if (GameEngine.loadoutMenuUnit == "Infantry") {
+                    temp = new Infantry(theContext, 125, 125, GameEngine.playing);
+                }
+                if (GameEngine.loadoutMenuUnit == "Artillery") {
+                    temp = new Artillery(theContext, 125, 125, GameEngine.playing);
+                }
+                if (GameEngine.loadoutMenuUnit == "Armor") {
+                    temp = new Armor(theContext, 125, 125, GameEngine.playing);
+                }
+
+                temp.draw(canvas, 900.0, 505.0);
+                Paint paint = new Paint();
+                paint.setTextSize(36 * FullscreenActivity.scaleFactor);
+                if (temp.owner == GameEngine.red) {
+                    paint.setColor(Color.RED);
+                }
+                if (temp.owner == GameEngine.green) {
+                    paint.setColor(Color.GREEN);
+                }
+                int[] unitInfo = {temp.attack1,
+                        temp.attack1Range,
+                        temp.attack2,
+                        temp.attack2Range,
+                        temp.HP,
+                        temp.maxHP,
+                        temp.defence,
+                };
+                canvas.drawText("Health : " + unitInfo[4], 1030 * FullscreenActivity.scaleFactor, 540 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText("Unit's defence : " + unitInfo[6], 1030 * FullscreenActivity.scaleFactor, 580 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText("Air attack : " + temp.airAttack, 1030 * FullscreenActivity.scaleFactor, 620 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText("Close attack damage :     " + unitInfo[0], 900 * FullscreenActivity.scaleFactor, 670 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText("Range : " + unitInfo[1], 900 * FullscreenActivity.scaleFactor, 710 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText("Ranged attack damage :  " + unitInfo[2], 900 * FullscreenActivity.scaleFactor, 760 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText("Range : " + unitInfo[3], 900 * FullscreenActivity.scaleFactor, 800 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText("Movement : " + temp.movement, 900 * FullscreenActivity.scaleFactor, 850 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText("Scouting range : " + temp.visibilityRange, 900 * FullscreenActivity.scaleFactor, 890 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText("Heal amount : " +temp.healRate, 900 * FullscreenActivity.scaleFactor, 930 * FullscreenActivity.scaleFactor, paint);
+
+                if (GameEngine.playing == GameEngine.green) {
+                    if (GameEngine.loadoutMenuUnit == "Cavalry") {
+                        if (GameEngine.playing.upgrades[0][0]) {
+                            pointers3.draw(canvas, 12 ,4);
+                        } else {
+                            pointers9.draw(canvas,12,4);
+                        }
+
+                        if (GameEngine.playing.upgrades[0][1]) {
+                            pointers3.draw(canvas, 12 ,6);
+                        } else {
+                            pointers9.draw(canvas,12,6);
+                        }
+
+                        if (GameEngine.playing.upgrades[0][2]) {
+                            pointers3.draw(canvas, 12 ,8);
+                        } else {
+                            pointers9.draw(canvas,12,8);
+                        }
+                    }
+
+                    if (GameEngine.loadoutMenuUnit == "Infantry") {
+                        if (GameEngine.playing.upgrades[1][0]) {
+                            pointers3.draw(canvas, 12 ,4);
+                        } else {
+                            pointers9.draw(canvas,12,4);
+                        }
+
+                        if (GameEngine.playing.upgrades[1][1]) {
+                            pointers3.draw(canvas, 12 ,6);
+                        } else {
+                            pointers9.draw(canvas,12,6);
+                        }
+
+                        if (GameEngine.playing.upgrades[1][2]) {
+                            pointers3.draw(canvas, 12 ,8);
+                        } else {
+                            pointers9.draw(canvas,12,8);
+                        }
+                    }
+
+                    if (GameEngine.loadoutMenuUnit == "Artillery") {
+                        if (GameEngine.playing.upgrades[2][0]) {
+                            pointers3.draw(canvas, 12 ,4);
+                        } else {
+                            pointers9.draw(canvas,12,4);
+                        }
+
+                        if (GameEngine.playing.upgrades[2][1]) {
+                            pointers3.draw(canvas, 12 ,6);
+                        } else {
+                            pointers9.draw(canvas,12,6);
+                        }
+
+                        if (GameEngine.playing.upgrades[2][2]) {
+                            pointers3.draw(canvas, 12 ,8);
+                        } else {
+                            pointers9.draw(canvas,12,8);
+                        }
+                    }
+
+                    if (GameEngine.loadoutMenuUnit == "Armor") {
+                        if (GameEngine.playing.upgrades[3][0]) {
+                            pointers3.draw(canvas, 12 ,4);
+                        } else {
+                            pointers9.draw(canvas,12,4);
+                        }
+
+                        if (GameEngine.playing.upgrades[3][1]) {
+                            pointers3.draw(canvas, 12 ,6);
+                        } else {
+                            pointers9.draw(canvas,12,6);
+                        }
+
+                        if (GameEngine.playing.upgrades[3][2]) {
+                            pointers3.draw(canvas, 12 ,8);
+                        } else {
+                            pointers9.draw(canvas,12,8);
+                        }
+                    }
+                }
+
+                if (GameEngine.playing == GameEngine.red) {
+                    if (GameEngine.loadoutMenuUnit == "Cavalry") {
+                        if (GameEngine.playing.upgrades[0][0]) {
+                            pointers3.draw(canvas, 12 ,4);
+                        } else {
+                            pointers9.draw(canvas,12,4);
+                        }
+
+                        if (GameEngine.playing.upgrades[0][1]) {
+                            pointers3.draw(canvas, 12 ,6);
+                        } else {
+                            pointers9.draw(canvas,12,6);
+                        }
+
+                        if (GameEngine.playing.upgrades[0][2]) {
+                            pointers3.draw(canvas, 12 ,8);
+                        } else {
+                            pointers9.draw(canvas,12,8);
+                        }
+                    }
+
+                    if (GameEngine.loadoutMenuUnit == "Infantry") {
+                        if (GameEngine.playing.upgrades[1][0]) {
+                            pointers3.draw(canvas, 12 ,4);
+                        } else {
+                            pointers9.draw(canvas,12,4);
+                        }
+
+                        if (GameEngine.playing.upgrades[1][1]) {
+                            pointers3.draw(canvas, 12 ,6);
+                        } else {
+                            pointers9.draw(canvas,12,6);
+                        }
+
+                        if (GameEngine.playing.upgrades[1][2]) {
+                            pointers3.draw(canvas, 12 ,8);
+                        } else {
+                            pointers9.draw(canvas,12,8);
+                        }
+                    }
+
+                    if (GameEngine.loadoutMenuUnit == "Artillery") {
+                        if (GameEngine.playing.upgrades[2][0]) {
+                            pointers3.draw(canvas, 12 ,4);
+                        } else {
+                            pointers9.draw(canvas,12,4);
+                        }
+
+                        if (GameEngine.playing.upgrades[2][1]) {
+                            pointers3.draw(canvas, 12 ,6);
+                        } else {
+                            pointers9.draw(canvas,12,6);
+                        }
+
+                        if (GameEngine.playing.upgrades[2][2]) {
+                            pointers3.draw(canvas, 12 ,8);
+                        } else {
+                            pointers9.draw(canvas,12,8);
+                        }
+                    }
+
+                    if (GameEngine.loadoutMenuUnit == "Armor") {
+                        if (GameEngine.playing.upgrades[3][0]) {
+                            pointers3.draw(canvas, 12 ,4);
+                        } else {
+                            pointers9.draw(canvas,12,4);
+                        }
+
+                        if (GameEngine.playing.upgrades[3][1]) {
+                            pointers3.draw(canvas, 12 ,6);
+                        } else {
+                            pointers9.draw(canvas,12,6);
+                        }
+
+                        if (GameEngine.playing.upgrades[3][2]) {
+                            pointers3.draw(canvas, 12 ,8);
+                        } else {
+                            pointers9.draw(canvas,12,8);
+                        }
+                    }
+                }
             }
         }
     }

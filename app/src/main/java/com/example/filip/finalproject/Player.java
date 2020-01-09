@@ -7,14 +7,57 @@ public class Player {
     public int ironStorage = 0;//Player's iron storage value
     public int foodStorage = 0;//Player's food storage value
     public Planes[] hangar = new Planes[6];
-    public int[] upgrades = new int[10]; //Player's upgrades, empty and unused for now
+    public boolean[][] upgrades = new boolean[5][3]; //Player's upgrades, empty and unused for now
+
 
     public boolean isHuman; //is the player human
 
     Player (String str, boolean human) {
         color = str;
         isHuman = human; //is the player human?
+
+        //upgrades are disabled by default
+        for (int i = 0; i < upgrades.length; i++) {
+            for (int j = 0; j < upgrades[i].length; j++) {
+                upgrades[i][j] = false;
+            }
+        }
     }
+
+    //adjust upgrades, x is unit, y is upgrade slot
+    public void adjustUpgrades(String unitType, int y) {
+        int x = 0;
+        if (unitType == "Cavalry") {
+            x = 0;
+        } else if (unitType == "Infantry") {
+            x = 1;
+        } else if (unitType == "Artillery") {
+            x = 2;
+        } else if (unitType == "Armor") {
+            x = 3;
+        }
+        upgrades[x][y] = !upgrades[x][y];
+
+        int factor = 1;
+        if (!upgrades[x][y]) {
+            factor = -1;
+        }
+
+        if (x == 0) {
+            Cavalry.adjustUpgrade(this, factor, y);
+        }
+        if (x == 1) {
+            Infantry.adjustUpgrade(this, factor, y);
+        }
+        if (x == 2) {
+            Artillery.adjustUpgrade(this, factor, y);
+        }
+        if (x == 3) {
+            Armor.adjustUpgrade(this, factor, y);
+        }
+
+    }
+
     public static String print(Player p) {
         return p.color;
     }

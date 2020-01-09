@@ -16,9 +16,13 @@ public class Armor extends Units {
     public static int greenAirAttack = 0;
 
     //cost of Armor unit
-    public static int foodPrice = 8;
-    public static int ironPrice = 5;
-    public static int oilPrice = 20;
+    public static int greenFoodPrice = 8;
+    public static int greenIronPrice = 5;
+    public static int greenOilPrice = 20;
+
+    public static int redFoodPrice = 8;
+    public static int redIronPrice = 5;
+    public static int redOilPrice = 20;
 
     //How much health will the unit gain if healed
     public static int healedBy = 6;
@@ -36,9 +40,74 @@ public class Armor extends Units {
     Armor(Context context, int x, int y, Player player) {
         super(context, x, y, player, "Armor");
         if (player.color.equals("green")) {
-            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement, GreenVisibility, greenAirAttack);
+            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement, GreenVisibility, greenAirAttack, healedBy);
         } else {
-            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility, redAirAttack);
+            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility, redAirAttack, healedBy);
         }
     }
+
+    public static void adjustUpgrade(Player player, int factor, int number) {
+        if (player == GameEngine.green) {
+            if (number == 0) {
+                Armor.greenFoodPrice += 1 * factor;
+                Armor.GreenVisibility += 2 * factor;
+            }
+            if (number == 1) {
+                Armor.greenIronPrice += 1 * factor;
+                Armor.GreenDefence += 1 * factor;
+            }
+            if (number == 2) {
+                Armor.greenFoodPrice += 1 * factor;
+                Armor.GreenAttack2 += 1 * factor;
+            }
+        } else if (player == GameEngine.red) {
+            if (number == 0) {
+                Armor.redFoodPrice += 1 * factor;
+                Armor.RedVisibility += 2 * factor;
+            }
+            if (number == 1) {
+                Armor.redIronPrice += 1 * factor;
+                Armor.RedDefence += 1 * factor;
+            }
+            if (number == 2) {
+                Armor.redFoodPrice += 1 * factor;
+                Armor.RedAttack2 += 1 * factor;
+            }
+        }
+    }
+
+    public static void restoreDefaultValues() {
+        GreenAttack1 = 15; // Green Armor's first attack value, this value can be changed
+        GreenAttack2 = 6; //  Green Armor's first attack value, this value can be changed
+        GreenFirstAttackRange = 1; //  Green Armor's first attack range, this value can be changed
+        GreenSecondAttackRange = 4; //  Green Armor's second attack value, this value can be changed
+        GreenDefence = 2; // Defence value of Green's Armor, this value can be changed
+        GreenHP = 30; // HP value of Green's Armor, this value can be changed
+        GreenMovement = 2; // Movement value of Green's Armor, this value can be changed
+        GreenVisibility = 4; // Movement value of Green's Infantry, this value can be changed
+        greenAirAttack = 0;
+
+        //cost of Armor unit
+        greenFoodPrice = 8;
+        greenIronPrice = 5;
+        greenOilPrice = 20;
+
+        redFoodPrice = 8;
+        redIronPrice = 5;
+        redOilPrice = 20;
+
+        //How much health will the unit gain if healed
+        healedBy = 6;
+
+        RedAttack1 = 15; // Red Armor's first attack value, this value can be changed
+        RedAttack2 = 6; //  Red Armor's first attack value, this value can be changed
+        RedFirstAttackRange = 1; //  Red Armor's first attack range, this value can be changed
+        RedSecondAttackRange = 4; //  Red Armor's second attack value, this value can be changed
+        RedDefence = 2; // Defence value of Red's Armor, this value can be changed
+        RedHP = 30; // HP value of Red's Armor, this value can be changed
+        RedMovement = 2; // Movement value of Red's Armor, this value can be changed
+        RedVisibility = 4; // Movement value of Green's Infantry, this value can be changed
+        redAirAttack = 0;
+    }
+
 }

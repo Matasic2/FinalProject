@@ -45,6 +45,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     public static FullscreenActivity theActivity; //stores the reference of the activity
     public static ArrayList<Integer> memory = new ArrayList<>();
 
+
     public static int lastDownX = 0;
     public static int lastDownY = 0;
 
@@ -111,8 +112,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
 
 
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            memory.add(new Integer((int) event.getX() * widthfullscreen + (int) event.getY()));
-            GameEngine.tapProcessor((int) event.getX(), (int) event.getY(),1); //sends coordinates to GameEngine, which does everything.
+            GameEngine.tapProcessor((int) event.getX(), (int) event.getY(),0); //sends coordinates to GameEngine, which does everything.
             lastDownX = -1;
             lastDownY = -1;
         }

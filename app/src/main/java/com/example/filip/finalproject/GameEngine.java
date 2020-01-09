@@ -38,6 +38,8 @@ public class GameEngine {
     public static Resources[][] BoardResources = new Resources[15][9]; //a 2D array of Units that stores the resources in the game
     public static boolean showFactory = false; //shows factory units which can be purchased
     public static boolean showMarket = false; //shows market units which can be purchased
+    public static boolean loadoutMenu = false;
+    public static String loadoutMenuUnit = "";
     public static String message = ""; //stores message to user
     public static int c = 0; //offset for x and y coordinate message, if set to 0 top left will be 0,0 if set to 1 top left will be 1,1
     public static int[] lastCoordinates = new int[2]; //coordinates of last action
@@ -45,6 +47,7 @@ public class GameEngine {
     public static Player AIPlayer = null;
     public static boolean[] fogOfWarIsRevealedForGreen = new boolean[3];
     public static boolean[] fogOfWarIsRevealedForRed = new boolean[3];
+
 
 
     public static int[] lastAddedResources = new int[3]; //memorizes last added resources, to display next to storage
@@ -72,6 +75,10 @@ public class GameEngine {
         AI.turn = 0;
         AI.aggresionLevel = 3;
         turnCount = 0;
+        Infantry.restoreDefaultValues();
+        Cavalry.restoreDefaultValues();
+        Artillery.restoreDefaultValues();
+        Armor.restoreDefaultValues();
 
     }
 
@@ -79,11 +86,15 @@ public class GameEngine {
         if (FullscreenActivity.memory != null && FullscreenActivity.memory.size() != 0) {
             GameView.shouldDrawUI = false;
 
-            for (int i = 0; i < FullscreenActivity.memory.size(); i+=2) {
+            for (int i = 0; i < FullscreenActivity.memory.size(); i++) {
                 int coord = FullscreenActivity.memory.get(i);
+                int mode = 1;
+                if (coord < 0) {
+                    mode = 2;
+                    coord *= -1;
+                }
                 int y = coord % FullscreenActivity.widthfullscreen;
                 int x = coord  / FullscreenActivity.widthfullscreen;
-                int mode = FullscreenActivity.memory.get(i+1);
                 tapProcessor(x,y,mode);
             }
 
@@ -125,41 +136,56 @@ public class GameEngine {
     A method that will process what happens with user's input (click/tap).
      */
     public static void tapProcessor (int x, int y, int mode) {
+        if (mode == 0) {
+            if (x < 0 || y < 0) {
+                return;
+            }
+            //This makes sure that unit gets tapped only once.
+            //if (selected != null && x/squareLength  == selected.coordinates[0] && y / squareLength  == selected.coordinates[1]) {
+            //    return;
+            //}
+            if (GameView.showendTurnScreen) {
+                GameView.showendTurnScreen = false;
 
-        if (x < 0 || y < 0) {
-            return;
-        }
-        //This makes sure that unit gets tapped only once.
-        //if (selected != null && x/squareLength  == selected.coordinates[0] && y / squareLength  == selected.coordinates[1]) {
-        //    return;
-        //}
-        if (GameView.showendTurnScreen) {
-            GameView.showendTurnScreen = false;
+                if (playing == red) {
+                    if (planeLines[0][0] != null || planeLines[1][0] != null || planeLines[2][0] != null) {
+                        message = "Enemy planes spotted! ";
+                    } else {
+                        message = "";
+                    }
+                }
 
-            if (playing == red) {
-                if (planeLines[0][0] != null || planeLines[1][0] != null || planeLines[2][0] != null) {
-                    message = "Enemy planes spotted! ";
+                if (playing == green) {
+                    if (planeLines[0][1] != null || planeLines[1][1] != null || planeLines[2][1] != null) {
+                        message = "Enemy planes spotted! ";
+                    } else {
+                        message = "";
+                    }
+                }
+                message += "Turn " + GameEngine.turnCount++ / 2;
+                return;
+            }
+            if (GameView.showAir) {
+                processAirTap(x,y);
+            } else if (!GameView.showAir) {
+
+                if (loadoutMenu) {
+                    ProcessLoadoutTap(x,y);
+                    FullscreenActivity.memory.add(new Integer((x * FullscreenActivity.widthfullscreen + y) * -1));
+                }
+                else if (x / squareLength < 15 && y / squareLength < 9) {
+                    ProcessGroundTap(x, y);
+                    FullscreenActivity.memory.add(new Integer((x - GameView.cameraX) * FullscreenActivity.widthfullscreen + (y - GameView.cameraY)));
                 } else {
-                    message = "";
+                    ProcessGroundUITap(x, y);
+                    FullscreenActivity.memory.add(new Integer((x * FullscreenActivity.widthfullscreen + y) * -1));
                 }
             }
-
-            if (playing == green) {
-                if (planeLines[0][1] != null || planeLines[1][1] != null || planeLines[2][1] != null) {
-                    message = "Enemy planes spotted! ";
-                } else {
-                    message = "";
-                }
-            }
-            message += "Turn " + GameEngine.turnCount++ / 2;
-            return;
-        }
-        if (GameView.showAir) {
-            processAirTap(x,y);
-        } else if (!GameView.showAir) {
-            //un-selects the unit if the button is pressed.
-            if (x / squareLength < 15 && y / squareLength < 9) {
-                ProcessGroundTap(x, y);
+        } else if (mode == 1) {
+            ProcessGroundTap(x, y);
+        } else if (mode == 2) {
+            if (loadoutMenu) {
+                ProcessLoadoutTap(x,y);
             } else {
                 ProcessGroundUITap(x, y);
             }
@@ -297,15 +323,15 @@ public class GameEngine {
             return;
         }
 
-        //deploy
-        if (selected == null && (((x / squareLength == 2 && y / squareLength == 2) && (playing == green && BoardSprites[2][2] == null)) ||
+        //deploy, not used atm
+        /**if (selected == null && (((x / squareLength == 2 && y / squareLength == 2) && (playing == green && BoardSprites[2][2] == null)) ||
                 (((x / squareLength == 12 && y / squareLength == 6) && (playing == red && BoardSprites[12][6] == null))))) {
             GameEngine.showMarket = !GameEngine.showMarket;
             if (showFactory == true) {
                 showFactory = false;
             }
             return;
-        }
+        }*/
 
         //Undo
         if (x / squareLength == 18 && y / squareLength == 3 && theUnit != null && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
@@ -351,8 +377,8 @@ public class GameEngine {
             }
         }
 
-        //upgrade
-        if (x / squareLength == 16 && y / squareLength == 5 && theUnit != null) {
+        //upgrade                                                             //TODO: Enable or remove this
+        if (x / squareLength == 16 && y / squareLength == 5 && theUnit != null && false) {
             if (theUnit.unitType == "Infantry") {
                 if (theUnit.defence == Infantry.GreenDefence) {
                     if (playing.ironStorage > 0) {
@@ -426,44 +452,38 @@ public class GameEngine {
         }
         //buys new cavalry
         if (x / squareLength == 7 && y / squareLength == 10 && showMarket) {
-            if (playing.foodStorage >= Cavalry.foodPrice) {
                 if (playing == green) {
                     if (GameEngine.BoardSprites[greenDeployX][greenDeployY] == null || (GameEngine.BoardSprites[greenDeployX][greenDeployY] != null && GameEngine.BoardSprites[greenDeployX][greenDeployY].owner == green)) {
-                        new Cavalry(GameView.theContext, greenDeployX, greenDeployY, playing);
-                        playing.foodStorage -= Cavalry.foodPrice;
+                        loadoutMenu = true;
+                        loadoutMenuUnit = "Cavalry";
                     }
                 }
                 if ((playing == red)) {
                     if (GameEngine.BoardSprites[redDeployX][redDeployY] == null || (GameEngine.BoardSprites[redDeployX][redDeployY] != null && GameEngine.BoardSprites[redDeployX][redDeployY].owner == red)) {
-                        new Cavalry(GameView.theContext, redDeployX, redDeployY, playing);
-                        playing.foodStorage -= Cavalry.foodPrice;
+                        loadoutMenu = true;
+                        loadoutMenuUnit = "Cavalry";
                     }
                 }
 
-            }
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
             lastUnit = null;
         }
         //buys new infantry
         if (x / squareLength == 9 && y / squareLength == 10 && showMarket) {
-            if (playing.foodStorage >= Infantry.foodPrice && playing.ironStorage >= Infantry.ironPrice) {
                 if (playing == green) {
                     if (GameEngine.BoardSprites[greenDeployX][greenDeployY] == null || (GameEngine.BoardSprites[greenDeployX][greenDeployY] != null && GameEngine.BoardSprites[greenDeployX][greenDeployY].owner == green)) {
-                        new Infantry(GameView.theContext, greenDeployX, greenDeployY, playing);
-                        playing.foodStorage -= Infantry.foodPrice;
-                        playing.ironStorage -= Infantry.ironPrice;
+                        loadoutMenu = true;
+                        loadoutMenuUnit = "Infantry";
                     }
                 }
                 if (playing == red) {
                     if (GameEngine.BoardSprites[redDeployX][redDeployY] == null || (GameEngine.BoardSprites[redDeployX][redDeployY] != null && GameEngine.BoardSprites[redDeployX][redDeployY].owner == red)) {
-                        new Infantry(GameView.theContext, redDeployX, redDeployY, playing);
-                        playing.foodStorage -= Infantry.foodPrice;
-                        playing.ironStorage -= Infantry.ironPrice;
+                        loadoutMenu = true;
+                        loadoutMenuUnit = "Infantry";
                     }
                 }
-            }
-            if (playing.foodStorage < Infantry.foodPrice) {
+            if (playing.foodStorage < 1) {
                 showMarket = false;
             }
             lastCoordinates[0] = 125;
@@ -496,48 +516,36 @@ public class GameEngine {
         }
         //buys new artillery
         if (x / squareLength == 13 && y / squareLength == 10 && showMarket) {
-            if (playing.foodStorage >= Artillery.foodPrice && playing.ironStorage >= Artillery.ironPrice) {
                 if (playing == green) {
                     if (GameEngine.BoardSprites[greenDeployX][greenDeployY] == null || (GameEngine.BoardSprites[greenDeployX][greenDeployY] != null && GameEngine.BoardSprites[greenDeployX][greenDeployY].owner == green)) {
-                        new Artillery(GameView.theContext, greenDeployX, greenDeployY, playing);
-                        playing.foodStorage -= Artillery.foodPrice;
-                        playing.ironStorage -= Artillery.ironPrice;
+                        loadoutMenu = true;
+                        loadoutMenuUnit = "Artillery";
                     }
                 }
                 if ((playing == red)) {
                     if (GameEngine.BoardSprites[redDeployX][redDeployY] == null || (GameEngine.BoardSprites[redDeployX][redDeployY] != null && GameEngine.BoardSprites[redDeployX][redDeployY].owner == red)) {
-                        new Artillery(GameView.theContext, redDeployX, redDeployY, playing);
-                        playing.foodStorage -= Artillery.foodPrice;
-                        playing.ironStorage -= Artillery.ironPrice;
+                        loadoutMenu = true;
+                        loadoutMenuUnit = "Artillery";
                     }
                 }
-
-            }
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
             lastUnit = null;
         }
         //buys new armor
         if (x / squareLength == 7 && y / squareLength == 10 && showFactory) {
-            if (playing.foodStorage >= Armor.foodPrice && playing.ironStorage >= Armor.ironPrice && playing.oilStorage >= Armor.oilPrice) {
                 if (playing == green) {
                     if (GameEngine.BoardSprites[greenDeployX][greenDeployY] == null || (GameEngine.BoardSprites[greenDeployX][greenDeployY] != null && GameEngine.BoardSprites[greenDeployX][greenDeployY].owner == green)) {
-                        new Armor(GameView.theContext, greenDeployX, greenDeployY, playing);
-                        playing.foodStorage -= Armor.foodPrice;
-                        playing.ironStorage -= Armor.ironPrice;
-                        playing.oilStorage -= Armor.oilPrice;
+                        loadoutMenu = true;
+                        loadoutMenuUnit = "Armor";
                     }
                 }
                 if ((playing == red)) {
-                    if (GameEngine.BoardSprites[12][6] == null || (GameEngine.BoardSprites[12][6] != null && GameEngine.BoardSprites[12][6].owner == red)) {
-                        new Armor(GameView.theContext, 12, 6, playing);
-                        playing.foodStorage -= Armor.foodPrice;
-                        playing.ironStorage -= Armor.ironPrice;
-                        playing.oilStorage -= Armor.oilPrice;
+                    if (GameEngine.BoardSprites[redDeployX][redDeployY] == null || (GameEngine.BoardSprites[redDeployX][redDeployY] != null && GameEngine.BoardSprites[redDeployX][redDeployY].owner == red)) {
+                        loadoutMenu = true;
+                        loadoutMenuUnit = "Armor";
                     }
                 }
-
-            }
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
             lastUnit = null;
@@ -714,6 +722,127 @@ public class GameEngine {
         if (selected != null) {
             return;
         }
+    }
+
+    public static void ProcessLoadoutTap(int x, int y) {
+        if (x / squareLength == 8 && y / squareLength == 8) {
+            loadoutMenu = false;
+
+            if (playing == green && loadoutMenuUnit == "Cavalry") {
+                if (playing.foodStorage < Cavalry.greenFoodPrice ||
+                        playing.ironStorage < Cavalry.greenIronPrice ||
+                        playing.oilStorage < Cavalry.greenOilPrice) {
+                    return;
+                }
+                new Cavalry(GameView.theContext, greenDeployX, greenDeployY, playing);
+                playing.foodStorage -= Cavalry.greenFoodPrice;
+                playing.ironStorage -= Cavalry.greenIronPrice;
+                playing.oilStorage -= Cavalry.greenOilPrice;
+                showMarket = false;
+            }
+
+            else if (playing == red && loadoutMenuUnit == "Cavalry") {
+                if (playing.foodStorage < Cavalry.redFoodPrice ||
+                        playing.ironStorage < Cavalry.redIronPrice ||
+                        playing.oilStorage < Cavalry.redOilPrice) {
+                    return;
+                }
+                new Cavalry(GameView.theContext, redDeployX, redDeployY, playing);
+                playing.foodStorage -= Cavalry.redFoodPrice;
+                playing.ironStorage -= Cavalry.redIronPrice;
+                playing.oilStorage -= Cavalry.redOilPrice;
+                showMarket = false;
+            }
+
+            else if (playing == green && loadoutMenuUnit == "Infantry") {
+                if (playing.foodStorage < Infantry.greenFoodPrice ||
+                        playing.ironStorage < Infantry.greenIronPrice ||
+                        playing.oilStorage < Infantry.greenOilPrice) {
+                    return;
+                }
+                new Infantry(GameView.theContext, greenDeployX, greenDeployY, playing);
+                playing.foodStorage -= Infantry.greenFoodPrice;
+                playing.ironStorage -= Infantry.greenIronPrice;
+                playing.oilStorage -= Infantry.greenOilPrice;
+                showMarket = false;
+            }
+
+            else if (playing == red && loadoutMenuUnit == "Infantry") {
+                if (playing.foodStorage < Infantry.redFoodPrice ||
+                        playing.ironStorage < Infantry.redIronPrice ||
+                        playing.oilStorage < Infantry.redOilPrice) {
+                    return;
+                }
+                new Infantry(GameView.theContext, redDeployX, redDeployY, playing);
+                playing.foodStorage -= Infantry.redFoodPrice;
+                playing.ironStorage -= Infantry.redIronPrice;
+                playing.oilStorage -= Infantry.redOilPrice;
+                showMarket = false;
+            }
+
+            else if (playing == green && loadoutMenuUnit == "Artillery") {
+                if (playing.foodStorage < Artillery.greenFoodPrice ||
+                        playing.ironStorage < Artillery.greenIronPrice ||
+                        playing.oilStorage < Artillery.greenOilPrice) {
+                    return;
+                }
+                new Artillery(GameView.theContext, greenDeployX, greenDeployY, playing);
+                playing.foodStorage -= Artillery.greenFoodPrice;
+                playing.ironStorage -= Artillery.greenIronPrice;
+                playing.oilStorage -= Artillery.greenOilPrice;
+                showMarket = false;
+            }
+
+            else if (playing == red && loadoutMenuUnit == "Artillery") {
+                if (playing.foodStorage < Artillery.redFoodPrice ||
+                        playing.ironStorage < Artillery.redIronPrice ||
+                        playing.oilStorage < Artillery.redOilPrice) {
+                    return;
+                }
+                new Artillery(GameView.theContext, redDeployX, redDeployY, playing);
+                playing.foodStorage -= Artillery.redFoodPrice;
+                playing.ironStorage -= Artillery.redIronPrice;
+                playing.oilStorage -= Artillery.redOilPrice;
+                showMarket = false;
+            }
+
+            else if (playing == green && loadoutMenuUnit == "Armor") {
+                if (playing.foodStorage < Armor.greenFoodPrice ||
+                        playing.ironStorage < Armor.greenIronPrice ||
+                        playing.oilStorage < Armor.greenOilPrice) {
+                    return;
+                }
+                new Armor(GameView.theContext, greenDeployX, greenDeployY, playing);
+                playing.foodStorage -= Armor.greenFoodPrice;
+                playing.ironStorage -= Armor.greenIronPrice;
+                playing.oilStorage -= Cavalry.greenOilPrice;
+                showMarket = false;
+            }
+
+            else if (playing == red && loadoutMenuUnit == "Cavalry") {
+                if (playing.foodStorage < Armor.redFoodPrice ||
+                        playing.ironStorage < Armor.redIronPrice ||
+                        playing.oilStorage < Armor.redOilPrice) {
+                    return;
+                }
+                new Armor(GameView.theContext, redDeployX, redDeployY, playing);
+                playing.foodStorage -= Armor.redFoodPrice;
+                playing.ironStorage -= Armor.redIronPrice;
+                playing.oilStorage -= Armor.redOilPrice;
+                showMarket = false;
+
+            }
+
+        } else if (x / squareLength == 10 && y / squareLength == 8) {
+            loadoutMenu = false;
+        } else if (x / squareLength == 12 && y / squareLength == 8) {
+            playing.adjustUpgrades(loadoutMenuUnit,2);
+        } else if (x / squareLength == 12 && y / squareLength == 6) {
+            playing.adjustUpgrades(loadoutMenuUnit,1);
+        } else if (x / squareLength == 12 && y / squareLength == 4) {
+            playing.adjustUpgrades(loadoutMenuUnit,0);
+        }
+
     }
 
     //gets the coordinates of the unit.
@@ -942,6 +1071,8 @@ public class GameEngine {
             }
 
             playing = red;
+            GameView.targetCameraX =  (15 - width)* squareLength;
+            GameView.targetCameraY =  (9 - heigth)* squareLength;
         } else if (playing == red) {
             for (int i = 0; i < playing.hangar.length; i++) {
                 if (playing.hangar[i] != null) {
@@ -973,6 +1104,8 @@ public class GameEngine {
                 fogOfWarIsRevealedForRed[i] = false;
             }
             playing = green;
+            GameView.targetCameraX = 0;
+            GameView.targetCameraY = 0;
         }
         // gives movement and attack to next player's units
         for (int i = 0; i < BoardSprites.length; i++) {
