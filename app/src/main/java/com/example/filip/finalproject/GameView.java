@@ -154,10 +154,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             //skirmish
             if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") ||  MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
-
-
-                int map_mode = 1;
-                Map.generateMap(map_mode, map, mapAir, square);
+                Map.generateMap(map, mapAir, square);
 
             }  else if (MainMenu.scenario.equals("dev_mode")){
                 AI.addUnit(new Cavalry(theContext, 10, 3, GameEngine.red),"moveTo_6_1");

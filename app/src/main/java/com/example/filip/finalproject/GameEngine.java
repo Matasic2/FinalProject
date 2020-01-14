@@ -75,6 +75,8 @@ public class GameEngine {
         AI.turn = 0;
         AI.aggresionLevel = 3;
         turnCount = 0;
+        loadoutMenu = false;
+        loadoutMenuUnit = "";
         Infantry.restoreDefaultValues();
         Cavalry.restoreDefaultValues();
         Artillery.restoreDefaultValues();
@@ -99,6 +101,11 @@ public class GameEngine {
             }
 
             GameView.shouldDrawUI = true;
+            if (playing.equals(green)) {
+                message = "Green player's turn. Press anywhere to continue.";
+            } else {
+                message = "Red player's turn. Press anywhere to continue.";
+            }
         }
     }
 
