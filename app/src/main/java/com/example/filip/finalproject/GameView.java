@@ -74,6 +74,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static movableLocation fitr;
     public static movableLocation bomr;
 
+    public static movableLocation shield;
+    public static movableLocation binoc;
+    public static movableLocation shieldDark;
+    public static movableLocation binocDark;
+
     //Starts the game thread
     public GameView(Context context) {
         super(context);
@@ -132,6 +137,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         armr = new movableLocation(theContext, 13, true);
         fitr = new movableLocation(theContext, 30, true);
         bomr = new movableLocation(theContext, 32, true);
+
+        binoc = new movableLocation(theContext, 33, true);
+        shield = new movableLocation(theContext, 34, true);
+        binocDark = new movableLocation(theContext, 35, true);
+        shieldDark = new movableLocation(theContext, 36, true);
+
 
         GameEngine.restart();
         GameEngine.green = new Player("green", true);
@@ -805,169 +816,85 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 canvas.drawText("Scouting range : " + temp.visibilityRange, 900 * FullscreenActivity.scaleFactor, 890 * FullscreenActivity.scaleFactor, paint);
                 canvas.drawText("Heal amount : " +temp.healRate, 900 * FullscreenActivity.scaleFactor, 930 * FullscreenActivity.scaleFactor, paint);
 
-                if (GameEngine.playing == GameEngine.green) {
-                    if (GameEngine.loadoutMenuUnit == "Cavalry") {
-                        if (GameEngine.playing.upgrades[0][0]) {
-                            pointers3.draw(canvas, 12 ,4);
-                        } else {
-                            pointers9.draw(canvas,12,4);
-                        }
+                if (GameEngine.loadoutMenuUnit == "Cavalry") {
+                    if (GameEngine.playing.upgrades[0][0]) {
+                        binoc.draw(canvas, 12 ,4);
+                    } else {
+                        binocDark.draw(canvas,12,4);
+                    }
 
                         if (GameEngine.playing.upgrades[0][1]) {
-                            pointers3.draw(canvas, 12 ,6);
+                            shield.draw(canvas, 12 ,6);
                         } else {
-                            pointers9.draw(canvas,12,6);
+                            shieldDark.draw(canvas,12,6);
                         }
 
                         if (GameEngine.playing.upgrades[0][2]) {
-                            pointers3.draw(canvas, 12 ,8);
+                            shield.draw(canvas, 12 ,8);
                         } else {
-                            pointers9.draw(canvas,12,8);
+                            shieldDark.draw(canvas,12,8);
                         }
-                    }
+                }
 
                     if (GameEngine.loadoutMenuUnit == "Infantry") {
                         if (GameEngine.playing.upgrades[1][0]) {
-                            pointers3.draw(canvas, 12 ,4);
+                            binoc.draw(canvas, 12 ,4);
                         } else {
-                            pointers9.draw(canvas,12,4);
+                            binocDark.draw(canvas,12,4);
                         }
 
                         if (GameEngine.playing.upgrades[1][1]) {
-                            pointers3.draw(canvas, 12 ,6);
+                            shield.draw(canvas, 12 ,6);
                         } else {
-                            pointers9.draw(canvas,12,6);
+                            shieldDark.draw(canvas,12,6);
                         }
 
                         if (GameEngine.playing.upgrades[1][2]) {
-                            pointers3.draw(canvas, 12 ,8);
+                            shield.draw(canvas, 12 ,8);
                         } else {
-                            pointers9.draw(canvas,12,8);
+                            shieldDark.draw(canvas,12,8);
                         }
                     }
 
                     if (GameEngine.loadoutMenuUnit == "Artillery") {
                         if (GameEngine.playing.upgrades[2][0]) {
-                            pointers3.draw(canvas, 12 ,4);
+                            binoc.draw(canvas, 12 ,4);
                         } else {
-                            pointers9.draw(canvas,12,4);
+                            binocDark.draw(canvas,12,4);
                         }
 
                         if (GameEngine.playing.upgrades[2][1]) {
-                            pointers3.draw(canvas, 12 ,6);
+                            shield.draw(canvas, 12 ,6);
                         } else {
-                            pointers9.draw(canvas,12,6);
+                            shieldDark.draw(canvas,12,6);
                         }
 
                         if (GameEngine.playing.upgrades[2][2]) {
-                            pointers3.draw(canvas, 12 ,8);
+                            shield.draw(canvas, 12 ,8);
                         } else {
-                            pointers9.draw(canvas,12,8);
+                            shieldDark.draw(canvas,12,8);
                         }
                     }
 
                     if (GameEngine.loadoutMenuUnit == "Armor") {
                         if (GameEngine.playing.upgrades[3][0]) {
-                            pointers3.draw(canvas, 12 ,4);
+                            binoc.draw(canvas, 12, 4);
                         } else {
-                            pointers9.draw(canvas,12,4);
+                            binocDark.draw(canvas, 12, 4);
                         }
 
                         if (GameEngine.playing.upgrades[3][1]) {
-                            pointers3.draw(canvas, 12 ,6);
+                            shield.draw(canvas, 12, 6);
                         } else {
-                            pointers9.draw(canvas,12,6);
+                            shieldDark.draw(canvas, 12, 6);
                         }
 
                         if (GameEngine.playing.upgrades[3][2]) {
-                            pointers3.draw(canvas, 12 ,8);
+                            shield.draw(canvas, 12, 8);
                         } else {
-                            pointers9.draw(canvas,12,8);
+                            shieldDark.draw(canvas, 12, 8);
                         }
                     }
-                }
-
-                if (GameEngine.playing == GameEngine.red) {
-                    if (GameEngine.loadoutMenuUnit == "Cavalry") {
-                        if (GameEngine.playing.upgrades[0][0]) {
-                            pointers3.draw(canvas, 12 ,4);
-                        } else {
-                            pointers9.draw(canvas,12,4);
-                        }
-
-                        if (GameEngine.playing.upgrades[0][1]) {
-                            pointers3.draw(canvas, 12 ,6);
-                        } else {
-                            pointers9.draw(canvas,12,6);
-                        }
-
-                        if (GameEngine.playing.upgrades[0][2]) {
-                            pointers3.draw(canvas, 12 ,8);
-                        } else {
-                            pointers9.draw(canvas,12,8);
-                        }
-                    }
-
-                    if (GameEngine.loadoutMenuUnit == "Infantry") {
-                        if (GameEngine.playing.upgrades[1][0]) {
-                            pointers3.draw(canvas, 12 ,4);
-                        } else {
-                            pointers9.draw(canvas,12,4);
-                        }
-
-                        if (GameEngine.playing.upgrades[1][1]) {
-                            pointers3.draw(canvas, 12 ,6);
-                        } else {
-                            pointers9.draw(canvas,12,6);
-                        }
-
-                        if (GameEngine.playing.upgrades[1][2]) {
-                            pointers3.draw(canvas, 12 ,8);
-                        } else {
-                            pointers9.draw(canvas,12,8);
-                        }
-                    }
-
-                    if (GameEngine.loadoutMenuUnit == "Artillery") {
-                        if (GameEngine.playing.upgrades[2][0]) {
-                            pointers3.draw(canvas, 12 ,4);
-                        } else {
-                            pointers9.draw(canvas,12,4);
-                        }
-
-                        if (GameEngine.playing.upgrades[2][1]) {
-                            pointers3.draw(canvas, 12 ,6);
-                        } else {
-                            pointers9.draw(canvas,12,6);
-                        }
-
-                        if (GameEngine.playing.upgrades[2][2]) {
-                            pointers3.draw(canvas, 12 ,8);
-                        } else {
-                            pointers9.draw(canvas,12,8);
-                        }
-                    }
-
-                    if (GameEngine.loadoutMenuUnit == "Armor") {
-                        if (GameEngine.playing.upgrades[3][0]) {
-                            pointers3.draw(canvas, 12 ,4);
-                        } else {
-                            pointers9.draw(canvas,12,4);
-                        }
-
-                        if (GameEngine.playing.upgrades[3][1]) {
-                            pointers3.draw(canvas, 12 ,6);
-                        } else {
-                            pointers9.draw(canvas,12,6);
-                        }
-
-                        if (GameEngine.playing.upgrades[3][2]) {
-                            pointers3.draw(canvas, 12 ,8);
-                        } else {
-                            pointers9.draw(canvas,12,8);
-                        }
-                    }
-                }
             }
         }
     }

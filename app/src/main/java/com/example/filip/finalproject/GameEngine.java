@@ -97,6 +97,8 @@ public class GameEngine {
                 }
                 int y = coord % FullscreenActivity.widthfullscreen;
                 int x = coord  / FullscreenActivity.widthfullscreen;
+                GameView.cameraX = 0;
+                GameView.cameraY = 0;
                 tapProcessor(x,y,mode);
             }
 
@@ -490,9 +492,6 @@ public class GameEngine {
                         loadoutMenuUnit = "Infantry";
                     }
                 }
-            if (playing.foodStorage < 1) {
-                showMarket = false;
-            }
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
             lastUnit = null;
@@ -632,10 +631,10 @@ public class GameEngine {
     public  static void ProcessGroundTap(int x, int y) {
         x -= GameView.cameraX;
         y -= GameView.cameraY;
-        // If tap is outside the grid, do nothing.
-        if (x / squareLength >= width || y / squareLength >= heigth) {
-            return;
-        }
+        // If tap is outside the grid, do nothing. Not used anymore because this would mess up loading games in onResume function.
+        //if (x / squareLength >= width || y / squareLength >= heigth) {
+        //    return;
+        //}
 
         //if user taps on empty square with no units selected, do nothing
         if (selected == null && BoardSprites[x / squareLength][y / squareLength] == null) {
