@@ -236,6 +236,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             thread.start(); // starts the tread
 
         GameEngine.load(); //load previous game if exists
+
+        if (!GameEngine.red.isHuman) {
+            AI.initializeAI();
+        }
+
         if ( MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
             AI.isCheating = true;
         } else {

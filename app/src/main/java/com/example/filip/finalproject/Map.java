@@ -212,4 +212,18 @@ public class Map {
         }
     }
 
+    public static String[] getAIResourcePoints() {
+        String[] toReturn = new String[0];
+        if (map_code == 0) {
+            toReturn = new String[]{"18,4", "12,9", "10,5,contested"};
+        }
+        if (map_code == 1) {
+            return toReturn;
+        }
+        if (map_code == 2) {
+            toReturn = new String[]{"13,1", "8,7"};
+        }
+        return toReturn;
+    }
+
 }

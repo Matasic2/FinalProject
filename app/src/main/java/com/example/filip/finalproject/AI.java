@@ -6,8 +6,8 @@ public class AI {
 
     public static int aggresionLevel = 3; // 5 is desperate attack, 4 is attack, 3 is hold, 2 is defend, 1 is desperate defense
     public static int turn = 0; //keeps track of the current turn
-    public static boolean makeUnitFor13_1 = false;
-    public static boolean makeUnitFor8_7 = false;
+    public static String[] resourcePointCoordinates = new String[0];
+    public static boolean[] makeUnitForResourcePoints = new boolean[0];
 
     public static int rng;
 
@@ -16,12 +16,37 @@ public class AI {
 
     public static boolean isCheating = false;
 
+    public static int aiStartingX = GameEngine.redDeployX;
+    public static int aiStartingY = GameEngine.redDeployY;
+    public static int opponentStartingX = GameEngine.greenDeployX;
+    public static int opponentStartingY = GameEngine.greenDeployY;
+    public static boolean hasContestedPoint = false;
+
+
+    public static void initializeAI() {
+        resourcePointCoordinates = Map.getAIResourcePoints();
+        makeUnitForResourcePoints = new boolean[resourcePointCoordinates.length];
+
+        for (int i = 0; i < makeUnitForResourcePoints.length; i++) {
+            makeUnitForResourcePoints[i] = true;
+        }
+
+        aiStartingX = GameEngine.redDeployX;
+        aiStartingY = GameEngine.redDeployY;
+        opponentStartingX = GameEngine.greenDeployX;
+        opponentStartingY = GameEngine.greenDeployY;
+    }
+
 //plays AI's turn
     public static void playTurn(Player AIPlayer) {
         //Takes AI's initial units and adds them to Units list
         if (turn == 0) {
-            addUnit(GameEngine.BoardSprites[12][6], "moveTo_8_7");
-            addUnit(GameEngine.BoardSprites[13][7], "Garrison_13_7");
+            String[] substring = resourcePointCoordinates[0].split(",");
+            int x = Integer.parseInt(substring[0]);
+            int y = Integer.parseInt(substring[1]);
+            addUnit(GameEngine.BoardSprites[aiStartingX][aiStartingY], "moveTo_" + x + "_" + y);
+            addUnit(GameEngine.BoardSprites[aiStartingX + 1][aiStartingY + 1], "Garrison_" + aiStartingX + "_" + aiStartingY);
+            makeUnitForResourcePoints[0] = false;
             Random rand = new Random();
             AI.rng = 30;
         }
@@ -37,7 +62,25 @@ public class AI {
 
         //is a resource point is not garrisoned, find nearest unit and garrison it (active after round 4), if no unit is found make a new one
         if (turn >= 4) {
-            if (GameEngine.BoardSprites[13][1] == null || GameEngine.BoardSprites[13][1].owner != GameEngine.AIPlayer) {
+            for (int i = 0; i <resourcePointCoordinates.length; i++) {
+                String[] substring = resourcePointCoordinates[i].split(",");
+                int x = Integer.parseInt(substring[0]);
+                int y = Integer.parseInt(substring[1]);
+                if (GameEngine.BoardSprites[x][y] == null || GameEngine.BoardSprites[x][y].owner != GameEngine.AIPlayer) {
+                    Units closest = closestUnitTo(x, y, true);
+                    if (closest == null) {
+                        makeUnitForResourcePoints[i] = true;  //TODO: once this is true, i dont think it ever becomes false so this code is useless.
+                    } else {
+                        for (int ij = 0; ij < units.length; ij++) {
+                            if (closest == units[ij]) {
+                                unitOrders[ij] = "moveTo_" + substring[0] + "_" + substring[1];
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+           /** if (GameEngine.BoardSprites[13][1] == null || GameEngine.BoardSprites[13][1].owner != GameEngine.AIPlayer) {
                 Units closest = closestUnitTo(13, 1, true);
                 if (closest == null) {
                     makeUnitFor13_1 = true;
@@ -62,7 +105,7 @@ public class AI {
                         }
                     }
                 }
-            }
+            }*/
         }
 
         //plays all units
@@ -86,9 +129,24 @@ public class AI {
         boolean[] viableUnits = determineUnitToProduce();
 
         boolean hasEnoughFood = true;
-        while (AIPlayer.foodStorage >= 2 && GameEngine.BoardSprites[12][6] == null) {
+        while (AIPlayer.foodStorage >= 2 && GameEngine.BoardSprites[aiStartingX][aiStartingY]== null) {
 
-            if (hasEnoughFood && (turn == 1 || makeUnitFor13_1 || makeUnitFor8_7) && AIPlayer.foodStorage >= Cavalry.redFoodPrice) {
+            //filling resources is highest priority
+            for (int i = 0; i < resourcePointCoordinates.length; i++) {
+                String[] substring = resourcePointCoordinates[i].split(",");
+                int x = Integer.parseInt(substring[0]);
+                int y = Integer.parseInt(substring[1]);
+                String safety = "";
+                if (substring.length > 2) {
+                    safety = substring[2];
+                }
+                if (makeUnitForResourcePoints[i] && AIPlayer.foodStorage >= Cavalry.redFoodPrice) {
+                    makeUnitForResourcePoints[i] = false;
+                    buyCavalry(AIPlayer, "moveTo_" + substring[0] + "_" + substring[1]);
+                }
+            }
+
+            /**if (hasEnoughFood && (turn == 1 || makeUnitFor13_1 || makeUnitFor8_7) && AIPlayer.foodStorage >= Cavalry.redFoodPrice) {
                 if (turn  == 1){
                     buyCavalry(AIPlayer, "moveTo_13_1");
                 }
@@ -100,8 +158,10 @@ public class AI {
                     makeUnitFor8_7 = false;
                     buyCavalry(AIPlayer, "moveTo_8_7");
                 }
-            }
-            else if (AIPlayer.oilStorage >= Armor.redOilPrice && AIPlayer.ironStorage >= Armor.redIronPrice && AIPlayer.foodStorage >= Armor.redFoodPrice && viableUnits[4]) {
+            }*/
+
+            //armor and artillery is a priority
+            if (AIPlayer.oilStorage >= Armor.redOilPrice && AIPlayer.ironStorage >= Armor.redIronPrice && AIPlayer.foodStorage >= Armor.redFoodPrice && viableUnits[4]) {
                 buyArmor(AIPlayer, "moveTo_2_2");
             }
             else if (AIPlayer.ironStorage >= Artillery.redIronPrice && AIPlayer.foodStorage >= Artillery.redFoodPrice && viableUnits[2]) {
@@ -170,47 +230,47 @@ public class AI {
     }
     //buys and plays Infantry
     public static boolean buyInfantry(Player AIPlayer, String order){
-        if (GameEngine.BoardSprites[12][6] != null || AIPlayer.foodStorage < Infantry.redFoodPrice) {
+        if (GameEngine.BoardSprites[aiStartingX][aiStartingY] != null || AIPlayer.foodStorage < Infantry.redFoodPrice) {
             return false;
         }
         AIPlayer.foodStorage -= Infantry.redFoodPrice;
-        Units temp = new Infantry(GameView.theContext, 12, 6, AIPlayer);
+        Units temp = new Infantry(GameView.theContext, aiStartingX, aiStartingY, AIPlayer);
         addUnit(temp,order);
         playUnit(temp,order);
         return true;
     }
     //buys and plays Cavalry
     public static boolean buyCavalry(Player AIPlayer, String order) {
-        if (GameEngine.BoardSprites[12][6] != null || AIPlayer.foodStorage < Cavalry.redFoodPrice) {
+        if (GameEngine.BoardSprites[aiStartingX][aiStartingY] != null || AIPlayer.foodStorage < Cavalry.redFoodPrice) {
             return false;
         }
         AIPlayer.foodStorage -= Cavalry.redFoodPrice;
-        Units temp = new Cavalry(GameView.theContext, 12, 6, AIPlayer);
+        Units temp = new Cavalry(GameView.theContext, aiStartingX, aiStartingY, AIPlayer);
         addUnit(temp,order);
         playUnit(temp,order);
         return true;
     }
     //buys and plays Artillery
     public static boolean buyArtillery(Player AIPlayer, String order) {
-        if (GameEngine.BoardSprites[12][6] != null || AIPlayer.foodStorage < Artillery.redFoodPrice) {
+        if (GameEngine.BoardSprites[aiStartingX][aiStartingY] != null || AIPlayer.foodStorage < Artillery.redFoodPrice) {
             return false;
         }
         AIPlayer.foodStorage -= Artillery.redFoodPrice;
         AIPlayer.ironStorage -= Artillery.redIronPrice;
-        Units temp = new Artillery(GameView.theContext, 12, 6, AIPlayer);
+        Units temp = new Artillery(GameView.theContext, aiStartingX, aiStartingY, AIPlayer);
         addUnit(temp,order);
         playUnit(temp,order);
         return true;
     }
     //buys and plays Armor
     public static boolean buyArmor(Player AIPlayer, String order){
-        if (GameEngine.BoardSprites[12][6] != null || AIPlayer.foodStorage < Armor.redFoodPrice || AIPlayer.ironStorage < Armor.redIronPrice || AIPlayer.oilStorage < Armor.redOilPrice) {
+        if (GameEngine.BoardSprites[aiStartingX][aiStartingY] != null || AIPlayer.foodStorage < Armor.redFoodPrice || AIPlayer.ironStorage < Armor.redIronPrice || AIPlayer.oilStorage < Armor.redOilPrice) {
             return false;
         }
         AIPlayer.foodStorage -= Armor.redFoodPrice;
         AIPlayer.ironStorage -= Armor.redIronPrice;
         AIPlayer.oilStorage -= Armor.redOilPrice;
-        Units temp = new Armor(GameView.theContext, 12, 6, AIPlayer);
+        Units temp = new Armor(GameView.theContext, aiStartingX, aiStartingY, AIPlayer);
         addUnit(temp,order);
         playUnit(temp,order);
         return true;
