@@ -145,6 +145,16 @@ public class SelectedUnit {
 
     //draws the selected unit when selected.draw(canvas) is called in GameView function.
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(icon, coordinates[0] * GameEngine.squareLength + GameView.cameraX, coordinates[1] * GameEngine.squareLength + GameView.cameraY, null);
+        if (owner == GameEngine.playing) {
+            Bitmap toDraw = icon;
+            toDraw = movableLocation.cutIconTransparency(toDraw, (double) GameEngine.theUnit.HP / (double) GameEngine.theUnit.maxHP);
+            canvas.drawBitmap(toDraw, coordinates[0] * GameEngine.squareLength + GameView.cameraX, coordinates[1] * GameEngine.squareLength + GameView.cameraY, null);
+            GameEngine.theUnit.drawUpgrades(canvas);
+        } else {
+            Bitmap toDraw = icon;
+            toDraw = movableLocation.cutIconTransparency(toDraw, (double) GameEngine.enemyTappedUnit.HP / (double) GameEngine.enemyTappedUnit.maxHP);
+            canvas.drawBitmap(toDraw, coordinates[0] * GameEngine.squareLength + GameView.cameraX, coordinates[1] * GameEngine.squareLength + GameView.cameraY, null);
+            GameEngine.enemyTappedUnit.drawUpgrades(canvas);
+        }
     }
 }

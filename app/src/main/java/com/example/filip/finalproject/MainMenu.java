@@ -10,7 +10,7 @@ import android.content.Intent;
 public class MainMenu extends AppCompatActivity  {
 
     //developer mode, should be set false on releases
-    public static boolean ENABLE_DEV_MODE = true;
+    public static boolean ENABLE_DEV_MODE = false;
 
     //Name of scenario that is being played
     public static String scenario = "";

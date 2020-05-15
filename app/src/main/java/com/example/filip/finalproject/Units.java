@@ -9,6 +9,9 @@ import android.util.EventLog;
 import android.content.Context;
 import android.graphics.Canvas;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /* When creating a new unit type :
     1. create a new class, and create (or copy) stats and constructor
     2. Create images (green, red, selected and regular) of your unit and add it as icon in units class (and in unit's constructor) and SelectedUnit class
@@ -32,7 +35,12 @@ public class Units {
     public int movement; //Movement distance of the unit
     public int visibilityRange; //how far the unit can see
     public int airAttack;
-    public int healRate;
+    public int healRate = 0;
+
+    public int fuelConsumption = 0;
+
+    public List<Bitmap> upgrades = new LinkedList<>();
+    public double iconUpgradeScale = 0.33;
 
     //Two methods below are from previous versions of the code, I might need them again later.
      /*public Units(Bitmap bmp) {
@@ -199,6 +207,8 @@ public class Units {
             coordinates[1] = 125;
             GameEngine.queue = toReturn;
         }
+
+        addUpgradeIcons(this);
     }
 
     public Units(Units u, Context context) {
@@ -495,21 +505,66 @@ public class Units {
     //draws the unit when unit[i].draw(canvas) is called in GameView function.
     public void draw(Canvas canvas) {
         if (coordinates[0] != 125) {
-            canvas.drawBitmap(icon, coordinates[0] * GameEngine.squareLength + GameView.cameraX, coordinates[1] * GameEngine.squareLength + GameView.cameraY, null);
+            Bitmap toDraw = icon;
+            toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
+            canvas.drawBitmap(toDraw, coordinates[0] * GameEngine.squareLength + GameView.cameraX, coordinates[1] * GameEngine.squareLength + GameView.cameraY, null);
         }
+        drawUpgrades(canvas, coordinates[0] * GameEngine.squareLength + GameView.cameraX, coordinates[1] * GameEngine.squareLength + GameView.cameraY);
     }
     public void draw(Canvas canvas, Paint paint, float displacement) {
         if (coordinates[0] != 125) {
-            canvas.drawBitmap(icon, coordinates[0] * GameEngine.squareLength + displacement, coordinates[1] * GameEngine.squareLength, paint);
+            Bitmap toDraw = icon;
+            toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
+            canvas.drawBitmap(toDraw, coordinates[0] * GameEngine.squareLength + GameView.cameraX + displacement, coordinates[1] * GameEngine.squareLength, paint);
         }
+        drawUpgrades(canvas, coordinates[0] * GameEngine.squareLength + GameView.cameraX + (int) displacement, coordinates[1] * GameEngine.squareLength + GameView.cameraY);
     }
     //Same as above, but draw then on given coordinates instead of unit's current coordinates.
-    public void draw(Canvas canvas, int x, int y) {
-        canvas.drawBitmap(icon, x * FullscreenActivity.scaleFactor, y * FullscreenActivity.scaleFactor, null);
+    public void draw(Canvas canvas, Paint paint,double  x, double y, boolean scaleForAir) {
+        if (scaleForAir) {
+            x = x * GameEngine.squareLength * GameEngine.airLineXScaleFactor;
+            x += 2.5 * GameEngine.squareLength;
+            y = y * GameEngine.squareLength * GameEngine.airLineYScaleFactor;
+            Bitmap toDraw = icon;
+            toDraw = Bitmap.createScaledBitmap(toDraw,(int)(icon.getWidth() * GameEngine.airLineXScaleFactor), (int)(icon.getHeight()  * GameEngine.airLineYScaleFactor), true);
+            toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
+            canvas.drawBitmap(toDraw, (int) x * FullscreenActivity.scaleFactor, (int) y * FullscreenActivity.scaleFactor, paint);
+            drawUpgrades(canvas, (int) (x - iconUpgradeScale),
+                    (int) (y - iconUpgradeScale));
+        }
+        else {
+            Bitmap toDraw = icon;
+            toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
+            canvas.drawBitmap(toDraw, (int) x * FullscreenActivity.scaleFactor, (int) y * FullscreenActivity.scaleFactor, paint);
+            drawUpgrades(canvas, (int) (x - iconUpgradeScale),
+                    (int) (y - iconUpgradeScale));
+        }
     }
 
     public void draw(Canvas canvas, double xx, double yy) {
-        canvas.drawBitmap(icon, (int) xx * FullscreenActivity.scaleFactor, (int) yy * FullscreenActivity.scaleFactor, null);
+        Bitmap toDraw = icon;
+        toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
+        canvas.drawBitmap(toDraw, (int) xx * FullscreenActivity.scaleFactor, (int) yy * FullscreenActivity.scaleFactor, null);
+        drawUpgrades(canvas, (int) (xx * FullscreenActivity.scaleFactor - FullscreenActivity.scaleFactor * iconUpgradeScale),
+                (int) (yy * FullscreenActivity.scaleFactor - FullscreenActivity.scaleFactor * iconUpgradeScale));
+    }
+
+    public void drawUpgrades(Canvas canvas) {
+        for (int i = 0; i < upgrades.size(); i++) {
+            canvas.drawBitmap(upgrades.get(i),
+                    ((coordinates[0] + 1) * GameEngine.squareLength) + GameView.cameraX - (int) (GameEngine.squareLength * iconUpgradeScale * (i + 1)),
+                    ((coordinates[1] + 1) * GameEngine.squareLength) + GameView.cameraY- (int) (GameEngine.squareLength * iconUpgradeScale),
+                    null);
+        }
+    }
+
+    public void drawUpgrades(Canvas canvas, int unitX, int unitY) {
+        for (int i = 0; i < upgrades.size(); i++) {
+            canvas.drawBitmap(upgrades.get(i),
+                    (unitX + GameEngine.squareLength) + - (int) (GameEngine.squareLength * iconUpgradeScale * (i + 1)),
+                    (unitY + GameEngine.squareLength) + - (int) (GameEngine.squareLength * iconUpgradeScale),
+                    null);
+        }
     }
 
     //get unit's distance to the point
@@ -517,5 +572,111 @@ public class Units {
         int x_distance = (this.coordinates[0] - x);
         int y_distance = (this.coordinates[1] - y);
         return Math.abs(x_distance) + Math.abs(y_distance);
+    }
+
+    public void addUpgradeIcons (Units u) {
+        if (GameEngine.loadoutMenuUnit == "Cavalry") {
+            if (GameEngine.playing.upgrades[0][0]) {
+                Bitmap iconUpgrade = Bitmap.createScaledBitmap(
+                        GameView.binoc.icon, (int) (GameView.binoc.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.binoc.icon.getHeight() * iconUpgradeScale), true);
+                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                upgrades.add(iconUpgrade);
+            }
+
+            if (GameEngine.playing.upgrades[0][1]) {
+                Bitmap iconUpgrade = Bitmap.createScaledBitmap(
+                        GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
+                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                upgrades.add(iconUpgrade);
+            }
+
+            if (GameEngine.playing.upgrades[0][2]) {
+                Bitmap iconUpgrade = Bitmap.createScaledBitmap(
+                        GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
+                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                upgrades.add(iconUpgrade);
+            }
+        }
+
+        if (GameEngine.loadoutMenuUnit == "Infantry") {
+            if (GameEngine.playing.upgrades[1][0]) {
+                Bitmap iconUpgrade = Bitmap.createScaledBitmap(
+                        GameView.binoc.icon, (int) (GameView.binoc.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.binoc.icon.getHeight() * iconUpgradeScale), true);
+                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                upgrades.add(iconUpgrade);
+            }
+
+            if (GameEngine.playing.upgrades[1][1]) {
+                Bitmap iconUpgrade = Bitmap.createScaledBitmap(
+                        GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
+                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                upgrades.add(iconUpgrade);
+            }
+
+            if (GameEngine.playing.upgrades[1][2]) {
+                Bitmap iconUpgrade = Bitmap.createScaledBitmap(
+                        GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
+                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                upgrades.add(iconUpgrade);
+            }
+        }
+
+        if (GameEngine.loadoutMenuUnit == "Artillery") {
+            if (GameEngine.playing.upgrades[2][0]) {
+                Bitmap iconUpgrade = Bitmap.createScaledBitmap(
+                        GameView.binoc.icon, (int) (GameView.binoc.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.binoc.icon.getHeight() * iconUpgradeScale), true);
+                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                upgrades.add(iconUpgrade);
+            }
+
+            if (GameEngine.playing.upgrades[2][1]) {
+                Bitmap iconUpgrade = Bitmap.createScaledBitmap(
+                        GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
+                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                upgrades.add(iconUpgrade);
+            }
+
+            if (GameEngine.playing.upgrades[2][2]) {
+                Bitmap iconUpgrade = Bitmap.createScaledBitmap(
+                        GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
+                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                upgrades.add(iconUpgrade);
+            }
+        }
+
+        if (GameEngine.loadoutMenuUnit == "Armor") {
+            if (GameEngine.playing.upgrades[3][0]) {
+                Bitmap iconUpgrade = Bitmap.createScaledBitmap(
+                        GameView.binoc.icon, (int) (GameView.binoc.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.binoc.icon.getHeight() * iconUpgradeScale), true);
+                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                upgrades.add(iconUpgrade);
+            }
+
+            if (GameEngine.playing.upgrades[3][1]) {
+                Bitmap iconUpgrade = Bitmap.createScaledBitmap(
+                        GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
+                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                upgrades.add(iconUpgrade);
+            }
+
+            if (GameEngine.playing.upgrades[3][2]) {
+                Bitmap iconUpgrade = Bitmap.createScaledBitmap(
+                        GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
+                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                upgrades.add(iconUpgrade);
+            }
+        }
     }
 }

@@ -44,6 +44,7 @@ public class Armor extends Units {
         } else {
             this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility, redAirAttack, healedBy);
         }
+        this.fuelConsumption = 1;
     }
 
     public static void adjustUpgrade(Player player, int factor, int number) {

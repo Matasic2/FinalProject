@@ -64,7 +64,12 @@ public class Resources {
         canvas.drawBitmap(icon, coordinates[0] * GameEngine.squareLength + displacement, coordinates[1] * GameEngine.squareLength , paint);
     }
 
-    public void draw(Canvas canvas, int x, int y) {
-        canvas.drawBitmap(icon, x, y, null);
+    public void draw(Canvas canvas, Paint paint, double x, double y, boolean scaleForAir) {
+        if (scaleForAir) {
+            Bitmap toDraw = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * GameEngine.airLineXScaleFactor), (int)(icon.getHeight()  * GameEngine.airLineYScaleFactor), true);
+            canvas.drawBitmap(toDraw, (int) x, (int) y, paint);
+        } else {
+            canvas.drawBitmap(icon, (int) x, (int) y, paint);
+        }
     }
 }

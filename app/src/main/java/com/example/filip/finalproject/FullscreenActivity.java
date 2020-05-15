@@ -123,6 +123,10 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         }
         else if (event.getAction() == MotionEvent.ACTION_MOVE) {
 
+            //don't allow moving screen around in air view
+            if (GameView.showAir) {
+                return true;
+            }
             // TODO : Spremi u memoriu za spremanje aktivnosti
            // memory.add(new Integer((int) event.getX() * widthfullscreen + (int) event.getY()));
             GameView.targetCameraX = (int) event.getX() - lastDownX;

@@ -18,7 +18,6 @@ public class MainThread extends Thread {
     public long previousTime = 0;
 
     public MainThread(SurfaceHolder surfaceHolder, GameView gameView) {
-
         super();
         run = true;
         this.surfaceHolder = surfaceHolder;

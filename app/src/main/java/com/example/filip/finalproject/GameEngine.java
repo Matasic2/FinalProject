@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.SystemClock;
 
 // Class that will run the game and manage all the events.
 public class GameEngine {
@@ -19,11 +20,15 @@ public class GameEngine {
     public static int redDeployX = 12;
     public static int redDeployY = 6;
 
+    public static double airLineXScaleFactor;
+    public static double airLineYScaleFactor;
+
+    public static int airLinesCount;
     public static int turnCount = 0;
     public static int squareLength = (int) (128  * FullscreenActivity.scaleFactor); //scales square length, dependent on scale factor
     public Bitmap image; // Image of the grid
     public Bitmap emptySquare;
-    public Bitmap airImage; //air grid
+    public static Bitmap emptyAirLine; //air grid
     public static Units lastUnit; //stores the last unit which made some action
     public static Units theUnit = null; // Selected unit, unlike the selected unit in GameView class this unit is the actual selected unit.
     public static SelectedUnit selected = null; // Selected unit, reference is not the same as the (selected) Unit itself.
@@ -114,7 +119,7 @@ public class GameEngine {
     //Constructor that creates the unit and it's image, doesn't set it's coordinates. Mostly used by onDraw function in GameView
     public GameEngine(Bitmap grid, Bitmap airGrid, Bitmap square,  int input_width, int input_heigth) {
         image = grid;
-        airImage = airGrid;
+        emptyAirLine = airGrid;
         emptySquare = square;
         this.width = input_width;
         this.heigth = input_heigth;
@@ -130,7 +135,10 @@ public class GameEngine {
     //draws the board when grid.draw(canvas) is called in GameView function.
     public void draw(Canvas canvas, boolean air) {
         if (air) {
-            canvas.drawBitmap(airImage, 2.5f*(GameEngine.squareLength + GameView.cameraX), 0.0f, null);
+            //Bitmap scaledGrid = Bitmap.createScaledBitmap(yourSelectedImage, width, height, false);
+            for (int i = 0; i < airLinesCount; i++) {
+                canvas.drawBitmap(emptyAirLine, 2.5f*(GameEngine.squareLength), (int) (3 * squareLength * i * airLineYScaleFactor), null);
+            }
         }
         else {
             for (int i = 0; i < width; i++) {
@@ -145,6 +153,12 @@ public class GameEngine {
     A method that will process what happens with user's input (click/tap).
      */
     public static void tapProcessor (int x, int y, int mode) {
+
+        //avoid changing game variables while game is drawing, this avoid crashes
+        while (MainThread.isRendering) {
+            SystemClock.sleep(1);
+        }
+
         if (mode == 0) {
             if (x < 0 || y < 0) {
                 return;
@@ -272,24 +286,7 @@ public class GameEngine {
         if (x / squareLength == 18 && y / squareLength == 1 && selected != null) {
             if (theUnit.HP != theUnit.maxHP) {
                 if (theUnit.hasAttack && theUnit.hasMove) {
-                    if (theUnit.unitType.equals("Armor")) {
-                        theUnit.HP += Armor.healedBy;
-                    }
-                    if (theUnit.unitType.equals("Cavalry")) {
-                        theUnit.HP += Cavalry.healedBy;
-                    }
-                    if (theUnit.unitType.equals("Infantry")) {
-                        theUnit.HP += Infantry.healedBy;
-                    }
-                    if (theUnit.unitType.equals("Artillery")) {
-                        theUnit.HP += Artillery.healedBy;
-                    }
-                    if (theUnit.unitType.equals("Anti air")) {
-                        theUnit.HP += MGInfantry.healedBy;
-                    }
-                    if (theUnit.unitType.equals("Heavy Tank")) {
-                        theUnit.HP += HeavyTank.healedBy;
-                    }
+                    theUnit.HP += theUnit.healRate;
                     theUnit.hasAttack = false;
                     theUnit.hasMove = false;
                 }
@@ -459,7 +456,7 @@ public class GameEngine {
             }
             return;
         }
-        //buys new cavalry
+        //switch loadout to cavalry
         if (x / squareLength == 7 && y / squareLength == 10 && showMarket) {
                 if (playing == green) {
                     if (GameEngine.BoardSprites[greenDeployX][greenDeployY] == null || (GameEngine.BoardSprites[greenDeployX][greenDeployY] != null && GameEngine.BoardSprites[greenDeployX][greenDeployY].owner == green)) {
@@ -478,7 +475,7 @@ public class GameEngine {
             lastCoordinates[1] = 125;
             lastUnit = null;
         }
-        //buys new infantry
+        //switch loadout to infantry
         if (x / squareLength == 9 && y / squareLength == 10 && showMarket) {
                 if (playing == green) {
                     if (GameEngine.BoardSprites[greenDeployX][greenDeployY] == null || (GameEngine.BoardSprites[greenDeployX][greenDeployY] != null && GameEngine.BoardSprites[greenDeployX][greenDeployY].owner == green)) {
@@ -520,7 +517,7 @@ public class GameEngine {
             lastCoordinates[1] = 125;
             lastUnit = null;
         }
-        //buys new artillery
+        //switch loadout to artillery
         if (x / squareLength == 13 && y / squareLength == 10 && showMarket) {
                 if (playing == green) {
                     if (GameEngine.BoardSprites[greenDeployX][greenDeployY] == null || (GameEngine.BoardSprites[greenDeployX][greenDeployY] != null && GameEngine.BoardSprites[greenDeployX][greenDeployY].owner == green)) {
@@ -538,7 +535,7 @@ public class GameEngine {
             lastCoordinates[1] = 125;
             lastUnit = null;
         }
-        //buys new armor
+        //switch loadout to armor
         if (x / squareLength == 7 && y / squareLength == 10 && showFactory) {
                 if (playing == green) {
                     if (GameEngine.BoardSprites[greenDeployX][greenDeployY] == null || (GameEngine.BoardSprites[greenDeployX][greenDeployY] != null && GameEngine.BoardSprites[greenDeployX][greenDeployY].owner == green)) {
@@ -631,6 +628,11 @@ public class GameEngine {
     public  static void ProcessGroundTap(int x, int y) {
         x -= GameView.cameraX;
         y -= GameView.cameraY;
+
+        //in case of small maps, dont crash if user taps on empty square
+        if (x/squareLength >= width || y/squareLength >= heigth) {
+            return;
+        }
         // If tap is outside the grid, do nothing. Not used anymore because this would mess up loading games in onResume function.
         //if (x / squareLength >= width || y / squareLength >= heigth) {
         //    return;
@@ -732,111 +734,182 @@ public class GameEngine {
 
     public static void ProcessLoadoutTap(int x, int y) {
         if (x / squareLength == 8 && y / squareLength == 8) {
-            loadoutMenu = false;
+            //loadoutMenu = false; //return back if buying a unit should close loadout menu
 
             if (playing == green && loadoutMenuUnit == "Cavalry") {
                 if (playing.foodStorage < Cavalry.greenFoodPrice ||
                         playing.ironStorage < Cavalry.greenIronPrice ||
                         playing.oilStorage < Cavalry.greenOilPrice) {
+                    showMarket = false;
+                    loadoutMenu = false;
                     return;
                 }
                 new Cavalry(GameView.theContext, greenDeployX, greenDeployY, playing);
+                message = "New Cavalry at " + greenDeployX + ", " + greenDeployY;
                 playing.foodStorage -= Cavalry.greenFoodPrice;
                 playing.ironStorage -= Cavalry.greenIronPrice;
                 playing.oilStorage -= Cavalry.greenOilPrice;
                 showMarket = false;
+                if (playing.foodStorage < Cavalry.greenFoodPrice ||
+                        playing.ironStorage < Cavalry.greenIronPrice ||
+                        playing.oilStorage < Cavalry.greenOilPrice) {
+                    showMarket = false;
+                    loadoutMenu = false;
+                }
             }
 
             else if (playing == red && loadoutMenuUnit == "Cavalry") {
                 if (playing.foodStorage < Cavalry.redFoodPrice ||
                         playing.ironStorage < Cavalry.redIronPrice ||
                         playing.oilStorage < Cavalry.redOilPrice) {
+                    showMarket = false;
+                    loadoutMenu = false;
                     return;
                 }
                 new Cavalry(GameView.theContext, redDeployX, redDeployY, playing);
+                message = "New Cavalry at " + redDeployX + ", " + redDeployY;
                 playing.foodStorage -= Cavalry.redFoodPrice;
                 playing.ironStorage -= Cavalry.redIronPrice;
                 playing.oilStorage -= Cavalry.redOilPrice;
                 showMarket = false;
+                if (playing.foodStorage < Cavalry.redFoodPrice ||
+                        playing.ironStorage < Cavalry.redIronPrice ||
+                        playing.oilStorage < Cavalry.redOilPrice) {
+                    showMarket = false;
+                    loadoutMenu = false;
+                }
             }
 
             else if (playing == green && loadoutMenuUnit == "Infantry") {
                 if (playing.foodStorage < Infantry.greenFoodPrice ||
                         playing.ironStorage < Infantry.greenIronPrice ||
                         playing.oilStorage < Infantry.greenOilPrice) {
+                    showMarket = false;
+                    loadoutMenu = false;
                     return;
                 }
                 new Infantry(GameView.theContext, greenDeployX, greenDeployY, playing);
+                message = "New Infantry at " + greenDeployX + ", " + greenDeployY;
                 playing.foodStorage -= Infantry.greenFoodPrice;
                 playing.ironStorage -= Infantry.greenIronPrice;
                 playing.oilStorage -= Infantry.greenOilPrice;
                 showMarket = false;
+                if (playing.foodStorage < Infantry.greenFoodPrice ||
+                        playing.ironStorage < Infantry.greenIronPrice ||
+                        playing.oilStorage < Infantry.greenOilPrice) {
+                    showMarket = false;
+                    loadoutMenu = false;
+                }
             }
 
             else if (playing == red && loadoutMenuUnit == "Infantry") {
                 if (playing.foodStorage < Infantry.redFoodPrice ||
                         playing.ironStorage < Infantry.redIronPrice ||
                         playing.oilStorage < Infantry.redOilPrice) {
+                    showMarket = false;
+                    loadoutMenu = false;
                     return;
                 }
                 new Infantry(GameView.theContext, redDeployX, redDeployY, playing);
+                message = "New Infantry at " + redDeployX + ", " + redDeployY;
                 playing.foodStorage -= Infantry.redFoodPrice;
                 playing.ironStorage -= Infantry.redIronPrice;
                 playing.oilStorage -= Infantry.redOilPrice;
                 showMarket = false;
+                if (playing.foodStorage < Infantry.redFoodPrice ||
+                        playing.ironStorage < Infantry.redIronPrice ||
+                        playing.oilStorage < Infantry.redOilPrice) {
+                    showMarket = false;
+                    loadoutMenu = false;
+                }
             }
 
             else if (playing == green && loadoutMenuUnit == "Artillery") {
                 if (playing.foodStorage < Artillery.greenFoodPrice ||
                         playing.ironStorage < Artillery.greenIronPrice ||
                         playing.oilStorage < Artillery.greenOilPrice) {
+                    showMarket = false;
+                    loadoutMenu = false;
                     return;
                 }
                 new Artillery(GameView.theContext, greenDeployX, greenDeployY, playing);
+                message = "New Artillery at " + greenDeployX + ", " + greenDeployY;
                 playing.foodStorage -= Artillery.greenFoodPrice;
                 playing.ironStorage -= Artillery.greenIronPrice;
                 playing.oilStorage -= Artillery.greenOilPrice;
                 showMarket = false;
+                if (playing.foodStorage < Artillery.greenFoodPrice ||
+                        playing.ironStorage < Artillery.greenIronPrice ||
+                        playing.oilStorage < Artillery.greenOilPrice) {
+                    showMarket = false;
+                    loadoutMenu = false;
+                }
             }
 
             else if (playing == red && loadoutMenuUnit == "Artillery") {
                 if (playing.foodStorage < Artillery.redFoodPrice ||
                         playing.ironStorage < Artillery.redIronPrice ||
                         playing.oilStorage < Artillery.redOilPrice) {
+                    showMarket = false;
+                    loadoutMenu = false;
                     return;
                 }
                 new Artillery(GameView.theContext, redDeployX, redDeployY, playing);
+                message = "New Artillery at " + redDeployX + ", " + redDeployY;
                 playing.foodStorage -= Artillery.redFoodPrice;
                 playing.ironStorage -= Artillery.redIronPrice;
                 playing.oilStorage -= Artillery.redOilPrice;
                 showMarket = false;
+                if (playing.foodStorage < Artillery.redFoodPrice ||
+                        playing.ironStorage < Artillery.redIronPrice ||
+                        playing.oilStorage < Artillery.redOilPrice) {
+                    showMarket = false;
+                    loadoutMenu = false;
+                }
             }
 
             else if (playing == green && loadoutMenuUnit == "Armor") {
                 if (playing.foodStorage < Armor.greenFoodPrice ||
                         playing.ironStorage < Armor.greenIronPrice ||
                         playing.oilStorage < Armor.greenOilPrice) {
+                    showMarket = false;
+                    loadoutMenu = false;
                     return;
                 }
                 new Armor(GameView.theContext, greenDeployX, greenDeployY, playing);
+                message = "New Armor at " + greenDeployX + ", " + greenDeployY;
                 playing.foodStorage -= Armor.greenFoodPrice;
                 playing.ironStorage -= Armor.greenIronPrice;
-                playing.oilStorage -= Cavalry.greenOilPrice;
+                playing.oilStorage -= Armor.greenOilPrice;
                 showMarket = false;
+                if (playing.foodStorage < Armor.greenFoodPrice ||
+                        playing.ironStorage < Armor.greenIronPrice ||
+                        playing.oilStorage < Armor.greenOilPrice) {
+                    showMarket = false;
+                    loadoutMenu = false;
+                }
             }
 
-            else if (playing == red && loadoutMenuUnit == "Cavalry") {
+            else if (playing == red && loadoutMenuUnit == "Armor") {
                 if (playing.foodStorage < Armor.redFoodPrice ||
                         playing.ironStorage < Armor.redIronPrice ||
                         playing.oilStorage < Armor.redOilPrice) {
+                    showMarket = false;
+                    loadoutMenu = false;
                     return;
                 }
                 new Armor(GameView.theContext, redDeployX, redDeployY, playing);
+                message = "New Armor at " + redDeployX + ", " + redDeployY;
                 playing.foodStorage -= Armor.redFoodPrice;
                 playing.ironStorage -= Armor.redIronPrice;
                 playing.oilStorage -= Armor.redOilPrice;
                 showMarket = false;
-
+                if (playing.foodStorage < Armor.redFoodPrice ||
+                        playing.ironStorage < Armor.redIronPrice ||
+                        playing.oilStorage < Armor.redOilPrice) {
+                    showMarket = false;
+                    loadoutMenu = false;
+                }
             }
 
         } else if (x / squareLength == 10 && y / squareLength == 8) {
@@ -865,12 +938,12 @@ public class GameEngine {
 
     //moves the unit to x and y
     public static void moveTo(Units u, int x, int y) {
-        if (u.unitType.equals("Armor")) {
-            if (u.owner.oilStorage <= 0) {
+        if (u.fuelConsumption != 0) {
+            if (u.owner.oilStorage < u.fuelConsumption) {
                 message = "No oil left to move armor unit";
                 return;
             } else {
-                u.owner.oilStorage--;
+                u.owner.oilStorage -= u.fuelConsumption;
             }
         }
 

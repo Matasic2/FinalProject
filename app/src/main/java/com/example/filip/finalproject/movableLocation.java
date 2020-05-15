@@ -20,13 +20,13 @@ public class movableLocation {
         BitmapFactory.Options o = new Options(); //get resource
         o.inScaled = false;
         icon = BitmapFactory.decodeResource(context.getResources(),R.drawable.yellow, o);
-        icon = replaceColor(icon);
+        icon = replaceWhiteWithTransparent(icon);
         icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         displacement = (int) (37  * FullscreenActivity.scaleFactor);
     }
 
     // replaces all white pixels with empty pixels
-    public Bitmap replaceColor(Bitmap src){
+    public static Bitmap replaceWhiteWithTransparent(Bitmap src){
         if(src == null)
             return null;
         int width = src.getWidth();
@@ -42,7 +42,44 @@ public class movableLocation {
         return result;
     }
 
-    //adds texture to the object, icon depends on number inputed
+    public static Bitmap replaceBlackWithTransparent(Bitmap src){
+        if(src == null)
+            return null;
+        int width = src.getWidth();
+        int height = src.getHeight();
+        int[] pixels = new int[width * height];
+        src.getPixels(pixels, 0, width, 0, 0, width, height);
+        for(int x = 0;x < pixels.length;++x){
+            if(pixels[x] != Color.WHITE){
+                pixels[x] = Color.TRANSPARENT;
+            }
+        }
+        Bitmap result = Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888);
+        return result;
+    }
+
+                                            //limit should be between 0 and 1, 1 representing full hp 0 representing no HP
+    public static Bitmap cutIconTransparency(Bitmap b,double limit) {
+        if (limit < 0 || limit > 1) {
+            return b;
+        }
+
+        limit = (limit - 1) * -1;
+
+        int width = b.getWidth();
+        int height = b.getHeight();
+        int[] pixels = new int[width * height];
+        b.getPixels(pixels, 0, width, 0, 0, width, height);
+        for(int x = 0; x < (int) (pixels.length * limit); ++x){
+            if(pixels[x] != Color.BLACK){
+                pixels[x] = pixels[x] & 0x40FFFFFF;
+            }
+        }
+        Bitmap result = Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888);
+        return result;
+    }
+
+    //adds texture to the object, icon depends on number input
     public movableLocation(Context context, int number, boolean isHUD) {
         this.isHUDelement = isHUD;
 
@@ -165,7 +202,7 @@ public class movableLocation {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.target, o);
-            icon = replaceColor(icon);
+            icon = replaceWhiteWithTransparent(icon);
             icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
             displacement = (int) (14  * FullscreenActivity.scaleFactor);
         }
@@ -179,7 +216,7 @@ public class movableLocation {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.greenarrow, o);
-            icon = replaceColor(icon);
+            icon = replaceWhiteWithTransparent(icon);
             icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
             displacement = (int) (39  * FullscreenActivity.scaleFactor);
         }
@@ -187,7 +224,7 @@ public class movableLocation {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.redarrow, o);
-            icon = replaceColor(icon);
+            icon = replaceWhiteWithTransparent(icon);
             icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
             displacement = (int) (39  * FullscreenActivity.scaleFactor);
         }
@@ -288,7 +325,8 @@ public class movableLocation {
     public void draw(Canvas canvas, float x, int y) {
         canvas.drawBitmap(icon, (x*GameEngine.squareLength) + GameView.cameraX + displacement,(y*GameEngine.squareLength) + displacement + GameView.cameraY, null);
     }
-    public void draw(Canvas canvas, int x, int y, Paint paint) {
-        canvas.drawBitmap(icon, (x*GameEngine.squareLength) + GameView.cameraX + displacement,(y*GameEngine.squareLength) + displacement + GameView.cameraY , paint);
+    public void draw(Canvas canvas, int x, int y, Paint paint, boolean isAir) {
+        if (!isAir) return; //only for air right now
+        canvas.drawBitmap(icon, x,y, paint);
     }
 }
