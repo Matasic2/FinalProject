@@ -35,7 +35,7 @@ public class GameEngine {
     public static Planes selectedPlane = null; //selected plane
     public static Units enemyTappedUnit = null; //same as above, but of opponent
     public static SelectedUnit enemySelected = null; // same as above, but for opponent
-    public static Planes[][] planeLines = new Planes[3][2];
+    public static Planes[][] planeLiness = new Planes[3][2];
     public static Units[][] BoardSprites = new Units[15][9]; //A 2D array of Units that stores the units for game engine and data processing, unlike GameView's Units[] this isn't involved in drawing units.
     public static Player green; //stores the reference to a player that is in charge of Green units
     public static Player red;//stores the reference to a player that is in charge of Red units
@@ -171,21 +171,24 @@ public class GameEngine {
                 GameView.showendTurnScreen = false;
 
                 if (playing == red) {
-                    if (planeLines[0][0] != null || planeLines[1][0] != null || planeLines[2][0] != null) {
-                        message = "Enemy planes spotted! ";
-                    } else {
-                        message = "";
+                    message = "";
+                    for (int i = 0;i < airLinesCount; i++) {
+                        if (planeLines[i][0] != null) {
+                            message = "Enemy planes spotted! ";
+                            break;
+                        }
                     }
                 }
 
                 if (playing == green) {
-                    if (planeLines[0][1] != null || planeLines[1][1] != null || planeLines[2][1] != null) {
-                        message = "Enemy planes spotted! ";
-                    } else {
-                        message = "";
+                    message = "";
+                    for (int i = 0;i < airLinesCount; i++) {
+                        if (planeLines[i][1] != null) {
+                            message = "Enemy planes spotted! ";
+                            break;
+                        }
                     }
                 }
-                message += "Turn " + GameEngine.turnCount++ / 2;
                 return;
             }
             if (GameView.showAir) {

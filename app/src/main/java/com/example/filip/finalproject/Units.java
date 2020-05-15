@@ -530,7 +530,7 @@ public class Units {
             toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
             canvas.drawBitmap(toDraw, (int) x * FullscreenActivity.scaleFactor, (int) y * FullscreenActivity.scaleFactor, paint);
             drawUpgrades(canvas, (int) (x - iconUpgradeScale),
-                    (int) (y - iconUpgradeScale));
+                    (int) (y - iconUpgradeScale), GameEngine.airLineXScaleFactor, GameEngine.airLineYScaleFactor);
         }
         else {
             Bitmap toDraw = icon;
@@ -563,6 +563,16 @@ public class Units {
             canvas.drawBitmap(upgrades.get(i),
                     (unitX + GameEngine.squareLength) + - (int) (GameEngine.squareLength * iconUpgradeScale * (i + 1)),
                     (unitY + GameEngine.squareLength) + - (int) (GameEngine.squareLength * iconUpgradeScale),
+                    null);
+        }
+    }
+
+    public void drawUpgrades(Canvas canvas, int unitX, int unitY, double xScale, double yScale) {
+        for (int i = 0; i < upgrades.size(); i++) {
+            Bitmap toDraw = Bitmap.createScaledBitmap(upgrades.get(i),(int)(upgrades.get(i).getWidth() * xScale), (int)(upgrades.get(i).getHeight()  * yScale), true);
+            canvas.drawBitmap(toDraw,
+                    ((int) (unitX + GameEngine.squareLength * xScale)) + - (int) (GameEngine.squareLength * xScale * iconUpgradeScale * (i + 1)),
+                    ((int)(unitY + GameEngine.squareLength * yScale)) + - (int) (GameEngine.squareLength * yScale * iconUpgradeScale),
                     null);
         }
     }
