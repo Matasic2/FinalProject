@@ -414,14 +414,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             newPaint = new Paint();
             newPaint.setColor(Color.argb(255, 10, 10, 10));
             Rect rectangle = new Rect(0,
-                    1152,
-                    3000,
-                    1500);
+                    (int)(1152 * FullscreenActivity.scaleFactor),
+                    (int)(3000 * FullscreenActivity.scaleFactor),
+                    (int)(1500* FullscreenActivity.scaleFactor));
             canvas.drawRect(rectangle,newPaint);
-            rectangle = new Rect (1920,
-                    0,
-                    3000,
-                    2000);
+            rectangle = new Rect ((int)(1920 * FullscreenActivity.scaleFactor),
+                    (int)(0 * FullscreenActivity.scaleFactor),
+                    (int)(3000 * FullscreenActivity.scaleFactor),
+                    (int)(2000 * FullscreenActivity.scaleFactor));
             canvas.drawRect(rectangle,newPaint);
 
             //draws HUD elements
@@ -666,10 +666,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             if (GameEngine.loadoutMenu) {
                 newPaint.setColor(Color.argb(255, 10, 10, 10));
-                rectangle = new Rect(895,
-                        500,
-                        1850,
-                        1200);
+                rectangle = new Rect((int)(895 * FullscreenActivity.scaleFactor),
+                        (int)(500 * FullscreenActivity.scaleFactor),
+                        (int)(1850 * FullscreenActivity.scaleFactor),
+                        (int)(1200 * FullscreenActivity.scaleFactor));
                 canvas.drawRect(rectangle,newPaint);
 
                 //buy and cancel
@@ -856,7 +856,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     canvas.drawRect(rectangle, paint);
                 } else if (fog_of_war[i][j] && GameEngine.BoardSprites[i][j] != null && !GameEngine.BoardSprites[i][j].owner.equals(GameEngine.playing)) {
                     paint.setAlpha(100);
-                    GameEngine.BoardSprites[i][j].draw(canvas, paint, GameEngine.squareLength * 2.5f);
+                    GameEngine.BoardSprites[i][j].draw(canvas, paint,
+                            GameEngine.BoardSprites[i][j].coordinates[0],
+                            GameEngine.BoardSprites[i][j].coordinates[1],
+                            true); //draws the units from units array found in GameView class.
                 }
             }
         }
@@ -873,7 +876,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             for (int i = 0; i < GameEngine.playing.hangar.length; i++) {
                 if (GameEngine.playing.hangar[i] != null) {
                     GameEngine.playing.hangar[i].draw(canvas, 4 + i, 10);
-                    GameEngine.message = "boo";
                 }
             }
         }
@@ -882,7 +884,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         for (int i = 0; i < GameEngine.planeLines.length; i++) {
             for (int j = 0; j < GameEngine.planeLines[i].length; j++) {
                 if (GameEngine.planeLines[i][j] != null) {
-                    GameEngine.planeLines[i][j].draw(canvas, 19*j, 1 + i*3);
+                    GameEngine.planeLines[i][j].draw(canvas, 19*j, (3 * i * GameEngine.airLineYScaleFactor + GameEngine.airLineYScaleFactor));
                 }
             }
         }

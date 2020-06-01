@@ -528,7 +528,7 @@ public class Units {
             Bitmap toDraw = icon;
             toDraw = Bitmap.createScaledBitmap(toDraw,(int)(icon.getWidth() * GameEngine.airLineXScaleFactor), (int)(icon.getHeight()  * GameEngine.airLineYScaleFactor), true);
             toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
-            canvas.drawBitmap(toDraw, (int) x * FullscreenActivity.scaleFactor, (int) y * FullscreenActivity.scaleFactor, paint);
+            canvas.drawBitmap(toDraw, (int) x, (int) y, paint);
             drawUpgrades(canvas, (int) (x - iconUpgradeScale),
                     (int) (y - iconUpgradeScale), GameEngine.airLineXScaleFactor, GameEngine.airLineYScaleFactor);
         }

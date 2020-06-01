@@ -21,6 +21,8 @@ public class Map {
             GameEngine.airLineXScaleFactor = 15.0f/21.0f; //15 is standard number of x squares and 21 is map's number of x squares
             GameEngine.airLineYScaleFactor = 9.0f/12.0f; //same as above
             GameEngine.planeLines = new Planes[4][2];
+            GameEngine.fogOfWarIsRevealedForGreen = new boolean[4];
+            GameEngine.fogOfWarIsRevealedForRed = new boolean[4];
 
             // next lines generate green's "natural resources" (the resources which are expected to be controlled by green player).
             new Food(GameView.theContext, 1, 0, 1, 1);

@@ -35,7 +35,7 @@ public class GameEngine {
     public static Planes selectedPlane = null; //selected plane
     public static Units enemyTappedUnit = null; //same as above, but of opponent
     public static SelectedUnit enemySelected = null; // same as above, but for opponent
-    public static Planes[][] planeLiness = new Planes[3][2];
+    public static Planes[][] planeLines = new Planes[3][2];
     public static Units[][] BoardSprites = new Units[15][9]; //A 2D array of Units that stores the units for game engine and data processing, unlike GameView's Units[] this isn't involved in drawing units.
     public static Player green; //stores the reference to a player that is in charge of Green units
     public static Player red;//stores the reference to a player that is in charge of Red units
@@ -59,9 +59,9 @@ public class GameEngine {
 
     //restarts board
     public static void restart(){
-        fogOfWarIsRevealedForGreen = new boolean[3];
-        fogOfWarIsRevealedForRed = new boolean[3];
-        planeLines = new Planes[3][2];
+        fogOfWarIsRevealedForGreen = new boolean[fogOfWarIsRevealedForGreen.length];
+        fogOfWarIsRevealedForRed = new boolean[fogOfWarIsRevealedForRed.length];
+        planeLines = new Planes[planeLines.length][planeLines[0].length];
         lastUnit = null; //stores the last unit which made some action
         theUnit = null; // Selected unit, unlike the selected unit in GameView class this unit is the actual selected unit.
         selected = null; // Selected unit, reference is not the same as the (selected) Unit itself.
@@ -227,7 +227,17 @@ public class GameEngine {
         else if (x / squareLength > 3 && y / squareLength >= 10 && x / squareLength < 10 && selectedPlane == null) {
             GameEngine.playing.selectPlane((x/squareLength) - 4);
         }
-        else if ((x/squareLength == 0 || x/squareLength == 19 )&& GameEngine.playing == GameEngine.green && selectedPlane != null){
+        else if (x/squareLength < 2 && GameEngine.playing == GameEngine.green && selectedPlane != null){
+
+            //y represents plane line after this
+            y = y / (int) (3 * GameEngine.airLineYScaleFactor * GameEngine.squareLength);
+
+            if (planeLines[y][0] == null && green.oilStorage > 0) {
+                    planeLines[y][0] = selectedPlane;
+                    green.removeFromHanger(selectedPlane);
+                    green.oilStorage--;
+            }
+            /**
             if (y/squareLength == 1 && planeLines[0][0] == null) {
                 if (green.oilStorage > 0) {
                     planeLines[0][0] = selectedPlane;
@@ -249,8 +259,18 @@ public class GameEngine {
                     green.oilStorage--;
                 }
             }
+             */
         }
-        else if (x/squareLength == 19 && GameEngine.playing == GameEngine.red && selectedPlane != null) {
+        else if (x/squareLength > 17 && GameEngine.playing == GameEngine.red && selectedPlane != null) {
+
+            y = y / (int) (3 * GameEngine.airLineYScaleFactor * GameEngine.squareLength);
+
+            if (planeLines[y][1] == null && red.oilStorage > 0) {
+                planeLines[y][1] = selectedPlane;
+                red.removeFromHanger(selectedPlane);
+                red.oilStorage--;
+            }
+            /**
             if (y / squareLength == 1 && planeLines[0][1] == null) {
                 if (red.oilStorage > 0) {
                     planeLines[0][1] = selectedPlane;
@@ -272,6 +292,7 @@ public class GameEngine {
                     red.oilStorage--;
                 }
             }
+             */
         }
         else if (selectedPlane != null){
             GameEngine.selectedPlane.unselect();
@@ -1132,7 +1153,7 @@ public class GameEngine {
                 }
             }
 
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < airLinesCount; i++) {
                 if (planeLines[i][0] != null) {
                     planeLines[i][0].takeGroundDamage(i);
                 }
@@ -1166,7 +1187,7 @@ public class GameEngine {
                 }
             }
 
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < airLinesCount; i++) {
                 if (planeLines[i][1] != null) {
                     planeLines[i][1].takeGroundDamage(i);
                 }
@@ -1336,6 +1357,16 @@ public class GameEngine {
 
         //reveal tiles that are scouted by planes
         if (player == green) {
+            for (int a = 0; a < fogOfWarIsRevealedForGreen.length; a++) {
+                if (fogOfWarIsRevealedForGreen[a]) {
+                    for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                        for (int j = a * 3; j < (a+1)*3; j++) {
+                            tile_is_visible[i][j] = true;
+                        }
+                    }
+                }
+            }
+            /**
             if (fogOfWarIsRevealedForGreen[0]) {
                 for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
                     for (int j = 0; j < 4; j++) {
@@ -1357,8 +1388,20 @@ public class GameEngine {
                     }
                 }
             }
+             */
         }
         if (player == red) {
+
+            for (int a = 0; a < fogOfWarIsRevealedForRed.length; a++) {
+                if (fogOfWarIsRevealedForRed[a]) {
+                    for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                        for (int j = a * 3; j < (a+1)*3; j++) {
+                            tile_is_visible[i][j] = true;
+                        }
+                    }
+                }
+            }
+            /**
             if (fogOfWarIsRevealedForRed[0]) {
                 for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
                     for (int j = 0; j < 4; j++) {
@@ -1380,6 +1423,7 @@ public class GameEngine {
                     }
                 }
             }
+             */
         }
 
         return tile_is_visible;

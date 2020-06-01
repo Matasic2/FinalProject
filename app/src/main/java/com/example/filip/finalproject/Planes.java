@@ -26,6 +26,10 @@ public class Planes {
         canvas.drawBitmap(icon, x * GameEngine.squareLength, y * GameEngine.squareLength, null);
     }
 
+    public void draw(Canvas canvas, double x, double y) {
+        canvas.drawBitmap(icon, (int)(x * GameEngine.squareLength), (int) (y * GameEngine.squareLength), null);
+    }
+
     public void select() {
         GameEngine.selectedPlane = this;
         getSelectedIcon();
@@ -38,9 +42,18 @@ public class Planes {
             }
         }
         else {
+            for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                for (int j = row * 3; j < (row + 1) * 3; j++) {
+                    if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
+                        GameEngine.DamageUnit(groundAttack, GameEngine.BoardSprites[i][j],i,j);
+                    }
+                }
+            }
+
+            /**
             if (row == 0) {
                 for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
-                    for (int j = 0; j < 4; j++) {
+                    for (int j = 0; j < 3; j++) {
                         if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
                             GameEngine.DamageUnit(groundAttack, GameEngine.BoardSprites[i][j],i,j);
                         }
@@ -65,13 +78,24 @@ public class Planes {
                     }
                 }
             }
+             */
         }
     }
 
     public void takeGroundDamage(int line) {
+
+        for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+            for (int j = line * 3; j < (line+1) * 3; j++) {
+                if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
+                    this.HP -= GameEngine.BoardSprites[i][j].airAttack;
+                }
+            }
+        }
+
+        /**
         if (line == 0) {
             for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
-                for (int j = 0; j < 4; j++) {
+                for (int j = 0; j < 3; j++) {
                     if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
                         this.HP -= GameEngine.BoardSprites[i][j].airAttack;
                     }
@@ -96,6 +120,7 @@ public class Planes {
                 }
             }
         }
+         */
     }
 
     public void groundPlane() {
