@@ -53,7 +53,7 @@ public class Infantry extends Units {
                 Infantry.GreenVisibility += 2 * factor;
             }
             if (number == 1) {
-                Infantry.greenIronPrice += 1 * factor;
+                Infantry.greenIronPrice += 2 * factor;
                 Infantry.GreenDefence += 1 * factor;
             }
             if (number == 2) {
@@ -66,7 +66,7 @@ public class Infantry extends Units {
                 Infantry.RedVisibility += 2 * factor;
             }
             if (number == 1) {
-                Infantry.redIronPrice += 1 * factor;
+                Infantry.redIronPrice += 2 * factor;
                 Infantry.RedDefence += 1 * factor;
             }
             if (number == 2) {

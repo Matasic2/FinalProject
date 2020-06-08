@@ -130,6 +130,21 @@ public class SelectedUnit {
             icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
             return;
         }
+        if (GameEngine.BoardSprites[x/GameEngine.squareLength][y/GameEngine.squareLength] instanceof Units && player == GameEngine.green && unitType.equals("Fort")) { //if selected unit is Green Cavalry, use cavgs (CAValry Green Selected) texture
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.fortgs, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+            return;
+        }
+
+        if (GameEngine.BoardSprites[x/GameEngine.squareLength][y/GameEngine.squareLength] instanceof Units && player == GameEngine.red &&  unitType.equals("Fort")) { //if selected unit is Red Cavalry, use cavrs (CAValry Red Selected) texture
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.fortrs, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+            return;
+        }
         BitmapFactory.Options o = new BitmapFactory.Options(); //if selected unit is Unknown, null texture instead of trying to draw with null and crashing the app. Null texture should never appear, because it's caused by a bug!
         o.inScaled = false;
         icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.nulll, o);

@@ -44,6 +44,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     public static int widthfullscreen; //width of the screen
     public static FullscreenActivity theActivity; //stores the reference of the activity
     public static ArrayList<Integer> memory = new ArrayList<>();
+    public static boolean hasScrolled = false;
 
 
     public static int lastDownX = 0;
@@ -111,17 +112,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     public boolean onTouch (View view, MotionEvent event) {
 
 
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            GameEngine.tapProcessor((int) event.getX(), (int) event.getY(),0); //sends coordinates to GameEngine, which does everything.
-            lastDownX = -1;
-            lastDownY = -1;
-        }
-
-        else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            lastDownX = (int) event.getX() - GameView.cameraX;
-            lastDownY = (int) event.getY() - GameView.cameraY;
-        }
-        else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+        if (event.getAction() == MotionEvent.ACTION_MOVE) {
 
             //don't allow moving screen around in air view
             if (GameView.showAir) {
@@ -131,6 +122,21 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
            // memory.add(new Integer((int) event.getX() * widthfullscreen + (int) event.getY()));
             GameView.targetCameraX = (int) event.getX() - lastDownX;
             GameView.targetCameraY = (int) event.getY() - lastDownY;
+            hasScrolled = true;
+            return true;
+        }
+
+        else if (event.getAction() == MotionEvent.ACTION_UP) {
+            GameEngine.tapProcessor((int) event.getX(), (int) event.getY(),0); //sends coordinates to GameEngine, which does everything.
+            lastDownX = -1;
+            lastDownY = -1;
+            hasScrolled = false;
+            return true;
+        }
+
+        else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            lastDownX = (int) event.getX() - GameView.cameraX;
+            lastDownY = (int) event.getY() - GameView.cameraY;
         }
         return true;
     }

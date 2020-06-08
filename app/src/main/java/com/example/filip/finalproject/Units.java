@@ -38,6 +38,7 @@ public class Units {
     public int healRate = 0;
 
     public int fuelConsumption = 0;
+    public boolean specialIsActivated = false;
 
     public List<Bitmap> upgrades = new LinkedList<>();
     public double iconUpgradeScale = 0.33;
@@ -173,6 +174,18 @@ public class Units {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.htankr2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.green && unitType.equals("Fort")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.fortg2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Fort")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.fortr2, o);
             icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
 
@@ -314,6 +327,18 @@ public class Units {
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.htankr2, o);
             icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
+        if (owner == GameEngine.green && unitType.equals("Fort")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.fortg2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Fort")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.fortr2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
 
         //sets the starting coordinates of the unit
 
@@ -406,6 +431,18 @@ public class Units {
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.htankr, o);
             icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
+        if (owner == GameEngine.green && unitType.equals("Fort")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.fortg, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Fort")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.fortr, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
     }
 
     public void brightenIcon() {
@@ -495,6 +532,18 @@ public class Units {
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.htankr2, o);
             icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
+        if (owner == GameEngine.green && unitType.equals("Fort")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.fortg2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (owner == GameEngine.red && unitType.equals("Fort")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.fortr2, o);
+            icon = Bitmap.createScaledBitmap(icon, (int) (icon.getWidth() * FullscreenActivity.scaleFactor), (int) (icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
     }
 
     //changes the coordinates of the unit
@@ -582,6 +631,14 @@ public class Units {
         int x_distance = (this.coordinates[0] - x);
         int y_distance = (this.coordinates[1] - y);
         return Math.abs(x_distance) + Math.abs(y_distance);
+    }
+
+    public int getVisibilityRange() {
+        if (unitType.equals("Cavalry") && specialIsActivated) {
+            return 1 + visibilityRange;
+        }
+
+        return visibilityRange;
     }
 
     public void addUpgradeIcons (Units u) {

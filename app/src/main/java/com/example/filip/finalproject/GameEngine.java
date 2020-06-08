@@ -193,6 +193,7 @@ public class GameEngine {
             }
             if (GameView.showAir) {
                 processAirTap(x,y);
+                FullscreenActivity.memory.add(new Integer((x * FullscreenActivity.widthfullscreen + y) * -1));
             } else if (!GameView.showAir) {
 
                 if (loadoutMenu) {
@@ -210,7 +211,10 @@ public class GameEngine {
         } else if (mode == 1) {
             ProcessGroundTap(x, y);
         } else if (mode == 2) {
-            if (loadoutMenu) {
+            if (GameView.showAir) {
+                processAirTap(x, y);
+            }
+            else if (loadoutMenu) {
                 ProcessLoadoutTap(x,y);
             } else {
                 ProcessGroundUITap(x, y);
@@ -301,9 +305,50 @@ public class GameEngine {
     }
 
     public static void ProcessGroundUITap(int x, int y) {
-        if (x / squareLength == 16 && y / squareLength == 1 && (selected != null || enemySelected != null)) {
-            unselectAll();
-            return;
+
+        //unit special action
+        if (x / squareLength == 16 && y / squareLength == 1 && (selected != null)) {
+            if (theUnit.hasAttack && theUnit.hasMove && !theUnit.unitType.equals("Armor")) {
+                if (theUnit.unitType.equals("Cavalry")) {
+                    message = "Scouting range extended.";
+                    showFactory = false;
+                    showMarket = false;
+                }
+                else if (theUnit.unitType.equals("Infantry") && playing.ironStorage >= 2) {
+                    message = "Unit fortified.";
+                    theUnit.unitType = "Fort";
+                    theUnit.defence += 1;
+                    theUnit.airAttack += 1;
+                    theUnit.movement = 0;
+
+                    playing.ironStorage -= 2;
+                    showFactory = false;
+                    showMarket = false;
+                }
+                else if (theUnit.unitType.equals("Fort")) {
+                    message = "Fort abandoned.";
+                    theUnit.unitType = "Infantry";
+                    theUnit.defence -= 1;
+                    theUnit.airAttack -= 1;
+                    theUnit.movement = 2;
+                    showFactory = false;
+                    showMarket = false;
+                }
+                theUnit.hasAttack = false;
+                theUnit.hasMove = false;
+                theUnit.specialIsActivated = true;
+                checkAction(theUnit);
+                unselectFriendly();
+            } else if (theUnit.unitType.equals("Armor") && !theUnit.specialIsActivated && playing.oilStorage >= 2) {
+                message = "Extra move activated.";
+                theUnit.hasAttack = true;
+                theUnit.hasMove = true;
+                playing.oilStorage -= 2;
+                showFactory = false;
+                showMarket = false;
+                theUnit.specialIsActivated = true;
+                checkAction(theUnit);
+            }
         }
 
         //heal the unit if the button is pressed
@@ -318,6 +363,7 @@ public class GameEngine {
                     theUnit.HP = theUnit.maxHP;
                 }
             }
+            checkAction(theUnit);
             unselectFriendly();
         }
 
@@ -750,8 +796,11 @@ public class GameEngine {
             }
         }
 
-        //If user taps on a square that is out of range while some unit is selected, do nothing (this could be changed later)
+        //If user taps on a square that is out of range while some unit is selected, unselect it
         if (selected != null) {
+            if (!FullscreenActivity.hasScrolled) {
+                unselectFriendly();
+            }
             return;
         }
     }
@@ -1216,6 +1265,7 @@ public class GameEngine {
                 if (BoardSprites[i][j] != null && BoardSprites[i][j].owner == playing) {
                     BoardSprites[i][j].hasMove = true;
                     BoardSprites[i][j].hasAttack = true;
+                    BoardSprites[i][j].specialIsActivated = false;
                     BoardSprites[i][j].brightenIcon();
                 }
                 if (BoardSprites[i][j] != null && BoardSprites[i][j].owner != playing) {
@@ -1328,7 +1378,7 @@ public class GameEngine {
                     if (BoardSprites[i][j] != null && BoardSprites[i][j].owner.color.equals("green")) {
                         for (int a = 0; a < BoardSprites.length; a++) {
                             for (int b = 0; b < BoardSprites[a].length; b++) {
-                                if (!tile_is_visible[a][b] && BoardSprites[i][j].getDistanceToPoint(a,b) <= BoardSprites[i][j].visibilityRange) {
+                                if (!tile_is_visible[a][b] && BoardSprites[i][j].getDistanceToPoint(a,b) <= BoardSprites[i][j].getVisibilityRange()) {
                                     tile_is_visible[a][b] = true;
                                 }
                             }
@@ -1345,7 +1395,7 @@ public class GameEngine {
                     if (BoardSprites[i][j] != null && BoardSprites[i][j].owner.color.equals("red")) {
                         for (int a = 0; a < BoardSprites.length; a++) {
                             for (int b = 0; b < BoardSprites[a].length; b++) {
-                                if (!tile_is_visible[a][b] && BoardSprites[i][j].getDistanceToPoint(a,b) <= BoardSprites[i][j].visibilityRange) {
+                                if (!tile_is_visible[a][b] && BoardSprites[i][j].getDistanceToPoint(a,b) <= BoardSprites[i][j].getVisibilityRange()) {
                                     tile_is_visible[a][b] = true;
                                 }
                             }
