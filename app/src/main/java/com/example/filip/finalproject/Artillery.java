@@ -56,8 +56,8 @@ public class Artillery extends Units {
                 Artillery.GreenDefence += 1 * factor;
             }
             if (number == 2) {
-                Artillery.greenFoodPrice += 1 * factor;
-                Artillery.GreenAttack2 += 1 * factor;
+                Artillery.greenFoodPrice += 2 * factor;
+                Artillery.GreenSecondAttackRange += 1 * factor;
             }
         } else if (player == GameEngine.red) {
             if (number == 0) {
@@ -69,8 +69,8 @@ public class Artillery extends Units {
                 Artillery.RedDefence += 1 * factor;
             }
             if (number == 2) {
-                Artillery.redFoodPrice += 1 * factor;
-                Artillery.RedAttack2 += 1 * factor;
+                Artillery.redFoodPrice += 2 * factor;
+                Artillery.RedSecondAttackRange += 1 * factor;
             }
         }
     }

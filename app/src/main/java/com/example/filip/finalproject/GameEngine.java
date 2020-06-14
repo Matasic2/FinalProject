@@ -56,6 +56,8 @@ public class GameEngine {
 
 
     public static int[] lastAddedResources = new int[3]; //memorizes last added resources, to display next to storage
+    public static boolean gameIsMultiplayer = false;
+    public static boolean isHostPhone = false;
 
     //restarts board
     public static void restart(){
@@ -308,38 +310,49 @@ public class GameEngine {
 
         //unit special action
         if (x / squareLength == 16 && y / squareLength == 1 && (selected != null)) {
-            if (theUnit.hasAttack && theUnit.hasMove && !theUnit.unitType.equals("Armor")) {
+            if (theUnit.hasAttack && theUnit.hasMove) {
                 if (theUnit.unitType.equals("Cavalry")) {
                     message = "Scouting range extended.";
                     showFactory = false;
                     showMarket = false;
                 }
-                else if (theUnit.unitType.equals("Infantry") && playing.ironStorage >= 2) {
+                else if (theUnit.unitType.equals("Infantry") && playing.ironStorage >= 1) {
                     message = "Unit fortified.";
                     theUnit.unitType = "Fort";
+
                     theUnit.defence += 1;
                     theUnit.airAttack += 1;
                     theUnit.movement = 0;
 
-                    playing.ironStorage -= 2;
+                    playing.ironStorage -= 1;
                     showFactory = false;
                     showMarket = false;
-                }
-                else if (theUnit.unitType.equals("Fort")) {
-                    message = "Fort abandoned.";
-                    theUnit.unitType = "Infantry";
-                    theUnit.defence -= 1;
-                    theUnit.airAttack -= 1;
-                    theUnit.movement = 2;
-                    showFactory = false;
-                    showMarket = false;
+                    theUnit.hasAttack = false;
+                    theUnit.hasMove = false;
                 }
                 theUnit.hasAttack = false;
                 theUnit.hasMove = false;
                 theUnit.specialIsActivated = true;
                 checkAction(theUnit);
                 unselectFriendly();
-            } else if (theUnit.unitType.equals("Armor") && !theUnit.specialIsActivated && playing.oilStorage >= 2) {
+                return;
+            }
+
+            if (theUnit.unitType.equals("Fort") && !theUnit.specialIsActivated) {
+                message = "Fort abandoned.";
+                theUnit.unitType = "Infantry";
+
+                theUnit.defence -= 1;
+                theUnit.airAttack -= 1;
+
+                theUnit.movement = 2;
+
+                showFactory = false;
+                showMarket = false;
+                return;
+            }
+
+            if (theUnit.unitType.equals("Armor") && !theUnit.specialIsActivated && playing.oilStorage >= 2) {
                 message = "Extra move activated.";
                 theUnit.hasAttack = true;
                 theUnit.hasMove = true;
@@ -348,6 +361,7 @@ public class GameEngine {
                 showMarket = false;
                 theUnit.specialIsActivated = true;
                 checkAction(theUnit);
+                return;
             }
         }
 
@@ -358,6 +372,7 @@ public class GameEngine {
                     theUnit.HP += theUnit.healRate;
                     theUnit.hasAttack = false;
                     theUnit.hasMove = false;
+                    theUnit.specialIsActivated = true; // healing counts as special move
                 }
                 if (theUnit.HP > theUnit.maxHP) {
                     theUnit.HP = theUnit.maxHP;
@@ -365,6 +380,7 @@ public class GameEngine {
             }
             checkAction(theUnit);
             unselectFriendly();
+            return;
         }
 
         //switches active player if the button is pressed.

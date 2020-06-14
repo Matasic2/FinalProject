@@ -57,7 +57,7 @@ public class Infantry extends Units {
                 Infantry.GreenDefence += 1 * factor;
             }
             if (number == 2) {
-                Infantry.greenFoodPrice += 1 * factor;
+                Infantry.greenFoodPrice += 2 * factor;
                 Infantry.GreenAttack2 += 1 * factor;
             }
         } else if (player == GameEngine.red) {
@@ -70,7 +70,7 @@ public class Infantry extends Units {
                 Infantry.RedDefence += 1 * factor;
             }
             if (number == 2) {
-                Infantry.redFoodPrice += 1 * factor;
+                Infantry.redFoodPrice += 2 * factor;
                 Infantry.RedAttack2 += 1 * factor;
             }
         }

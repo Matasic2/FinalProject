@@ -6,6 +6,8 @@ import android.widget.Button;
 import android.view.View;
 import android.content.Intent;
 
+import com.google.android.gms.nearby.Nearby;
+
 
 public class MainMenu extends AppCompatActivity  {
 
@@ -21,6 +23,7 @@ public class MainMenu extends AppCompatActivity  {
         Button button = (Button) findViewById(R.id.button); //button that switches main activity to skirmish menu
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                GameEngine.gameIsMultiplayer = false;
                 scenario = "Skirmish";
                 startActivity(new Intent(MainMenu.this, SkirmishMenu.class));
             }
@@ -29,6 +32,15 @@ public class MainMenu extends AppCompatActivity  {
         button2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 startActivity(new Intent(MainMenu.this, ScenarioMenu.class));
+            }
+        });
+        Button button9 = (Button) findViewById(R.id.button9); //button that switches main activity to scenario menu
+        button9.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                GameEngine.gameIsMultiplayer = true;
+                GameEngine.isHostPhone = true; // TODO: change this!!
+                scenario = "Skirmish";
+                startActivity(new Intent(MainMenu.this, SkirmishMenu.class));
             }
         });
         if (ENABLE_DEV_MODE) {

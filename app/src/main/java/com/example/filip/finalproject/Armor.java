@@ -25,7 +25,7 @@ public class Armor extends Units {
     public static int redOilPrice = 15;
 
     //How much health will the unit gain if healed
-    public static int healedBy = 6;
+    public static int healedBy = 3;
 
     public static int RedAttack1 = 15; // Red Armor's first attack value, this value can be changed
     public static int RedAttack2 = 6; //  Red Armor's first attack value, this value can be changed
@@ -54,7 +54,7 @@ public class Armor extends Units {
                 Armor.GreenVisibility += 2 * factor;
             }
             if (number == 1) {
-                Armor.greenIronPrice += 1 * factor;
+                Armor.greenIronPrice += 3 * factor;
                 Armor.GreenDefence += 1 * factor;
             }
             if (number == 2) {
@@ -67,7 +67,7 @@ public class Armor extends Units {
                 Armor.RedVisibility += 2 * factor;
             }
             if (number == 1) {
-                Armor.redIronPrice += 1 * factor;
+                Armor.redIronPrice += 3 * factor;
                 Armor.RedDefence += 1 * factor;
             }
             if (number == 2) {
@@ -98,7 +98,7 @@ public class Armor extends Units {
         redOilPrice = 15;
 
         //How much health will the unit gain if healed
-        healedBy = 6;
+        healedBy = 3;
 
         RedAttack1 = 15; // Red Armor's first attack value, this value can be changed
         RedAttack2 = 6; //  Red Armor's first attack value, this value can be changed

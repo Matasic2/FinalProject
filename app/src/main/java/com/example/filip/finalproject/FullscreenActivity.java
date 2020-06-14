@@ -39,7 +39,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     /*
     This method creates Fullscreen activity
      */
-    public static float scaleFactor; //scale factor for all icons and tap coordinates
+    public static float scaleFactor = 1; //scale factor for all icons and tap coordinates
     public static int heightscreen; //height of the screen
     public static int widthfullscreen; //width of the screen
     public static FullscreenActivity theActivity; //stores the reference of the activity
@@ -81,6 +81,10 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         setContentView(myGameView); //sets context
         theActivity = this;
         GameEngine.message = "Create";
+
+        if (GameEngine.gameIsMultiplayer) {
+
+        }
     }
 
     //vibrates the phone
@@ -128,6 +132,11 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
 
         else if (event.getAction() == MotionEvent.ACTION_UP) {
             GameEngine.tapProcessor((int) event.getX(), (int) event.getY(),0); //sends coordinates to GameEngine, which does everything.
+
+            if (GameEngine.gameIsMultiplayer) {
+                MultiplayerConnection.connection.sendGameData(0, (int) event.getX(), (int) event.getY());
+            }
+
             lastDownX = -1;
             lastDownY = -1;
             hasScrolled = false;

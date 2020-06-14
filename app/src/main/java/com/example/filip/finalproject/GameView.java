@@ -11,6 +11,8 @@ import android.view.SurfaceHolder;
 import android.content.Context;
 import android.graphics.Canvas;
 
+import com.google.android.gms.nearby.Nearby;
+
 
 //Most of this code is taken from Java tutorial found online(https://www.youtube.com/watch?v=6prI4ZB_rXI). It's a great tutorial that got me started.
 
@@ -98,6 +100,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         units = new Units[0];
         resources = new Resources[0];
         theContext = this.getContext(); // Stores the context, see the variable comment above
+
+        if (GameEngine.gameIsMultiplayer) {
+            MultiplayerConnection connectionn = new MultiplayerConnection();
+            MultiplayerConnection.connectionsClient = Nearby.getConnectionsClient(FullscreenActivity.theActivity);
+            MultiplayerConnection.connection = connectionn;
+            connectionn.findOpponent();
+            while (!MultiplayerConnection.hasConnection) {
+                break;//wait
+            }
+        }
 
 
         pointers = new movableLocation(theContext, 0, false);
