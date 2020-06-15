@@ -283,6 +283,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void draw (Canvas canvas) {
         super.draw(canvas);
         if (canvas != null && shouldDrawUI) {
+
+            if (GameEngine.gameIsMultiplayer) {
+                if ((GameEngine.isHostPhone && GameEngine.playing.equals(GameEngine.red))
+                || ((!GameEngine.isHostPhone) && GameEngine.playing.equals(GameEngine.green))) {
+                    GameEngine.message = "Waiting opponent";
+                    Paint paint2 = new Paint();
+                    paint2.setTextSize(80 * FullscreenActivity.scaleFactor);
+                    if (GameEngine.playing.equals(GameEngine.red)) {
+                        paint2.setColor(Color.RED);
+                        canvas.drawText(GameEngine.message, 500 * FullscreenActivity.scaleFactor, 800 * FullscreenActivity.scaleFactor, paint2);
+                    } else {
+                        paint2.setColor(Color.GREEN);
+                        canvas.drawText(GameEngine.message, 500 * FullscreenActivity.scaleFactor, 800 * FullscreenActivity.scaleFactor, paint2);
+                    }
+                    return;
+                }
+            }
+
             if (showendTurnScreen) {
                 Paint paint2 = new Paint();
                 paint2.setTextSize(80 * FullscreenActivity.scaleFactor);

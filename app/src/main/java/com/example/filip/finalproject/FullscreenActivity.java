@@ -115,6 +115,10 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     @Override
     public boolean onTouch (View view, MotionEvent event) {
 
+        if ((GameEngine.isHostPhone && GameEngine.playing.equals(GameEngine.red))
+                || ((!GameEngine.isHostPhone) && GameEngine.playing.equals(GameEngine.green))) {
+            return true;
+        }
 
         if (event.getAction() == MotionEvent.ACTION_MOVE) {
 
@@ -131,11 +135,8 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         }
 
         else if (event.getAction() == MotionEvent.ACTION_UP) {
-            GameEngine.tapProcessor((int) event.getX(), (int) event.getY(),0); //sends coordinates to GameEngine, which does everything.
 
-            if (GameEngine.gameIsMultiplayer) {
-                MultiplayerConnection.connection.sendGameData(0, (int) event.getX(), (int) event.getY());
-            }
+            GameEngine.tapProcessor((int) event.getX(), (int) event.getY(),0); //sends coordinates to GameEngine, which does everything.
 
             lastDownX = -1;
             lastDownY = -1;

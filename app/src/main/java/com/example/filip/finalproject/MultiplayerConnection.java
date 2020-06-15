@@ -50,6 +50,7 @@ public class MultiplayerConnection {
                 public void onConnectionResult(String endpointId, ConnectionResolution result) {
                     if (result.getStatus().isSuccess()) {
                         Log.i("TAG", "onConnectionResult: connection success");
+                        GameEngine.message = "connected";
                         hasConnection = true;
                         connectionsClient.stopDiscovery();
                         connectionsClient.stopAdvertising();
@@ -84,22 +85,28 @@ public class MultiplayerConnection {
                         /* endpointName= */ "Device A",
                         /* serviceId= */ "com.landsOfBattle",
                         connectionLifecycleCallback,
-                        new AdvertisingOptions(Strategy.P2P_STAR));
+                        new AdvertisingOptions(Strategy.P2P_POINT_TO_POINT));
     }
 
     private void startDiscovery() {
         connectionsClient.startDiscovery(
                 "com.landsOfBattle",endpointDiscoveryCallback,
-                new DiscoveryOptions(Strategy.P2P_STAR));
+                new DiscoveryOptions(Strategy.P2P_POINT_TO_POINT));
     }
 
     public void findOpponent() {
+        /**
+        if (GameEngine.isHostPhone) {
+            startAdvertising();
+        } else {
+            startDiscovery();
+        }*/
         startAdvertising();
         startDiscovery();
         Log.i("Tag", "search started");
     }
 
-    public void sendGameData(int mode, int x, int y) {
+    private void sendGameDataInternal(int mode, int x, int y) {
         byte[] toSend = new byte[5];
         toSend[0] = (byte) mode;
         toSend[1] = (byte) (x / 100);
@@ -109,5 +116,10 @@ public class MultiplayerConnection {
         connectionsClient.sendPayload(
                 opponentEndpointId, Payload.fromBytes(toSend));
     }
+
+    public static void sendGameData(int mode, int x, int y) {
+        connection.sendGameDataInternal(mode,x,y);
+    }
+
 
 }

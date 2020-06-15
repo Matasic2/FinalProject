@@ -38,7 +38,7 @@ public class MainMenu extends AppCompatActivity  {
         button9.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 GameEngine.gameIsMultiplayer = true;
-                GameEngine.isHostPhone = true; // TODO: change this!!
+                //GameEngine.isHostPhone = true; // TODO: change this!!
                 scenario = "Skirmish";
                 startActivity(new Intent(MainMenu.this, SkirmishMenu.class));
             }

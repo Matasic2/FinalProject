@@ -57,7 +57,7 @@ public class GameEngine {
 
     public static int[] lastAddedResources = new int[3]; //memorizes last added resources, to display next to storage
     public static boolean gameIsMultiplayer = false;
-    public static boolean isHostPhone = false;
+    public static boolean isHostPhone = true;
 
     //restarts board
     public static void restart(){
@@ -191,23 +191,46 @@ public class GameEngine {
                         }
                     }
                 }
+
+                if (gameIsMultiplayer) {
+                    MultiplayerConnection.sendGameData(0,5,5);
+                }
+
                 return;
+
             }
             if (GameView.showAir) {
                 processAirTap(x,y);
                 FullscreenActivity.memory.add(new Integer((x * FullscreenActivity.widthfullscreen + y) * -1));
+
+                if (gameIsMultiplayer) {
+                    MultiplayerConnection.sendGameData(2,x,y);
+                }
+
             } else if (!GameView.showAir) {
 
                 if (loadoutMenu) {
                     ProcessLoadoutTap(x,y);
                     FullscreenActivity.memory.add(new Integer((x * FullscreenActivity.widthfullscreen + y) * -1));
+
+                    if (gameIsMultiplayer) {
+                        MultiplayerConnection.sendGameData(2,x,y);
+                    }
                 }
                 else if (x / squareLength < 15 && y / squareLength < 9) {
                     ProcessGroundTap(x, y);
                     FullscreenActivity.memory.add(new Integer((x - GameView.cameraX) * FullscreenActivity.widthfullscreen + (y - GameView.cameraY)));
+
+                    if (gameIsMultiplayer) {
+                        MultiplayerConnection.sendGameData(1,x- GameView.cameraX,y - GameView.cameraY);
+                    }
                 } else {
                     ProcessGroundUITap(x, y);
                     FullscreenActivity.memory.add(new Integer((x * FullscreenActivity.widthfullscreen + y) * -1));
+
+                    if (gameIsMultiplayer) {
+                        MultiplayerConnection.sendGameData(2,x,y);
+                    }
                 }
             }
         } else if (mode == 1) {
