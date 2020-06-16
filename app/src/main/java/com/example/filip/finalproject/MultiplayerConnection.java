@@ -1,9 +1,12 @@
 package com.example.filip.finalproject;
+import android.content.Intent;
 import android.support.design.circularreveal.CircularRevealHelper;
 import android.util.Log;
 
 import com.google.android.gms.nearby.*;
 import com.google.android.gms.nearby.connection.*;
+
+import java.util.ArrayList;
 
 import static android.util.Xml.Encoding.UTF_8;
 
@@ -42,6 +45,7 @@ public class MultiplayerConnection {
                 @Override
                 public void onConnectionInitiated(String endpointId, ConnectionInfo connectionInfo) {
                     Log.i("TAG", "onConnectionInitiated: accepting connection");
+                    MultiplayerMenu.changeText("opponent found, connecting");
                     connectionsClient.acceptConnection(endpointId, payloadCallback);
                     hasConnection = true;
                 }
@@ -50,11 +54,12 @@ public class MultiplayerConnection {
                 public void onConnectionResult(String endpointId, ConnectionResolution result) {
                     if (result.getStatus().isSuccess()) {
                         Log.i("TAG", "onConnectionResult: connection success");
-                        GameEngine.message = "connected";
                         hasConnection = true;
                         connectionsClient.stopDiscovery();
                         connectionsClient.stopAdvertising();
                         opponentEndpointId = endpointId;
+
+                        MultiplayerMenu.launchGame();
                     } else {
                         Log.i("TAG", "onConnectionResult: connection failed");
                     }
@@ -72,12 +77,15 @@ public class MultiplayerConnection {
                 @Override
                 public void onEndpointFound(String endpointId, DiscoveredEndpointInfo info) {
                     Log.i("Tag", "onEndpointFound: endpoint found, connecting");
+                    MultiplayerMenu.changeText("host found, connecting");
                     connectionsClient.requestConnection("Device A", endpointId, connectionLifecycleCallback);
                     hasConnection = true;
                 }
 
                 @Override
-                public void onEndpointLost(String endpointId) {}
+                public void onEndpointLost(String endpointId) {
+                    Log.i("Tag", "onEndpointFound: endpoint lost");
+                }
             };
 
     private void startAdvertising() {
@@ -94,17 +102,30 @@ public class MultiplayerConnection {
                 new DiscoveryOptions(Strategy.P2P_POINT_TO_POINT));
     }
 
-    public void findOpponent() {
-        /**
-        if (GameEngine.isHostPhone) {
-            startAdvertising();
-        } else {
-            startDiscovery();
-        }*/
+    private void hostGameInternal() {
         startAdvertising();
-        startDiscovery();
-        Log.i("Tag", "search started");
+        Log.i("Tag", "search started as host");
+        MultiplayerMenu.changeText("search started as host");
     }
+
+    private void joinGameInternal() {
+        startDiscovery();
+        Log.i("Tag", "search started as client");
+        MultiplayerMenu.changeText("search started as client");
+    }
+
+    public static void hostGame() {
+        connection.hostGameInternal();
+        GameEngine.gameIsMultiplayer = true;
+        GameEngine.isHostPhone = true;
+    }
+
+    public static void joinGame() {
+        connection.joinGameInternal();
+        GameEngine.gameIsMultiplayer = true;
+        GameEngine.isHostPhone = false;
+    }
+
 
     private void sendGameDataInternal(int mode, int x, int y) {
         byte[] toSend = new byte[5];

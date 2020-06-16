@@ -115,8 +115,12 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     @Override
     public boolean onTouch (View view, MotionEvent event) {
 
-        if ((GameEngine.isHostPhone && GameEngine.playing.equals(GameEngine.red))
-                || ((!GameEngine.isHostPhone) && GameEngine.playing.equals(GameEngine.green))) {
+        if (GameEngine.replayMode) {
+            return true;
+        }
+
+        if ((GameEngine.gameIsMultiplayer) && ((GameEngine.isHostPhone && GameEngine.playing.equals(GameEngine.red))
+                || ((!GameEngine.isHostPhone) && GameEngine.playing.equals(GameEngine.green)))) {
             return true;
         }
 

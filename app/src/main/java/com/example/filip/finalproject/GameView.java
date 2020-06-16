@@ -101,17 +101,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         resources = new Resources[0];
         theContext = this.getContext(); // Stores the context, see the variable comment above
 
-        if (GameEngine.gameIsMultiplayer) {
-            MultiplayerConnection connectionn = new MultiplayerConnection();
-            MultiplayerConnection.connectionsClient = Nearby.getConnectionsClient(FullscreenActivity.theActivity);
-            MultiplayerConnection.connection = connectionn;
-            connectionn.findOpponent();
-            while (!MultiplayerConnection.hasConnection) {
-                break;//wait
-            }
-        }
-
-
         pointers = new movableLocation(theContext, 0, false);
         pointers1 = new movableLocation(theContext, 1, false);
         pointers2 = new movableLocation(theContext, 2, false);
@@ -244,7 +233,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             GameEngine.estimateResources();
             thread.start(); // starts the tread
 
-        GameEngine.load(); //load previous game if exists
+            GameEngine.load(this); //load previous game if exists
+
 
         if (!GameEngine.red.isHuman) {
             AI.initializeAI();

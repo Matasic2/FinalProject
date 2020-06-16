@@ -10,7 +10,7 @@ import android.media.MediaPlayer;
 import android.os.SystemClock;
 
 // Class that will run the game and manage all the events.
-public class GameEngine {
+public class GameEngine extends Thread{
 
     public static int width = 15;
     public static int heigth = 9;
@@ -57,7 +57,8 @@ public class GameEngine {
 
     public static int[] lastAddedResources = new int[3]; //memorizes last added resources, to display next to storage
     public static boolean gameIsMultiplayer = false;
-    public static boolean isHostPhone = true;
+    public static boolean isHostPhone = false;
+    public static boolean replayMode = false;
 
     //restarts board
     public static void restart(){
@@ -91,9 +92,12 @@ public class GameEngine {
 
     }
 
-    public static void load() {
+    public static void load(GameView view) {
         if (FullscreenActivity.memory != null && FullscreenActivity.memory.size() != 0) {
-            GameView.shouldDrawUI = false;
+
+            if (!replayMode) {
+                GameView.shouldDrawUI = false;
+            }
 
             for (int i = 0; i < FullscreenActivity.memory.size(); i++) {
                 int coord = FullscreenActivity.memory.get(i);
@@ -107,6 +111,15 @@ public class GameEngine {
                 GameView.cameraX = 0;
                 GameView.cameraY = 0;
                 tapProcessor(x,y,mode);
+
+                if (replayMode) {
+                    try {
+                        view.draw(MainThread.canvas);
+                        Thread.sleep(500);
+                    } catch (Exception e){
+
+                    }
+                }
             }
 
             GameView.shouldDrawUI = true;

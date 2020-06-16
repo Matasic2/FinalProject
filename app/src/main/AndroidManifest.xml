@@ -34,6 +34,7 @@
             android:name=".ScenarioMenu"
             android:label="Scenario Menu" />
         <activity android:name=".SkirmishMenu"></activity>
+        <activity android:name=".MultiplayerMenu"></activity>
     </application>
 
 </manifest>

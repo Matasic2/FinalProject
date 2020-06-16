@@ -12,7 +12,7 @@ import com.google.android.gms.nearby.Nearby;
 public class MainMenu extends AppCompatActivity  {
 
     //developer mode, should be set false on releases
-    public static boolean ENABLE_DEV_MODE = false;
+    public static boolean ENABLE_DEV_MODE = true;
 
     //Name of scenario that is being played
     public static String scenario = "";
@@ -25,12 +25,14 @@ public class MainMenu extends AppCompatActivity  {
             public void onClick(View view) {
                 GameEngine.gameIsMultiplayer = false;
                 scenario = "Skirmish";
+                GameEngine.replayMode = false;
                 startActivity(new Intent(MainMenu.this, SkirmishMenu.class));
             }
         });
         Button button2 = (Button) findViewById(R.id.button2); //button that switches main activity to scenario menu
         button2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                GameEngine.replayMode = false;
                 startActivity(new Intent(MainMenu.this, ScenarioMenu.class));
             }
         });
@@ -40,14 +42,19 @@ public class MainMenu extends AppCompatActivity  {
                 GameEngine.gameIsMultiplayer = true;
                 //GameEngine.isHostPhone = true; // TODO: change this!!
                 scenario = "Skirmish";
-                startActivity(new Intent(MainMenu.this, SkirmishMenu.class));
+                GameEngine.replayMode = false;
+                MultiplayerConnection connectionn = new MultiplayerConnection();
+                MultiplayerConnection.connectionsClient = Nearby.getConnectionsClient(MainMenu.this);
+                MultiplayerConnection.connection = connectionn;
+                startActivity(new Intent(MainMenu.this, MultiplayerMenu.class));
             }
         });
         if (ENABLE_DEV_MODE) {
             Button devbutton = (Button) findViewById(R.id.devbutton); //button that switches main activity to skirmish menu
             devbutton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
-                    scenario = "dev_mode";
+                    scenario = "Skirmish";
+                    GameEngine.replayMode = true;
                     startActivity(new Intent(MainMenu.this, FullscreenActivity.class));
                 }
             });
