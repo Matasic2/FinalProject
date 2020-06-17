@@ -45,6 +45,8 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     public static FullscreenActivity theActivity; //stores the reference of the activity
     public static ArrayList<Integer> memory = new ArrayList<>();
     public static boolean hasScrolled = false;
+    public static GameView currentView;
+    public static boolean replayIsRunning = false;
 
 
     public static int lastDownX = 0;
@@ -81,6 +83,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         setContentView(myGameView); //sets context
         theActivity = this;
         GameEngine.message = "Create";
+        currentView = myGameView;
 
         if (GameEngine.gameIsMultiplayer) {
 
@@ -98,11 +101,12 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     @Override
     public void onBackPressed() {
         if (GameEngine.message != null && GameEngine.message.equals("You are about to leave the battle, tap again to continue")) {
+            MainThread.run = false;
             FullscreenActivity.theActivity.backToMenu();
         }
         else {
             if (GameEngine.theUnit != null) {
-                GameEngine.theUnit = null;
+                GameEngine.unselectFriendly();
             }
             GameEngine.message = "You are about to leave the battle, tap again to continue";
         }
@@ -116,6 +120,12 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     public boolean onTouch (View view, MotionEvent event) {
 
         if (GameEngine.replayMode) {
+            if (!replayIsRunning) {
+                replayIsRunning = true;
+                GameEngine.load();
+                MainThread.run = true;
+                GameEngine.replayMode = false;
+            }
             return true;
         }
 

@@ -31,6 +31,11 @@ public class MultiplayerConnection {
                         receivedData[1] = payload.asBytes()[1] * 100 + payload.asBytes()[2];
                         receivedData[2] = payload.asBytes()[3] * 100 + payload.asBytes()[4];
                         GameEngine.tapProcessor(receivedData[1],receivedData[2],receivedData[0]);
+                        if (receivedData[0] == 1) {
+                            FullscreenActivity.memory.add(new Integer(receivedData[1] * FullscreenActivity.widthfullscreen + receivedData[2]));
+                        } else {
+                            FullscreenActivity.memory.add(new Integer((receivedData[1] * FullscreenActivity.widthfullscreen + receivedData[2]) * -1));
+                        }
                     }
                 }
 

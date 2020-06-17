@@ -50,6 +50,7 @@ public class MultiplayerMenu  extends AppCompatActivity {
         MainMenu.scenario = "Skirmish";
         FullscreenActivity.memory = new ArrayList<>();
         Map.map_code = 2;
+        GameEngine.replayMode = false;
         instance.startActivity(new Intent(instance, FullscreenActivity.class)); //new player vs player skirmish
     }
 }

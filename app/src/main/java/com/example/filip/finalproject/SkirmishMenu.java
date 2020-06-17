@@ -21,6 +21,8 @@ public class SkirmishMenu extends AppCompatActivity {
                 MainMenu.scenario = "Skirmish";
                 startActivity(new Intent(SkirmishMenu.this, FullscreenActivity.class)); //new player vs player skirmish
                 FullscreenActivity.memory = new ArrayList<>();
+                //GameEngine.replayMode = false;
+                MainThread.run = true;
             }
         });
         Button button5 = (Button) findViewById(R.id.button5);
@@ -29,6 +31,8 @@ public class SkirmishMenu extends AppCompatActivity {
                 MainMenu.scenario = "Skirmish vs AI";
                 startActivity(new Intent(SkirmishMenu.this, FullscreenActivity.class)); // new player vs AI skirmish
                 FullscreenActivity.memory = new ArrayList<>();
+                //GameEngine.replayMode = false;
+                MainThread.run = true;
             }
         });
         Button button6 = (Button) findViewById(R.id.button6);
@@ -37,6 +41,8 @@ public class SkirmishMenu extends AppCompatActivity {
                 MainMenu.scenario = "Skirmish vs AI_cheating";
                 startActivity(new Intent(SkirmishMenu.this, FullscreenActivity.class)); // new player vs AI skirmish
                 FullscreenActivity.memory = new ArrayList<>();
+                GameEngine.replayMode = false;
+                MainThread.run = true;
             }
         });
         Button button7 = (Button) findViewById(R.id.button7);

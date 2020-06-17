@@ -233,7 +233,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             GameEngine.estimateResources();
             thread.start(); // starts the tread
 
-            GameEngine.load(this); //load previous game if exists
+        if (!GameEngine.replayMode) {
+            GameEngine.load(); //load previous game if exists
+        }
+
 
 
         if (!GameEngine.red.isHuman) {

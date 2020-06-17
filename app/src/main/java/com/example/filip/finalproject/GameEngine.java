@@ -76,6 +76,11 @@ public class GameEngine extends Thread{
         showFactory = false; //shows factory units which can be purchased
         showMarket = false; //shows market units which can be purchased
         message = ""; //stores message to user
+
+        if (GameEngine.replayMode) {
+            GameEngine.message = "Tap anywhere to start replay";
+        }
+
         lastCoordinates = new int[2]; //coordinates of last action
         queue = new Units[0]; // stores all units that will be deployed
         AI.unitOrders = new String[0];
@@ -92,7 +97,7 @@ public class GameEngine extends Thread{
 
     }
 
-    public static void load(GameView view) {
+    public static void load() {
         if (FullscreenActivity.memory != null && FullscreenActivity.memory.size() != 0) {
 
             if (!replayMode) {
@@ -114,7 +119,7 @@ public class GameEngine extends Thread{
 
                 if (replayMode) {
                     try {
-                        view.draw(MainThread.canvas);
+                        //FullscreenActivity.currentView.draw(MainThread.canvas);
                         Thread.sleep(500);
                     } catch (Exception e){
 
@@ -208,7 +213,7 @@ public class GameEngine extends Thread{
                 if (gameIsMultiplayer) {
                     MultiplayerConnection.sendGameData(0,5,5);
                 }
-
+                FullscreenActivity.memory.add(new Integer((-1000)));
                 return;
 
             }
@@ -220,7 +225,7 @@ public class GameEngine extends Thread{
                     MultiplayerConnection.sendGameData(2,x,y);
                 }
 
-            } else if (!GameView.showAir) {
+            } else {
 
                 if (loadoutMenu) {
                     ProcessLoadoutTap(x,y);
@@ -249,10 +254,15 @@ public class GameEngine extends Thread{
         } else if (mode == 1) {
             ProcessGroundTap(x, y);
         } else if (mode == 2) {
+            if (GameView.showendTurnScreen) {
+                GameView.showendTurnScreen = false;
+                return;
+            }
+
+
             if (GameView.showAir) {
                 processAirTap(x, y);
-            }
-            else if (loadoutMenu) {
+            } else if (loadoutMenu) {
                 ProcessLoadoutTap(x,y);
             } else {
                 ProcessGroundUITap(x, y);
