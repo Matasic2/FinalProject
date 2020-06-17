@@ -280,7 +280,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             if (GameEngine.gameIsMultiplayer) {
                 if ((GameEngine.isHostPhone && GameEngine.playing.equals(GameEngine.red))
                 || ((!GameEngine.isHostPhone) && GameEngine.playing.equals(GameEngine.green))) {
-                    GameEngine.message = "Waiting opponent";
+                    if (!GameEngine.message.equals("You are about to leave the battle, tap again to continue")) {
+                        GameEngine.message = "Waiting opponent";
+                    }
                     Paint paint2 = new Paint();
                     paint2.setTextSize(80 * FullscreenActivity.scaleFactor);
                     if (GameEngine.playing.equals(GameEngine.red)) {

@@ -55,6 +55,7 @@ public class MainMenu extends AppCompatActivity  {
                 public void onClick(View view) {
                     scenario = "Skirmish";
                     GameEngine.replayMode = true;
+                    GameEngine.gameIsMultiplayer = false;
                     startActivity(new Intent(MainMenu.this, FullscreenActivity.class));
                 }
             });
