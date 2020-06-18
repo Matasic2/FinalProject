@@ -53,7 +53,7 @@ public class GameEngine extends Thread{
     public static boolean[] fogOfWarIsRevealedForGreen = new boolean[3];
     public static boolean[] fogOfWarIsRevealedForRed = new boolean[3];
 
-
+    public static boolean  returnFireEnabled = true;
 
     public static int[] lastAddedResources = new int[3]; //memorizes last added resources, to display next to storage
     public static boolean gameIsMultiplayer = false;
@@ -478,9 +478,7 @@ public class GameEngine extends Thread{
                 theUnit.coordinates[0] = lastCoordinates[0];
                 theUnit.coordinates[1] = lastCoordinates[1];
                 BoardSprites[lastCoordinates[0]][lastCoordinates[1]] = theUnit;
-                if (theUnit.unitType == "Armor") {
-                    playing.oilStorage++;
-                }
+                playing.oilStorage += theUnit.fuelConsumption;
                 theUnit.brightenIcon();
                 theUnit.hasMove = true;
                 unselectFriendly();
@@ -488,7 +486,6 @@ public class GameEngine extends Thread{
                 lastCoordinates[1] = 125;
                 return;
             } else {
-
                 Units u = BoardSprites[lastCoordinates[0]][lastCoordinates[1]];
                 for (int i = 0; i < GameView.units.length; i++) {
                     if (GameView.units[i] == u) {
@@ -821,7 +818,9 @@ public class GameEngine extends Thread{
                         (getCoordinates(theUnit)[0], x / squareLength,
                                 getCoordinates(theUnit)[1], y / squareLength))
                 && theUnit.hasAttack == true) {
-            DamageUnit(theUnit.attack1, BoardSprites[x / squareLength][y / squareLength], x / squareLength, y / squareLength); //and then move the unit, and un-select it.
+            attackUnit(theUnit, BoardSprites[x / squareLength][y / squareLength]);
+            //DamageUnit(theUnit.attack1, BoardSprites[x / squareLength][y / squareLength], x / squareLength, y / squareLength); //and then move the unit, and un-select it.
+
             //if unit has a move, don't un-select it yet.
             if (theUnit == null) {
                 return;
@@ -845,7 +844,8 @@ public class GameEngine extends Thread{
                         (getCoordinates(theUnit)[0], x / squareLength,
                                 getCoordinates(theUnit)[1], y / squareLength))
                 && theUnit.hasAttack == true) {
-            DamageUnit(theUnit.attack2, BoardSprites[x / squareLength][y / squareLength], x / squareLength, y / squareLength);
+            attackUnit(theUnit, BoardSprites[x / squareLength][y / squareLength]);
+            //DamageUnit(theUnit.attack2, BoardSprites[x / squareLength][y / squareLength], x / squareLength, y / squareLength);
             if (theUnit != null && theUnit.hasMove) {
                 theUnit.hasAttack = false;
                 checkAction(theUnit);
@@ -1123,6 +1123,91 @@ public class GameEngine extends Thread{
         }
     }
 
+    public static void attackUnit(Units attacker, Units defender) {
+        lastUnit = new Units(defender, GameView.theContext);
+        lastCoordinates[0] = defender.coordinates[0];
+        lastCoordinates[1] = defender.coordinates[1];
+
+        int attackerDamage;
+        int defenderDamage;
+
+        if ((attacker.attack1Range >= getSquareDistance           //and check if unit is in range of first (stronger) attack.
+                (getCoordinates(attacker)[0], getCoordinates(defender)[0],
+                        getCoordinates(attacker)[1], getCoordinates(defender)[1]))) {
+            attackerDamage = attacker.attack1;
+        } else {
+            attackerDamage = attacker.attack2;
+        }
+
+        if (!returnFireEnabled) {
+            DamageUnit(attackerDamage, defender, getCoordinates(defender)[0], getCoordinates(defender)[1]);
+            return;
+        }
+
+        if ((defender.attack1Range >= getSquareDistance           //and check if unit is in range of first (stronger) attack.
+                (getCoordinates(defender)[0], getCoordinates(attacker)[0],
+                        getCoordinates(defender)[1], getCoordinates(attacker)[1]))) {
+            defenderDamage = defender.attack1 - 1;
+        } else if ((defender.attack2Range >= getSquareDistance           //and check if unit is in range of first (stronger) attack.
+                (getCoordinates(defender)[0], getCoordinates(attacker)[0],
+                        getCoordinates(defender)[1], getCoordinates(attacker)[1]))) {
+            defenderDamage = defender.attack2 - 1;
+        } else {
+            defenderDamage = 0;
+        }
+
+        //one unit would kill another, so partially damage other unit
+        if (attackerDamage - defender.defence > defender.HP || defenderDamage - attacker.defence > attacker.HP) {
+            double attackerTimeToKill;
+            double defenderTimeToKill;
+            if (attackerDamage <= defender.defence) {
+                attackerTimeToKill = 9999;
+            } else {
+                attackerTimeToKill = (double) defender.HP / (double) (attackerDamage - defender.defence);
+            }
+            if (defenderDamage <= attacker.defence) {
+                defenderTimeToKill = 9999;
+            } else {
+                defenderTimeToKill = (double)attacker.HP / (double) (defenderDamage - attacker.defence);
+            }
+
+            if (attackerTimeToKill == defenderTimeToKill) {
+                DamageUnit(attackerDamage, defender, getCoordinates(defender)[0], getCoordinates(defender)[1]);
+                attacker.HP = 1;
+            }
+
+            double finalDamageFactor;
+
+            if (attackerTimeToKill < defenderTimeToKill) {
+                finalDamageFactor = attackerTimeToKill;
+                DamageUnit(attackerDamage, defender, getCoordinates(defender)[0], getCoordinates(defender)[1]);
+                if (attacker.defence >= (int) (defenderDamage * finalDamageFactor)) {
+                    attacker.HP = attacker.HP - (int) (defenderDamage * finalDamageFactor) - attacker.defence;
+                    if (attacker.HP <= 0) {
+                        attacker.HP = 1;
+                    }
+                } else {
+                    return;
+                }
+            } else {
+                finalDamageFactor = defenderTimeToKill;
+                DamageUnit(defenderDamage, attacker, getCoordinates(attacker)[0], getCoordinates(attacker)[1]);
+                if (defender.defence >= (int) (attackerDamage * finalDamageFactor)) {
+                    defender.HP = defender.HP - (int) (attackerDamage * finalDamageFactor) - defender.defence;
+                    if (defender.HP <= 0) {
+                        defender.HP = 1;
+                    }
+                } else {
+                    return;
+                }
+            }
+
+        } else {
+            DamageUnit(attackerDamage, defender, getCoordinates(defender)[0], getCoordinates(defender)[1]);
+            DamageUnit(defenderDamage, attacker, getCoordinates(attacker)[0], getCoordinates(attacker)[1]);
+        }
+
+    }
     //damages the unit at given coordinates
     public static void DamageUnit(int damage, Units u, int x, int y) {
         lastUnit = new Units(u, GameView.theContext);
@@ -1158,10 +1243,16 @@ public class GameEngine extends Thread{
                             FullscreenActivity.theActivity.vibrate();
                             showMarket = false;
                         }
-                        return;
                     }
                 }
             }
+        }
+
+        if (theUnit != null && theUnit.HP < 0) {
+            unselectFriendly();
+        }
+        if (enemyTappedUnit != null && enemyTappedUnit.HP < 0) {
+            unselectEnemy();
         }
     }
     //unselects all units
