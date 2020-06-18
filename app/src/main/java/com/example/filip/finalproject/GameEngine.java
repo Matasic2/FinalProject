@@ -1181,8 +1181,8 @@ public class GameEngine extends Thread{
             if (attackerTimeToKill < defenderTimeToKill) {
                 finalDamageFactor = attackerTimeToKill;
                 DamageUnit(attackerDamage, defender, getCoordinates(defender)[0], getCoordinates(defender)[1]);
-                if (attacker.defence >= (int) (defenderDamage * finalDamageFactor)) {
-                    attacker.HP = attacker.HP - (int) (defenderDamage * finalDamageFactor) - attacker.defence;
+                if (attacker.defence <= (int) (defenderDamage * finalDamageFactor)) {
+                    attacker.HP = attacker.HP - (int) ((defenderDamage * finalDamageFactor) - attacker.defence);
                     if (attacker.HP <= 0) {
                         attacker.HP = 1;
                     }
@@ -1192,8 +1192,8 @@ public class GameEngine extends Thread{
             } else {
                 finalDamageFactor = defenderTimeToKill;
                 DamageUnit(defenderDamage, attacker, getCoordinates(attacker)[0], getCoordinates(attacker)[1]);
-                if (defender.defence >= (int) (attackerDamage * finalDamageFactor)) {
-                    defender.HP = defender.HP - (int) (attackerDamage * finalDamageFactor) - defender.defence;
+                if (defender.defence <= (int) (attackerDamage * finalDamageFactor)) {
+                    defender.HP = defender.HP - (int) ((attackerDamage * finalDamageFactor) - defender.defence);
                     if (defender.HP <= 0) {
                         defender.HP = 1;
                     }

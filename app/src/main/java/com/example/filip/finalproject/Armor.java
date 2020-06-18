@@ -5,8 +5,8 @@ import android.content.Context;
 public class Armor extends Units {
 
     // TODO : fix these comments
-    public static int GreenAttack1 = 15; // Green Armor's first attack value, this value can be changed
-    public static int GreenAttack2 = 6; //  Green Armor's first attack value, this value can be changed
+    public static int GreenAttack1 = 10; // Green Armor's first attack value, this value can be changed
+    public static int GreenAttack2 = 5; //  Green Armor's first attack value, this value can be changed
     public static int GreenFirstAttackRange = 1; //  Green Armor's first attack range, this value can be changed
     public static int GreenSecondAttackRange = 4; //  Green Armor's second attack value, this value can be changed
     public static int GreenDefence = 2; // Defence value of Green's Armor, this value can be changed
@@ -27,8 +27,8 @@ public class Armor extends Units {
     //How much health will the unit gain if healed
     public static int healedBy = 3;
 
-    public static int RedAttack1 = 15; // Red Armor's first attack value, this value can be changed
-    public static int RedAttack2 = 6; //  Red Armor's first attack value, this value can be changed
+    public static int RedAttack1 = 10; // Red Armor's first attack value, this value can be changed
+    public static int RedAttack2 = 5; //  Red Armor's first attack value, this value can be changed
     public static int RedFirstAttackRange = 1; //  Red Armor's first attack range, this value can be changed
     public static int RedSecondAttackRange = 4; //  Red Armor's second attack value, this value can be changed
     public static int RedDefence = 2; // Defence value of Red's Armor, this value can be changed
@@ -78,8 +78,8 @@ public class Armor extends Units {
     }
 
     public static void restoreDefaultValues() {
-        GreenAttack1 = 15; // Green Armor's first attack value, this value can be changed
-        GreenAttack2 = 6; //  Green Armor's first attack value, this value can be changed
+        GreenAttack1 = 10; // Green Armor's first attack value, this value can be changed
+        GreenAttack2 = 5; //  Green Armor's first attack value, this value can be changed
         GreenFirstAttackRange = 1; //  Green Armor's first attack range, this value can be changed
         GreenSecondAttackRange = 4; //  Green Armor's second attack value, this value can be changed
         GreenDefence = 2; // Defence value of Green's Armor, this value can be changed
@@ -100,8 +100,8 @@ public class Armor extends Units {
         //How much health will the unit gain if healed
         healedBy = 3;
 
-        RedAttack1 = 15; // Red Armor's first attack value, this value can be changed
-        RedAttack2 = 6; //  Red Armor's first attack value, this value can be changed
+        RedAttack1 = 10; // Red Armor's first attack value, this value can be changed
+        RedAttack2 = 5; //  Red Armor's first attack value, this value can be changed
         RedFirstAttackRange = 1; //  Red Armor's first attack range, this value can be changed
         RedSecondAttackRange = 4; //  Red Armor's second attack value, this value can be changed
         RedDefence = 2; // Defence value of Red's Armor, this value can be changed
