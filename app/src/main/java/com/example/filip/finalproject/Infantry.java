@@ -5,7 +5,7 @@ import android.content.Context;
 public class Infantry extends Units {
 
     // TODO : fix these comments
-    public static int GreenAttack1 = 12; // Green Infantry's first attack value, this value can be changed
+    public static int GreenAttack1 = 20; // Green Infantry's first attack value, this value can be changed
     public static int GreenAttack2 = 4; //  Green Infantry's first attack value, this value can be changed
     public static int GreenFirstAttackRange = 1; //  Green Infantry's first attack range, this value can be changed
     public static int GreenSecondAttackRange = 5; //  Green Infantry's second attack value, this value can be changed
@@ -27,7 +27,7 @@ public class Infantry extends Units {
     //How much health will the unit gain if healed
     public static int healedBy = 3;
 
-    public static int RedAttack1 = 12; // Red Infantry's first attack value, this value can be changed
+    public static int RedAttack1 = 20; // Red Infantry's first attack value, this value can be changed
     public static int RedAttack2 = 4; //  Red Infantry's first attack value, this value can be changed
     public static int RedFirstAttackRange = 1; //  Red Infantry's first attack range, this value can be changed
     public static int RedSecondAttackRange = 5; //  Red Infantry's second attack value, this value can be changed
@@ -49,9 +49,10 @@ public class Infantry extends Units {
     public static void adjustUpgrade(Player player, int factor, int number) {
         if (player == GameEngine.green) {
             if (number == 0) {
-                Infantry.greenFoodPrice += 1 * factor;
+                //Infantry.greenFoodPrice += 1 * factor;
                 Infantry.greenIronPrice += 1 * factor;
                 Infantry.GreenFirstAttackRange += 1 * factor;
+                Infantry.GreenAttack1 += 10 * factor;
             }
             if (number == 1) {
                 Infantry.greenIronPrice += 2 * factor;
@@ -63,9 +64,10 @@ public class Infantry extends Units {
             }
         } else if (player == GameEngine.red) {
             if (number == 0) {
-                Infantry.redFoodPrice += 1 * factor;
+                //Infantry.redFoodPrice += 1 * factor;
                 Infantry.redIronPrice += 1 * factor;
                 Infantry.RedFirstAttackRange += 1 * factor;
+                Infantry.RedAttack1 += 10 * factor;
             }
             if (number == 1) {
                 Infantry.redIronPrice += 2 * factor;
@@ -79,7 +81,7 @@ public class Infantry extends Units {
     }
 
     public static void restoreDefaultValues() {
-        GreenAttack1 = 12; // Green Infantry's first attack value, this value can be changed
+        GreenAttack1 = 20; // Green Infantry's first attack value, this value can be changed
         GreenAttack2 = 4; //  Green Infantry's first attack value, this value can be changed
         GreenFirstAttackRange = 1; //  Green Infantry's first attack range, this value can be changed
         GreenSecondAttackRange = 5; //  Green Infantry's second attack value, this value can be changed
@@ -101,7 +103,7 @@ public class Infantry extends Units {
         //How much health will the unit gain if healed
         healedBy = 3;
 
-        RedAttack1 = 12; // Red Infantry's first attack value, this value can be changed
+        RedAttack1 = 20; // Red Infantry's first attack value, this value can be changed
         RedAttack2 = 4; //  Red Infantry's first attack value, this value can be changed
         RedFirstAttackRange = 1; //  Red Infantry's first attack range, this value can be changed
         RedSecondAttackRange = 5; //  Red Infantry's second attack value, this value can be changed

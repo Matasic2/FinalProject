@@ -440,12 +440,12 @@ public class AI {
         }
         //if best attack is melee attack, use melee attack
         if (attackType == 1) {
-            GameEngine.DamageUnit(u.attack1,GameEngine.BoardSprites[bestX][bestY],bestX,bestY);
+            GameEngine.attackUnit(u,GameEngine.BoardSprites[bestX][bestY]);
             u.hasAttack = false;
         }
         //if best attack is ranged attack, damage it with ranged attack
         else if (attackType == 2)  {
-            GameEngine.DamageUnit(u.attack2,GameEngine.BoardSprites[bestX][bestY],bestX,bestY);
+            GameEngine.attackUnit(u,GameEngine.BoardSprites[bestX][bestY]);
             u.hasAttack = false;
         }
     }
@@ -494,12 +494,12 @@ public class AI {
             }
         //if best attack is melee attack, use melee attack
         if (attackType == 1) {
-            GameEngine.DamageUnit(u.attack1,GameEngine.BoardSprites[bestX][bestY],bestX,bestY);
+            GameEngine.attackUnit(u,GameEngine.BoardSprites[bestX][bestY]);
             u.hasAttack = false;
         }
         //if best attack is ranged attack, damage it with ranged attack
         else if (attackType == 2)  {
-            GameEngine.DamageUnit(u.attack2,GameEngine.BoardSprites[bestX][bestY],bestX,bestY);
+            GameEngine.attackUnit(u,GameEngine.BoardSprites[bestX][bestY]);
             u.hasAttack = false;
         }
     }

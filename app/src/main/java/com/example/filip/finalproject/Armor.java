@@ -16,11 +16,11 @@ public class Armor extends Units {
     public static int greenAirAttack = 0;
 
     //cost of Armor unit
-    public static int greenFoodPrice = 4;
+    public static int greenFoodPrice = 6;
     public static int greenIronPrice = 5;
     public static int greenOilPrice = 15;
 
-    public static int redFoodPrice = 4;
+    public static int redFoodPrice = 6;
     public static int redIronPrice = 5;
     public static int redOilPrice = 15;
 
@@ -89,11 +89,11 @@ public class Armor extends Units {
         greenAirAttack = 0;
 
         //cost of Armor unit
-        greenFoodPrice = 4;
+        greenFoodPrice = 6;
         greenIronPrice = 5;
         greenOilPrice = 15;
 
-        redFoodPrice = 4;
+        redFoodPrice = 6;
         redIronPrice = 5;
         redOilPrice = 15;
 

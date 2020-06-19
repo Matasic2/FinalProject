@@ -30,6 +30,10 @@ public class MultiplayerConnection {
                         receivedData[0] = payload.asBytes()[0];
                         receivedData[1] = payload.asBytes()[1] * 100 + payload.asBytes()[2];
                         receivedData[2] = payload.asBytes()[3] * 100 + payload.asBytes()[4];
+
+                        receivedData[1] *= FullscreenActivity.scaleFactor;
+                        receivedData[2] *= FullscreenActivity.scaleFactor;
+
                         GameEngine.tapProcessor(receivedData[1],receivedData[2],receivedData[0]);
                         if (receivedData[0] == 1) {
                             FullscreenActivity.memory.add(new Integer(receivedData[1] * FullscreenActivity.widthfullscreen + receivedData[2]));
@@ -133,6 +137,10 @@ public class MultiplayerConnection {
 
 
     private void sendGameDataInternal(int mode, int x, int y) {
+        x /= FullscreenActivity.scaleFactor;
+        y /= FullscreenActivity.scaleFactor;
+
+
         byte[] toSend = new byte[5];
         toSend[0] = (byte) mode;
         toSend[1] = (byte) (x / 100);

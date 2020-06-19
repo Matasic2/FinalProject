@@ -5,7 +5,7 @@ import android.content.Context;
 public class Cavalry extends Units{
 
     // TODO : fix these comments
-    public static int GreenAttack1 = 10; // Green Cavalry's first attack value, this value can be changed
+    public static int GreenAttack1 = 5; // Green Cavalry's first attack value, this value can be changed
     public static int GreenAttack2 = 2; //  Green Cavalry's first attack value, this value can be changed
     public static int GreenFirstAttackRange = 1; //  Green Cavalry's first attack range, this value can be changed
     public static int GreenSecondAttackRange = 4; //  Green Cavalry's second attack value, this value can be changed
@@ -16,18 +16,18 @@ public class Cavalry extends Units{
     public static int greenAirAttack = 0;
 
     //cost of Cavalry unit
-    public static int greenFoodPrice = 2;
+    public static int greenFoodPrice = 1;
     public static int greenIronPrice = 0;
     public static int greenOilPrice = 0;
 
-    public static int redFoodPrice = 2;
+    public static int redFoodPrice = 1;
     public static int redIronPrice = 0;
     public static int redOilPrice = 0;
 
     //How much health will the unit gain if healed
-    public static int healedBy = 3;
+    public static int healedBy = 2;
 
-    public static int RedAttack1 = 10; // Red Cavalry's first attack value, this value can be changed
+    public static int RedAttack1 = 5; // Red Cavalry's first attack value, this value can be changed
     public static int RedAttack2 = 2; //  Red Cavalry's first attack value, this value can be changed
     public static int RedFirstAttackRange = 1; //  Red Cavalry's first attack range, this value can be changed
     public static int RedSecondAttackRange = 4; //  Red Cavalry's second attack value, this value can be changed
@@ -55,8 +55,8 @@ public class Cavalry extends Units{
                 Cavalry.GreenVisibility += 2 * factor;
             }
             if (number == 1) {
-                Cavalry.greenIronPrice += 1 * factor;
-                Cavalry.GreenDefence += 1 * factor;
+                Cavalry.greenFoodPrice += 1 * factor;
+                Cavalry.GreenAttack1 += 20 * factor;
             }
             if (number == 2) {
                 Cavalry.greenFoodPrice += 1 * factor;
@@ -68,8 +68,8 @@ public class Cavalry extends Units{
                 Cavalry.RedVisibility += 2 * factor;
             }
             if (number == 1) {
-                Cavalry.redIronPrice += 1 * factor;
-                Cavalry.RedDefence += 1 * factor;
+                Cavalry.redFoodPrice += 1 * factor;
+                Cavalry.RedAttack1 += 20 * factor;
             }
             if (number == 2) {
                 Cavalry.redFoodPrice += 1 * factor;
@@ -79,7 +79,7 @@ public class Cavalry extends Units{
     }
 
     public static void restoreDefaultValues() {
-        GreenAttack1 = 10; // Green Cavalry's first attack value, this value can be changed
+        GreenAttack1 = 5; // Green Cavalry's first attack value, this value can be changed
         GreenAttack2 = 2; //  Green Cavalry's first attack value, this value can be changed
         GreenFirstAttackRange = 1; //  Green Cavalry's first attack range, this value can be changed
         GreenSecondAttackRange = 4; //  Green Cavalry's second attack value, this value can be changed
@@ -90,18 +90,18 @@ public class Cavalry extends Units{
         greenAirAttack = 0;
 
         //cost of Cavalry unit
-        greenFoodPrice = 2;
+        greenFoodPrice = 1;
         greenIronPrice = 0;
         greenOilPrice = 0;
 
-        redFoodPrice = 2;
+        redFoodPrice = 1;
         redIronPrice = 0;
         redOilPrice = 0;
 
         //How much health will the unit gain if healed
-        healedBy = 3;
+        healedBy = 2;
 
-        RedAttack1 = 10; // Red Cavalry's first attack value, this value can be changed
+        RedAttack1 = 5; // Red Cavalry's first attack value, this value can be changed
         RedAttack2 = 2; //  Red Cavalry's first attack value, this value can be changed
         RedFirstAttackRange = 1; //  Red Cavalry's first attack range, this value can be changed
         RedSecondAttackRange = 4; //  Red Cavalry's second attack value, this value can be changed

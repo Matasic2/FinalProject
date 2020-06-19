@@ -5,7 +5,7 @@ import android.content.Context;
 public class Headquaters extends Units{
 
     // TODO : fix these comments
-    public static int GreenAttack1 = 50; //  Green HQ's first attack value, this value can be changed
+    public static int GreenAttack1 = 6; //  Green HQ's first attack value, this value can be changed
     public static int GreenAttack2 = 5; //  Green HQ's second attack value, this value can be changed
     public static int GreenFirstAttackRange = 1; //  Green HQ's first attack range, this value can be changed
     public static int GreenSecondAttackRange = 5; //  Green HQ's second attack value, this value can be changed
@@ -18,7 +18,7 @@ public class Headquaters extends Units{
     public static int healedBy = 4;
 
 
-    public static int RedAttack1 = 50; // Red HQ's first attack value, this value can be changed
+    public static int RedAttack1 = 6; // Red HQ's first attack value, this value can be changed
     public static int RedAttack2 = 5; //  Red HQ's first attack value, this value can be changed
     public static int RedFirstAttackRange = 1; //  Red HQ's first attack range, this value can be changed
     public static int RedSecondAttackRange = 5; //  Red HQ's second attack value, this value can be changed

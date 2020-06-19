@@ -4,7 +4,7 @@ import android.content.Context;
 
 public class Artillery extends Units {
     // TODO : fix these comments
-    public static int GreenAttack1 = 50; // Green artillery's first attack value , this value can be changed
+    public static int GreenAttack1 = 6; // Green artillery's first attack value , this value can be changed
     public static int GreenAttack2 = 4;  // Green artillery's second attack value , this value can be changed
     public static int GreenFirstAttackRange = 1; //  Green artillery's first attack range, this value can be changed
     public static int GreenSecondAttackRange = 7; //  Green artillery's second attack range, this value can be changed
@@ -26,7 +26,7 @@ public class Artillery extends Units {
     //How much health will the unit gain if healed
     public static int healedBy = 2;
 
-    public static int RedAttack1 = 50; // Red artillery's first attack value, this value can be changed
+    public static int RedAttack1 = 6; // Red artillery's first attack value, this value can be changed
     public static int RedAttack2 = 4; //  Red artillery's first attack value, this value can be changed
     public static int RedFirstAttackRange = 1; //  Red artillery's first attack range, this value can be changed
     public static int RedSecondAttackRange = 7; //  Red artillery's second attack value, this value can be changed
@@ -48,8 +48,9 @@ public class Artillery extends Units {
     public static void adjustUpgrade(Player player, int factor, int number) {
         if (player == GameEngine.green) {
             if (number == 0) {
-                Artillery.greenFoodPrice += 1 * factor;
-                Artillery.GreenVisibility += 2 * factor;
+                Artillery.greenFoodPrice -= 1 * factor;
+                Artillery.greenIronPrice -= 2 * factor;
+                Artillery.GreenSecondAttackRange -= 1 * factor;
             }
             if (number == 1) {
                 Artillery.greenIronPrice += 1 * factor;
@@ -61,8 +62,9 @@ public class Artillery extends Units {
             }
         } else if (player == GameEngine.red) {
             if (number == 0) {
-                Artillery.redFoodPrice += 1 * factor;
-                Artillery.RedVisibility += 2 * factor;
+                Artillery.redFoodPrice -= 1 * factor;
+                Artillery.redIronPrice -= 2 * factor;
+                Artillery.RedSecondAttackRange -= 1 * factor;
             }
             if (number == 1) {
                 Artillery.redIronPrice += 1 * factor;
@@ -76,7 +78,7 @@ public class Artillery extends Units {
     }
 
     public static void restoreDefaultValues() {
-        GreenAttack1 = 50; // Green artillery's first attack value , this value can be changed
+        GreenAttack1 = 6; // Green artillery's first attack value , this value can be changed
         GreenAttack2 = 4;  // Green artillery's second attack value , this value can be changed
         GreenFirstAttackRange = 1; //  Green artillery's first attack range, this value can be changed
         GreenSecondAttackRange = 7; //  Green artillery's second attack range, this value can be changed
@@ -98,7 +100,7 @@ public class Artillery extends Units {
         //How much health will the unit gain if healed
         healedBy = 2;
 
-        RedAttack1 = 50; // Red artillery's first attack value, this value can be changed
+        RedAttack1 = 6; // Red artillery's first attack value, this value can be changed
         RedAttack2 = 4; //  Red artillery's first attack value, this value can be changed
         RedFirstAttackRange = 1; //  Red artillery's first attack range, this value can be changed
         RedSecondAttackRange = 7; //  Red artillery's second attack value, this value can be changed
