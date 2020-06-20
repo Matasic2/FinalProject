@@ -39,7 +39,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     /*
     This method creates Fullscreen activity
      */
-    public static float scaleFactor = 1; //scale factor for all icons and tap coordinates
+    public static float scaleFactor; //scale factor for all icons and tap coordinates
     public static int heightscreen; //height of the screen
     public static int widthfullscreen; //width of the screen
     public static FullscreenActivity theActivity; //stores the reference of the activity
@@ -76,6 +76,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
             scale = height / 1440.0f;
         }
         scaleFactor = scale;
+        GameEngine.squareLength = (int) (128  * FullscreenActivity.scaleFactor);
 
 
         GameView myGameView = new GameView(this); //creates context
