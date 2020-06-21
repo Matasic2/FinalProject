@@ -6,7 +6,7 @@ public class Cavalry extends Units{
 
     // TODO : fix these comments
     public static int GreenAttack1 = 5; // Green Cavalry's first attack value, this value can be changed
-    public static int GreenAttack2 = 2; //  Green Cavalry's first attack value, this value can be changed
+    public static int GreenAttack2 = 1; //  Green Cavalry's first attack value, this value can be changed
     public static int GreenFirstAttackRange = 1; //  Green Cavalry's first attack range, this value can be changed
     public static int GreenSecondAttackRange = 4; //  Green Cavalry's second attack value, this value can be changed
     public static int GreenDefence = 0; // Defence value of Green's Cavalry, this value can be changed
@@ -28,7 +28,7 @@ public class Cavalry extends Units{
     public static int healedBy = 2;
 
     public static int RedAttack1 = 5; // Red Cavalry's first attack value, this value can be changed
-    public static int RedAttack2 = 2; //  Red Cavalry's first attack value, this value can be changed
+    public static int RedAttack2 = 1; //  Red Cavalry's first attack value, this value can be changed
     public static int RedFirstAttackRange = 1; //  Red Cavalry's first attack range, this value can be changed
     public static int RedSecondAttackRange = 4; //  Red Cavalry's second attack value, this value can be changed
     public static int RedDefence = 0; // Defence value of Red's Cavalry, this value can be changed
@@ -56,6 +56,7 @@ public class Cavalry extends Units{
             }
             if (number == 1) {
                 Cavalry.greenFoodPrice += 1 * factor;
+                Cavalry.GreenAttack2 += 1 * factor;
                 Cavalry.GreenAttack1 += 20 * factor;
             }
             if (number == 2) {
@@ -69,6 +70,7 @@ public class Cavalry extends Units{
             }
             if (number == 1) {
                 Cavalry.redFoodPrice += 1 * factor;
+                Cavalry.RedAttack2 += 1 * factor;
                 Cavalry.RedAttack1 += 20 * factor;
             }
             if (number == 2) {
