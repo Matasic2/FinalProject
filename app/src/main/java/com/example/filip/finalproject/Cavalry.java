@@ -82,7 +82,7 @@ public class Cavalry extends Units{
 
     public static void restoreDefaultValues() {
         GreenAttack1 = 5; // Green Cavalry's first attack value, this value can be changed
-        GreenAttack2 = 2; //  Green Cavalry's first attack value, this value can be changed
+        GreenAttack2 = 1; //  Green Cavalry's first attack value, this value can be changed
         GreenFirstAttackRange = 1; //  Green Cavalry's first attack range, this value can be changed
         GreenSecondAttackRange = 4; //  Green Cavalry's second attack value, this value can be changed
         GreenDefence = 0; // Defence value of Green's Cavalry, this value can be changed
@@ -104,7 +104,7 @@ public class Cavalry extends Units{
         healedBy = 2;
 
         RedAttack1 = 5; // Red Cavalry's first attack value, this value can be changed
-        RedAttack2 = 2; //  Red Cavalry's first attack value, this value can be changed
+        RedAttack2 = 1; //  Red Cavalry's first attack value, this value can be changed
         RedFirstAttackRange = 1; //  Red Cavalry's first attack range, this value can be changed
         RedSecondAttackRange = 4; //  Red Cavalry's second attack value, this value can be changed
         RedDefence = 0; // Defence value of Red's Cavalry, this value can be changed

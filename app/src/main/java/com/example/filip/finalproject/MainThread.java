@@ -58,7 +58,11 @@ public class MainThread extends Thread {
                 this.gameView.update();
                 canvas = surfaceHolder.lockCanvas();
                 isRendering = true;
-                this.gameView.draw(canvas);
+                try {
+                    this.gameView.draw(canvas);
+                } catch (Exception e) {
+
+                }
                 isRendering = false;
             }
             if (this.canvas != null) {

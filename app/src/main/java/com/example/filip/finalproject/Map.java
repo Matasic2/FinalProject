@@ -82,8 +82,8 @@ public class Map {
                     new Infantry(GameView.theContext, 12, 6, GameEngine.red);
                 }
 
-                for (int i = 0; i < 1; i++) {
-                    new Cavalry(GameView.theContext, 2, 2, GameEngine.green);
+                for (int i = 0; i < 2; i++) {
+                    new Cavalry(GameView.theContext, 2, i*2, GameEngine.green);
                 }
                 for (int i = 0; i < 1; i++) {
                     new Cavalry(GameView.theContext, 17, 9, GameEngine.red);
@@ -199,8 +199,8 @@ public class Map {
                     new Infantry(GameView.theContext, 12, 6, GameEngine.red);
                 }
 
-                for (int i = 0; i < 1; i++) {
-                    new Cavalry(GameView.theContext, 2, 2, GameEngine.green);
+                for (int i = 0; i < 2; i++) {
+                    new Cavalry(GameView.theContext, 2, i*2, GameEngine.green);
                 }
                 for (int i = 0; i < 1; i++) {
                     new Cavalry(GameView.theContext, 12, 6, GameEngine.red);

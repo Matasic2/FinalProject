@@ -8,6 +8,9 @@ import android.graphics.Canvas;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.SystemClock;
+import java.util.concurrent.Semaphore;
+
+import static com.example.filip.finalproject.MainThread.canvas;
 
 // Class that will run the game and manage all the events.
 public class GameEngine extends Thread{
@@ -175,9 +178,8 @@ public class GameEngine extends Thread{
     public static void tapProcessor (int x, int y, int mode) {
 
         //avoid changing game variables while game is drawing, this avoid crashes
-        while (MainThread.isRendering) {
-            SystemClock.sleep(1);
-        }
+
+
 
         if (mode == 0) {
             if (x < 0 || y < 0) {
@@ -1157,7 +1159,7 @@ public class GameEngine extends Thread{
         }
 
         //one unit would kill another, so partially damage other unit
-        if (attackerDamage - defender.defence > defender.HP || defenderDamage - attacker.defence > attacker.HP) {
+        if (attackerDamage - defender.defence >= defender.HP || defenderDamage - attacker.defence >= attacker.HP) {
             double attackerTimeToKill;
             double defenderTimeToKill;
             if (attackerDamage <= defender.defence) {
@@ -1174,6 +1176,7 @@ public class GameEngine extends Thread{
             if (attackerTimeToKill == defenderTimeToKill) {
                 DamageUnit(attackerDamage, defender, getCoordinates(defender)[0], getCoordinates(defender)[1]);
                 attacker.HP = 1;
+                return;
             }
 
             double finalDamageFactor;
@@ -1181,7 +1184,7 @@ public class GameEngine extends Thread{
             if (attackerTimeToKill < defenderTimeToKill) {
                 finalDamageFactor = attackerTimeToKill;
                 DamageUnit(attackerDamage, defender, getCoordinates(defender)[0], getCoordinates(defender)[1]);
-                if (attacker.defence <= (int) (defenderDamage * finalDamageFactor)) {
+                if (attacker.defence < (int) (defenderDamage * finalDamageFactor)) {
                     attacker.HP = attacker.HP - (int) ((defenderDamage * finalDamageFactor) - attacker.defence);
                     if (attacker.HP <= 0) {
                         attacker.HP = 1;
@@ -1192,7 +1195,7 @@ public class GameEngine extends Thread{
             } else {
                 finalDamageFactor = defenderTimeToKill;
                 DamageUnit(defenderDamage, attacker, getCoordinates(attacker)[0], getCoordinates(attacker)[1]);
-                if (defender.defence <= (int) (attackerDamage * finalDamageFactor)) {
+                if (defender.defence < (int) (attackerDamage * finalDamageFactor)) {
                     defender.HP = defender.HP - (int) ((attackerDamage * finalDamageFactor) - defender.defence);
                     if (defender.HP <= 0) {
                         defender.HP = 1;
@@ -1225,8 +1228,12 @@ public class GameEngine extends Thread{
                 BoardSprites[x][y] = null;
                 for (int i = 0; i < GameView.units.length; i++) {
                     if (GameView.units[i] == u) {
+                        if (u.owner == GameEngine.playing) {
+                            unselectFriendly();
+                        } else {
+                            unselectEnemy();
+                        }
                         GameView.removeSprite(i);
-                        unselectEnemy();
                         showMarket = false;
                         message = u.unitType + " at " + (x + c) + ", " + (y + c) + " is destroyed";
                         if (u.unitType.equals("Headquarters")) {

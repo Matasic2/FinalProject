@@ -100,6 +100,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         units = new Units[0];
         resources = new Resources[0];
         theContext = this.getContext(); // Stores the context, see the variable comment above
+        showAir = false;
+        showendTurnScreen = false;
 
         pointers = new movableLocation(theContext, 0, false);
         pointers1 = new movableLocation(theContext, 1, false);
