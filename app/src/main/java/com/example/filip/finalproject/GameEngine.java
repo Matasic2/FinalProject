@@ -79,6 +79,9 @@ public class GameEngine extends Thread{
         showFactory = false; //shows factory units which can be purchased
         showMarket = false; //shows market units which can be purchased
         message = ""; //stores message to user
+        green = new Player("green", true);
+        red = new Player("red", true);
+        selectedPlane = null;
 
         if (GameEngine.replayMode) {
             GameEngine.message = "Tap anywhere to start replay";
@@ -86,6 +89,7 @@ public class GameEngine extends Thread{
 
         lastCoordinates = new int[2]; //coordinates of last action
         queue = new Units[0]; // stores all units that will be deployed
+        c = 0;
         AI.unitOrders = new String[0];
         AI.units = new Units[0];
         AI.turn = 0;
@@ -93,6 +97,7 @@ public class GameEngine extends Thread{
         turnCount = 0;
         loadoutMenu = false;
         loadoutMenuUnit = "";
+        lastAddedResources = new int[3];
         Infantry.restoreDefaultValues();
         Cavalry.restoreDefaultValues();
         Artillery.restoreDefaultValues();
@@ -131,6 +136,7 @@ public class GameEngine extends Thread{
             }
 
             GameView.shouldDrawUI = true;
+            GameView.showendTurnScreen = true;
             if (playing.equals(green)) {
                 message = "Green player's turn. Press anywhere to continue.";
             } else {
@@ -176,10 +182,6 @@ public class GameEngine extends Thread{
     A method that will process what happens with user's input (click/tap).
      */
     public static void tapProcessor (int x, int y, int mode) {
-
-        //avoid changing game variables while game is drawing, this avoid crashes
-
-
 
         if (mode == 0) {
             if (x < 0 || y < 0) {
@@ -260,8 +262,6 @@ public class GameEngine extends Thread{
                 GameView.showendTurnScreen = false;
                 return;
             }
-
-
             if (GameView.showAir) {
                 processAirTap(x, y);
             } else if (loadoutMenu) {
@@ -358,6 +358,39 @@ public class GameEngine extends Thread{
 
         //unit special action
         if (x / squareLength == 16 && y / squareLength == 1 && (selected != null)) {
+
+            if (theUnit.unitType.equals("Fort") && !theUnit.specialIsActivated) {
+                message = "Fort abandoned.";
+                theUnit.unitType = "Infantry";
+
+                theUnit.defence -= 1;
+                theUnit.airAttack -= 1;
+
+                theUnit.movement = 2;
+
+                int oldCoordinatex = theUnit.coordinates[0];
+                int oldCoordinatey = theUnit.coordinates[1];
+                unselectFriendly();
+                theUnit = BoardSprites[oldCoordinatex][oldCoordinatey];
+                theUnit.brightenIcon();
+                selected = new SelectedUnit(GameView.theContext, oldCoordinatex * squareLength, oldCoordinatey * squareLength, theUnit.owner, theUnit.unitType);
+                showFactory = false;
+                showMarket = false;
+                return;
+            }
+
+            if (theUnit.unitType.equals("Armor") && !theUnit.specialIsActivated && playing.oilStorage >= 2) {
+                message = "Extra move activated.";
+                theUnit.hasAttack = true;
+                theUnit.hasMove = true;
+                playing.oilStorage -= 2;
+                showFactory = false;
+                showMarket = false;
+                theUnit.specialIsActivated = true;
+                checkAction(theUnit);
+                return;
+            }
+
             if (theUnit.hasAttack && theUnit.hasMove) {
                 if (theUnit.unitType.equals("Cavalry")) {
                     message = "Scouting range extended.";
@@ -383,32 +416,6 @@ public class GameEngine extends Thread{
                 theUnit.specialIsActivated = true;
                 checkAction(theUnit);
                 unselectFriendly();
-                return;
-            }
-
-            if (theUnit.unitType.equals("Fort") && !theUnit.specialIsActivated) {
-                message = "Fort abandoned.";
-                theUnit.unitType = "Infantry";
-
-                theUnit.defence -= 1;
-                theUnit.airAttack -= 1;
-
-                theUnit.movement = 2;
-
-                showFactory = false;
-                showMarket = false;
-                return;
-            }
-
-            if (theUnit.unitType.equals("Armor") && !theUnit.specialIsActivated && playing.oilStorage >= 2) {
-                message = "Extra move activated.";
-                theUnit.hasAttack = true;
-                theUnit.hasMove = true;
-                playing.oilStorage -= 2;
-                showFactory = false;
-                showMarket = false;
-                theUnit.specialIsActivated = true;
-                checkAction(theUnit);
                 return;
             }
         }
@@ -473,12 +480,22 @@ public class GameEngine extends Thread{
             return;
         }*/
 
-        //Undo
+        //Undo undo
         if (x / squareLength == 18 && y / squareLength == 3 && theUnit != null && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
             if (lastUnit == null) {
                 BoardSprites[theUnit.coordinates[0]][theUnit.coordinates[1]] = null;
                 theUnit.coordinates[0] = lastCoordinates[0];
                 theUnit.coordinates[1] = lastCoordinates[1];
+
+                if (BoardSprites[lastCoordinates[0]][lastCoordinates[1]] != null) {
+                    Units[] newQueue = new Units[GameEngine.queue.length + 1];
+                    for (int k = 0; k < GameEngine.queue.length; k++) {
+                        newQueue[k] = GameEngine.queue[k];
+                    }
+                    newQueue[newQueue.length - 1] = BoardSprites[lastCoordinates[0]][lastCoordinates[1]];
+                    GameEngine.queue = newQueue;
+                }
+
                 BoardSprites[lastCoordinates[0]][lastCoordinates[1]] = theUnit;
                 playing.oilStorage += theUnit.fuelConsumption;
                 theUnit.brightenIcon();

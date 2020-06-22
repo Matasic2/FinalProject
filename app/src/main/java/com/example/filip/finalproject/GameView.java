@@ -102,6 +102,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         theContext = this.getContext(); // Stores the context, see the variable comment above
         showAir = false;
         showendTurnScreen = false;
+        shouldDrawUI = true;
+        selected = null;
+        enemySelected = null;
+
+        cameraX = 0;
+        cameraY = 0;
+        targetCameraX = 0;
+        targetCameraY = 0;
 
         pointers = new movableLocation(theContext, 0, false);
         pointers1 = new movableLocation(theContext, 1, false);
@@ -145,8 +153,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 
         GameEngine.restart();
-        GameEngine.green = new Player("green", true);
-        GameEngine.red = new Player("red", true);
         if (MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("Skirmish vs AI_cheating") ||  MainMenu.scenario.equals("dev_mode")) {
             GameEngine.red.isHuman = false;
             GameEngine.AIPlayer = GameEngine.red;
