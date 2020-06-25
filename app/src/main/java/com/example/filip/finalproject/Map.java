@@ -24,6 +24,8 @@ public class Map {
             GameEngine.fogOfWarIsRevealedForGreen = new boolean[4];
             GameEngine.fogOfWarIsRevealedForRed = new boolean[4];
 
+            GameEngine.playing = GameEngine.green;
+
             // next lines generate green's "natural resources" (the resources which are expected to be controlled by green player).
             new Food(GameView.theContext, 1, 0, 1, 1);
             new Food(GameView.theContext, 2, 1, 1, 1);
@@ -82,9 +84,13 @@ public class Map {
                     new Infantry(GameView.theContext, 12, 6, GameEngine.red);
                 }
 
+                GameEngine.loadoutMenuUnit = "Cavalry";
                 for (int i = 0; i < 2; i++) {
+                    GameEngine.green.adjustUpgrades("Cavalry",1);  //enable for first unit, disable for second
                     new Cavalry(GameView.theContext, 2, i*2, GameEngine.green);
                 }
+                GameEngine.loadoutMenuUnit = "";
+
                 for (int i = 0; i < 1; i++) {
                     new Cavalry(GameView.theContext, 17, 9, GameEngine.red);
                 }
@@ -155,6 +161,7 @@ public class Map {
             GameEngine.airLinesCount = 3;
             GameEngine.airLineXScaleFactor = 1;
             GameEngine.airLineYScaleFactor = 1;
+            GameEngine.playing = GameEngine.green;
 
             // next lines generate green's "natural resources" (the resources which are expected to be controlled by green player).
             new Food(GameView.theContext, 1, 0, 1, 1);
@@ -199,9 +206,13 @@ public class Map {
                     new Infantry(GameView.theContext, 12, 6, GameEngine.red);
                 }
 
+                GameEngine.loadoutMenuUnit = "Cavalry";
                 for (int i = 0; i < 2; i++) {
+                    GameEngine.green.adjustUpgrades("Cavalry",1);  //enable for first unit, disable for second
                     new Cavalry(GameView.theContext, 2, i*2, GameEngine.green);
                 }
+                GameEngine.loadoutMenuUnit = "";
+
                 for (int i = 0; i < 1; i++) {
                     new Cavalry(GameView.theContext, 12, 6, GameEngine.red);
                 }
