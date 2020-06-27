@@ -123,10 +123,13 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         if (GameEngine.replayMode) {
             if (!replayIsRunning) {
                 replayIsRunning = true;
+                MainThread.shouldPause = true;
                 GameEngine.load();
-                MainThread.run = true;
+                MainThread.shouldPause = false;
                 GameEngine.replayMode = false;
+                //GameView.thread.run();
             }
+            replayIsRunning = false;
             return true;
         }
 
@@ -137,19 +140,28 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
 
         if (event.getAction() == MotionEvent.ACTION_MOVE) {
 
+            int currentX = (int) event.getX();
+            int currentY = (int) event.getY();
+
+            if (Math.abs(currentX - lastDownX) < (40 * scaleFactor) && Math.abs(currentY - lastDownY) < (40 * scaleFactor)) {
+                return true;
+            }
             //don't allow moving screen around in air view
             if (GameView.showAir) {
                 return true;
             }
-            // TODO : Spremi u memoriu za spremanje aktivnosti
-           // memory.add(new Integer((int) event.getX() * widthfullscreen + (int) event.getY()));
-            GameView.targetCameraX = (int) event.getX() - lastDownX;
-            GameView.targetCameraY = (int) event.getY() - lastDownY;
+            GameView.targetCameraX = currentX - lastDownX;
+            GameView.targetCameraY = currentY - lastDownY;
             hasScrolled = true;
             return true;
         }
 
         else if (event.getAction() == MotionEvent.ACTION_UP) {
+
+            if (hasScrolled) {
+                hasScrolled = false;
+                return true;
+            }
 
             GameEngine.tapProcessor((int) event.getX(), (int) event.getY(),0); //sends coordinates to GameEngine, which does everything.
 

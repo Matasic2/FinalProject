@@ -126,13 +126,19 @@ public class GameEngine extends Thread{
                 tapProcessor(x,y,mode);
 
                 if (replayMode) {
+
                     try {
                         //FullscreenActivity.currentView.draw(MainThread.canvas);
                         Thread.sleep(500);
+                        GameView.thread.renderFrame();
                     } catch (Exception e){
 
                     }
                 }
+            }
+
+            if (replayMode) {
+                GameView.shouldDrawUI = true;
             }
 
             GameView.shouldDrawUI = true;
@@ -879,9 +885,9 @@ public class GameEngine extends Thread{
 
         //If user taps on a square that is out of range while some unit is selected, unselect it
         if (selected != null) {
-            if (!FullscreenActivity.hasScrolled) {
-                unselectFriendly();
-            }
+            //if (!FullscreenActivity.hasScrolled) {
+            unselectFriendly();
+            //}
             return;
         }
     }

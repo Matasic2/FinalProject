@@ -14,6 +14,7 @@ public class MainThread extends Thread {
     public static Canvas canvas;
     public static boolean run;
     public static boolean isRendering = false;
+    public static boolean shouldPause = false;
 
     public long previousTime = 0;
 
@@ -27,49 +28,92 @@ public class MainThread extends Thread {
     @Override
     public void run() {
         while (run) {
-            GameView.cameraY = GameView.targetCameraY;
-            GameView.cameraX = GameView.targetCameraX;
-
-            //adjust camera
-            if (GameEngine.width > 15) {
-                if (GameView.cameraX > 0) {
-                    GameView.cameraX = 0;
-                }
-                if (GameView.cameraX < (15 - GameEngine.width) * GameEngine.squareLength) {
-                    GameView.cameraX = (15 - GameEngine.width) * GameEngine.squareLength;
-                }
-            } else {
-                GameView.cameraX = 0;
-            }
-            if (GameEngine.heigth > 9) {
-                if (GameView.cameraY > 0) {
-                    GameView.cameraY = 0;
-                }
-                if (GameView.cameraY < (9 - GameEngine.heigth) * GameEngine.squareLength) {
-                    GameView.cameraY = (9 - GameEngine.heigth ) * GameEngine.squareLength;
-                }
-            } else {
-                GameView.cameraY = 0;
-            }
-
-            //GameEngine.message = GameView.cameraX + " " + GameView.cameraY;
-
-            synchronized (surfaceHolder) {
-                this.gameView.update();
-                canvas = surfaceHolder.lockCanvas();
-                isRendering = true;
+            if (shouldPause) {
                 try {
-                    this.gameView.draw(canvas);
+                    Thread.sleep(100);
                 } catch (Exception e) {
 
                 }
-                isRendering = false;
+                continue;
             }
-            if (this.canvas != null) {
+
+            adjustCamera();
+            //GameEngine.message = GameView.cameraX + " " + GameView.cameraY;
+
+            boolean drawSucceeded = false;
+            synchronized (surfaceHolder) {
+                this.gameView.update();
+                isRendering = true;
+                canvas = surfaceHolder.lockCanvas();
+                while (!drawSucceeded) {
+                    try {
+                        this.gameView.draw(canvas);
+                        drawSucceeded = true;
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+
+
+            if (this.canvas != null && drawSucceeded) {
                 surfaceHolder.unlockCanvasAndPost(canvas);
                 previousTime = System.currentTimeMillis();
             }
+            isRendering = false;
+        }
+    }
+
+    public void renderFrame() {
+        adjustCamera();
+        boolean drawSucceeded = false;
+        synchronized (surfaceHolder) {
+            this.gameView.update();
+            canvas = surfaceHolder.lockCanvas();
+            isRendering = true;
+            while (!drawSucceeded) {
+                try {
+                    this.gameView.draw(canvas);
+                    drawSucceeded = true;
+                } catch (Exception e) {
+
+                }
+            }
+        }
+
+        if (this.canvas != null && drawSucceeded) {
+            surfaceHolder.unlockCanvasAndPost(canvas);
+            previousTime = System.currentTimeMillis();
         }
         isRendering = false;
+        surfaceHolder.unlockCanvasAndPost(canvas);
+    }
+
+    public void adjustCamera() {
+        GameView.cameraY = GameView.targetCameraY;
+        GameView.cameraX = GameView.targetCameraX;
+
+        //adjust camera
+        if (GameEngine.width > 15) {
+            if (GameView.cameraX > 0) {
+                GameView.cameraX = 0;
+            }
+            if (GameView.cameraX < (15 - GameEngine.width) * GameEngine.squareLength) {
+                GameView.cameraX = (15 - GameEngine.width) * GameEngine.squareLength;
+            }
+        } else {
+            GameView.cameraX = 0;
+        }
+        if (GameEngine.heigth > 9) {
+            if (GameView.cameraY > 0) {
+                GameView.cameraY = 0;
+            }
+            if (GameView.cameraY < (9 - GameEngine.heigth) * GameEngine.squareLength) {
+                GameView.cameraY = (9 - GameEngine.heigth ) * GameEngine.squareLength;
+            }
+        } else {
+            GameView.cameraY = 0;
+        }
+
     }
 }
