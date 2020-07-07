@@ -55,6 +55,7 @@ public class GameEngine extends Thread{
     public static Player AIPlayer = null;
     public static boolean[] fogOfWarIsRevealedForGreen = new boolean[3];
     public static boolean[] fogOfWarIsRevealedForRed = new boolean[3];
+    public static int[][] smokeMap = new int[15][9]; //represents if smoke exists on a tile, number represents how long should smoke remain
 
     public static boolean  returnFireEnabled = true;
 
@@ -160,6 +161,7 @@ public class GameEngine extends Thread{
         this.heigth = input_heigth;
         BoardSprites = new Units[width][heigth];
         BoardResources = new Resources[width][heigth];
+        smokeMap = new int[width][heigth];
     }
 
     // updates board
@@ -1561,7 +1563,8 @@ public class GameEngine extends Thread{
                     if (BoardSprites[i][j] != null && BoardSprites[i][j].owner.color.equals("green")) {
                         for (int a = 0; a < BoardSprites.length; a++) {
                             for (int b = 0; b < BoardSprites[a].length; b++) {
-                                if (!tile_is_visible[a][b] && BoardSprites[i][j].getDistanceToPoint(a,b) <= BoardSprites[i][j].getVisibilityRange()) {
+                                if (!tile_is_visible[a][b] && BoardSprites[i][j].getDistanceToPoint(a,b) <= BoardSprites[i][j].getVisibilityRange()
+                                    && unitCanSeeTile(i,j,a,b)) {
                                     tile_is_visible[a][b] = true;
                                 }
                             }
@@ -1578,7 +1581,8 @@ public class GameEngine extends Thread{
                     if (BoardSprites[i][j] != null && BoardSprites[i][j].owner.color.equals("red")) {
                         for (int a = 0; a < BoardSprites.length; a++) {
                             for (int b = 0; b < BoardSprites[a].length; b++) {
-                                if (!tile_is_visible[a][b] && BoardSprites[i][j].getDistanceToPoint(a,b) <= BoardSprites[i][j].getVisibilityRange()) {
+                                if (!tile_is_visible[a][b] && BoardSprites[i][j].getDistanceToPoint(a,b) <= BoardSprites[i][j].getVisibilityRange()
+                                        && unitCanSeeTile(i,j,a,b)) {
                                     tile_is_visible[a][b] = true;
                                 }
                             }
@@ -1692,4 +1696,42 @@ public class GameEngine extends Thread{
         tiles[xCoord][yCoord] = false;
         return tiles;
     }
+
+    public static final double SMOKE_WIDTH = 0.51;
+
+    public static double distanceFromLineToPoint(double x1, double y1, double x2, double y2, double smokeX, double smokeY) {
+
+        if (y2 == y1 || x2 == x1) return 0; //they are on the same line if this is true
+        double a = (y2-y1)/(x2 - x1);
+        double b = 1;
+        double c = y1 - a*x1;
+        a *= -1;
+        c *= -1;
+        return (Math.abs(a*smokeX+b*smokeY+c))/(Math.sqrt(a*a+b*b));
+    }
+
+    public static boolean unitCanSeeTile(double unitX, double unitY, double tileX, double tileY) {
+        smokeMap[5][5] = 1;
+        smokeMap[5][6] = 1;
+
+        for (int i = 0; i < smokeMap.length; i++) {
+            for (int j = 0; j < smokeMap[i].length; j++) {
+                if (smokeMap[i][j] > 0) { //is smoke there
+
+                    if (i == tileX && j == tileY) { //dont hide smoke itself
+                        continue;
+                    }
+
+                    if (((unitX <= i && tileX >= i) || (unitX >= i && tileX <= i))
+                        && ((unitY <= j && tileY >= j) || (unitY >= j && tileY <= j))) { //is smoke between the two
+                        if (distanceFromLineToPoint(unitX, unitY, tileX, tileY, i,j) <= SMOKE_WIDTH) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
 }

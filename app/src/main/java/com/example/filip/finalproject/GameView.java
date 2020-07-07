@@ -55,6 +55,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static movableLocation pointers4;
     public static movableLocation pointers5;
     public static movableLocation pointers6;
+    public static movableLocation smoke;
 
     public static movableLocation pointers99;
 
@@ -150,6 +151,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         shield = new movableLocation(theContext, 34, true);
         binocDark = new movableLocation(theContext, 35, true);
         shieldDark = new movableLocation(theContext, 36, true);
+        smoke = new movableLocation(theContext,37, false);
+        //smoke.displacement = (int) ((double) GameEngine.squareLength * 0.5);
 
 
         GameEngine.restart();
@@ -387,6 +390,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             if (GameEngine.enemySelected != null) { //If no units are selected yet, do nothing
                 GameEngine.enemySelected.draw(canvas); //If they are, draw it.
+            }
+
+            for (int i = 0; i < GameEngine.smokeMap.length; i++) {
+                for (int j = 0; j < GameEngine.smokeMap[i].length; j++) {
+                    if (GameEngine.smokeMap[i][j] > 0) {
+                        smoke.draw(canvas,i,j);
+                    }
+                }
             }
 
             //draws yellow squares where selected unit can move.
@@ -868,6 +879,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         units[i].coordinates[0],
                         units[i].coordinates[1],
                         true); //draws the units from units array found in GameView class.
+            }
+        }
+
+        //TODO: SCALE!!
+        for (int i = 0; i < GameEngine.smokeMap.length; i++) {
+            for (int j = 0; j < GameEngine.smokeMap[i].length; j++) {
+                if (GameEngine.smokeMap[i][j] > 0) {
+                    smoke.draw(canvas,i,j);
+                }
             }
         }
 

@@ -58,7 +58,7 @@ public class movableLocation {
         return result;
     }
 
-                                            //limit should be between 0 and 1, 1 representing full hp 0 representing no HP
+                                            //limit should be between 0 and 1, 1 representing full image, 0 representing no image
     public static Bitmap cutIconTransparency(Bitmap b,double limit) {
         if (limit < 0 || limit > 1) {
             return b;
@@ -311,6 +311,13 @@ public class movableLocation {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.shield2, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+
+        if (number == 37) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.smoke, o);
             icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
     }
