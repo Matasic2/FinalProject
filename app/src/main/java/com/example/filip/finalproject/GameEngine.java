@@ -15,6 +15,10 @@ import static com.example.filip.finalproject.MainThread.canvas;
 // Class that will run the game and manage all the events.
 public class GameEngine extends Thread{
 
+    public static final double SMOKE_WIDTH = 0.71;
+    public static final int SMOKE_DURATION = 4;
+    public static final int SMOKE_PRICE_OIL = 2;
+
     public static int width = 15;
     public static int heigth = 9;
 
@@ -56,6 +60,7 @@ public class GameEngine extends Thread{
     public static boolean[] fogOfWarIsRevealedForGreen = new boolean[3];
     public static boolean[] fogOfWarIsRevealedForRed = new boolean[3];
     public static int[][] smokeMap = new int[15][9]; //represents if smoke exists on a tile, number represents how long should smoke remain
+    public static boolean smokeFireActive = false;
 
     public static boolean  returnFireEnabled = true;
 
@@ -83,6 +88,8 @@ public class GameEngine extends Thread{
         green = new Player("green", true);
         red = new Player("red", true);
         selectedPlane = null;
+        smokeMap = new int[width][heigth];
+        smokeFireActive = false;
 
         if (GameEngine.replayMode) {
             GameEngine.message = "Tap anywhere to start replay";
@@ -162,6 +169,7 @@ public class GameEngine extends Thread{
         BoardSprites = new Units[width][heigth];
         BoardResources = new Resources[width][heigth];
         smokeMap = new int[width][heigth];
+        smokeFireActive = false;
     }
 
     // updates board
@@ -399,6 +407,19 @@ public class GameEngine extends Thread{
                 return;
             }
 
+            if (theUnit.unitType.equals("Artillery") && theUnit.hasAttack) {
+
+                if (playing.oilStorage >= SMOKE_PRICE_OIL) {
+                    playing.oilStorage -= SMOKE_PRICE_OIL;
+                    theUnit.specialIsActivated = true;
+                    smokeFireActive = true;
+                    message = "Smoke fire activated";
+                    showFactory = false;
+                    showMarket = false;
+                }
+                return;
+            }
+
             if (theUnit.hasAttack && theUnit.hasMove) {
                 if (theUnit.unitType.equals("Cavalry")) {
                     message = "Scouting range extended.";
@@ -426,6 +447,8 @@ public class GameEngine extends Thread{
                 unselectFriendly();
                 return;
             }
+
+            return;
         }
 
         //heal the unit if the button is pressed
@@ -796,6 +819,28 @@ public class GameEngine extends Thread{
 
         //if user taps on empty square with no units selected, do nothing
         if (selected == null && BoardSprites[x / squareLength][y / squareLength] == null) {
+            return;
+        }
+
+        if (smokeFireActive && theUnit != null && theUnit.unitType.equals("Artillery")) {
+            int distance = getSquareDistance(x / squareLength, theUnit.coordinates[0], y / squareLength, theUnit.coordinates[1]);
+            if (distance > theUnit.attack2Range || distance == 0) {    //cancel action
+                playing.oilStorage += SMOKE_PRICE_OIL;
+                theUnit.specialIsActivated = false;
+                message = "Smoke fire cancelled";
+                showFactory = false;
+                showMarket = false;
+
+            } else {
+                message = "Smoke fired";
+                showFactory = false;
+                showMarket = false;
+                smokeMap[x / squareLength][y / squareLength] = SMOKE_DURATION;
+                theUnit.hasAttack = false;
+                checkAction(theUnit);
+                theUnit.specialIsActivated = true;
+            }
+            smokeFireActive = false;
             return;
         }
 
@@ -1376,6 +1421,15 @@ public class GameEngine extends Thread{
 
     //switches the player when called
     public static void switchPlayer() {
+
+        for (int i = 0; i < smokeMap.length; i++) {
+            for (int j = 0; j < smokeMap[i].length; j++) {
+                if (smokeMap[i][j] > 0) {
+                    smokeMap[i][j]--;
+                }
+            }
+        }
+
         if (playing == green) {
             for (int i = 0; i < playing.hangar.length; i++) {
                 if (playing.hangar[i] != null) {
@@ -1697,8 +1751,6 @@ public class GameEngine extends Thread{
         return tiles;
     }
 
-    public static final double SMOKE_WIDTH = 0.51;
-
     public static double distanceFromLineToPoint(double x1, double y1, double x2, double y2, double smokeX, double smokeY) {
 
         if (y2 == y1 || x2 == x1) return 0; //they are on the same line if this is true
@@ -1711,8 +1763,6 @@ public class GameEngine extends Thread{
     }
 
     public static boolean unitCanSeeTile(double unitX, double unitY, double tileX, double tileY) {
-        smokeMap[5][5] = 1;
-        smokeMap[5][6] = 1;
 
         for (int i = 0; i < smokeMap.length; i++) {
             for (int j = 0; j < smokeMap[i].length; j++) {

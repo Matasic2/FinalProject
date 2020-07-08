@@ -152,6 +152,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         binocDark = new movableLocation(theContext, 35, true);
         shieldDark = new movableLocation(theContext, 36, true);
         smoke = new movableLocation(theContext,37, false);
+        smoke.icon = movableLocation.cutIconTransparency(smoke.icon, 0);
         //smoke.displacement = (int) ((double) GameEngine.squareLength * 0.5);
 
 
@@ -428,8 +429,21 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
 
+            //draws targets if unit is firing smoke
+            if (GameEngine.smokeFireActive && GameEngine.theUnit != null && GameEngine.theUnit.unitType.equals("Artillery")) {
+                for (int i = 0; i < GameEngine.BoardSprites.length; i++) { // TODO : optimize this
+                    for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
+                        if ((GameEngine.theUnit.attack2Range >= GameEngine.getSquareDistance
+                                                                (GameEngine.getCoordinates(GameEngine.theUnit)[0], i,
+                                                                GameEngine.getCoordinates(GameEngine.theUnit)[1], j))) {
+                            temp2.draw(canvas, i, j);
+                        }
+                    }
+                }
+            }
+
             //draws fog of war
-            boolean[][] fog_of_war = new boolean[0][0];
+            boolean[][] fog_of_war;
 
             if (!removeFogOfWar) {
 
