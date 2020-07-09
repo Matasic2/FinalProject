@@ -900,7 +900,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         for (int i = 0; i < GameEngine.smokeMap.length; i++) {
             for (int j = 0; j < GameEngine.smokeMap[i].length; j++) {
                 if (GameEngine.smokeMap[i][j] > 0) {
-                    smoke.draw(canvas,i,j);
+                    smoke.draw(canvas,null,i,j,true);
                 }
             }
         }
