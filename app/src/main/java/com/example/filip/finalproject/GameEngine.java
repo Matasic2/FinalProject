@@ -68,6 +68,7 @@ public class GameEngine extends Thread{
     public static boolean gameIsMultiplayer = false;
     public static boolean isHostPhone = false;
     public static boolean replayMode = false;
+    public static int replayActionDelay = 500;
 
     //restarts board
     public static void restart(){
@@ -111,11 +112,12 @@ public class GameEngine extends Thread{
         Artillery.restoreDefaultValues();
         Armor.restoreDefaultValues();
 
+        ReplayMenu.replayMapMode = Map.map_code; //store map for replay
+
     }
 
     public static void load() {
         if (FullscreenActivity.memory != null && FullscreenActivity.memory.size() != 0) {
-
             if (!replayMode) {
                 GameView.shouldDrawUI = false;
             }
@@ -137,7 +139,7 @@ public class GameEngine extends Thread{
 
                     try {
                         //FullscreenActivity.currentView.draw(MainThread.canvas);
-                        Thread.sleep(500);
+                        Thread.sleep(replayActionDelay);
                         GameView.thread.renderFrame();
                     } catch (Exception e){
 

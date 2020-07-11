@@ -6,4 +6,6 @@
     <string name="new_skirmish_game">New Skirmish game</string>
     <string name="button">Button</string>
     <string name="title_activity_scenario_menu">ScenarioMenu</string>
+    <string name="title_activity_main">ReplayMenu</string>
+    <string name="title_activity_replay_menu">ReplayMenu</string>
 </resources>

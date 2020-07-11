@@ -48,7 +48,6 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     public static GameView currentView;
     public static boolean replayIsRunning = false;
 
-
     public static int lastDownX = 0;
     public static int lastDownY = 0;
 

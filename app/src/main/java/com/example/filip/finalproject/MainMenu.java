@@ -53,10 +53,7 @@ public class MainMenu extends AppCompatActivity  {
             Button devbutton = (Button) findViewById(R.id.devbutton); //button that switches main activity to skirmish menu
             devbutton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
-                    scenario = "Skirmish";
-                    GameEngine.replayMode = true;
-                    GameEngine.gameIsMultiplayer = false;
-                    startActivity(new Intent(MainMenu.this, FullscreenActivity.class));
+                    startActivity(new Intent(MainMenu.this, ReplayMenu.class));
                 }
             });
         }
