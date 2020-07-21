@@ -146,7 +146,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
                 return true;
             }
             //don't allow moving screen around in air view
-            if (GameView.showAir) {
+            if (GameView.activeScreen == GameView.Screen.AIR_SCREEN) {
                 return true;
             }
             GameView.targetCameraX = currentX - lastDownX;

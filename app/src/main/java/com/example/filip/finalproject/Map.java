@@ -10,7 +10,7 @@ public class Map {
     public static int number_of_maps_available = 3;
 
     public static void generateMap(Bitmap map, Bitmap mapAir, Bitmap square) {
-        if (map_code == 0) {
+        if (map_code == 2) {
 
             GameView.grid = new GameEngine(map, mapAir, square, 21, 12); // these lines create the board.
 
@@ -153,7 +153,7 @@ public class Map {
                     new Artillery(GameView.theContext, 13, i, GameEngine.red);
                 }
             }
-        } else if (map_code == 2) {
+        } else if (map_code == 0) {
 
             GameView.grid = new GameEngine(map, mapAir, square, 15, 9); // these lines create the board.
             GameEngine.redDeployX = 12;
@@ -230,7 +230,7 @@ public class Map {
     }
 
     public static void drawMapFeatures(Canvas canvas) {
-        if (map_code == 0) {
+        if (map_code == 2) {
             GameView.pointers.draw(canvas, 1, 6);
             GameView.pointers.draw(canvas, 18, 5);
             GameView.pointers1.draw(canvas, 8, 1);
@@ -241,7 +241,7 @@ public class Map {
             //GameView.pointers.draw(canvas, 10, 5);
         } else if (map_code == 1) {
             return;
-        } else if (map_code == 2) {
+        } else if (map_code == 0) {
             GameView.pointers.draw(canvas, 1, 7);
             GameView.pointers.draw(canvas, 13, 1);
             GameView.pointers1.draw(canvas, 7, 1);

@@ -49,7 +49,7 @@ public class MultiplayerMenu  extends AppCompatActivity {
     public static void launchGame() {
         MainMenu.scenario = "Skirmish";
         FullscreenActivity.memory = new ArrayList<>();
-        Map.map_code = 2;
+        Map.map_code = 0;
         GameEngine.replayMode = false;
         instance.startActivity(new Intent(instance, FullscreenActivity.class)); //new player vs player skirmish
     }

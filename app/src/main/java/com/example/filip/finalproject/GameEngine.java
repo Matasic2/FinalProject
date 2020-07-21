@@ -239,8 +239,16 @@ public class GameEngine extends Thread{
                 return;
 
             }
-            if (GameView.showAir) {
+            if (GameView.activeScreen == GameView.Screen.AIR_SCREEN) {
                 processAirTap(x,y);
+                FullscreenActivity.memory.add(new Integer((x * FullscreenActivity.widthfullscreen + y) * -1));
+
+                if (gameIsMultiplayer) {
+                    MultiplayerConnection.sendGameData(2,x,y);
+                }
+
+            } else if (GameView.activeScreen == GameView.Screen.TECH_SCREEN) {
+                processTechTap(x,y);
                 FullscreenActivity.memory.add(new Integer((x * FullscreenActivity.widthfullscreen + y) * -1));
 
                 if (gameIsMultiplayer) {
@@ -280,8 +288,10 @@ public class GameEngine extends Thread{
                 GameView.showendTurnScreen = false;
                 return;
             }
-            if (GameView.showAir) {
+            if (GameView.activeScreen == GameView.Screen.AIR_SCREEN) {
                 processAirTap(x, y);
+            } else if (GameView.activeScreen == GameView.Screen.TECH_SCREEN) {
+                processTechTap(x, y);
             } else if (loadoutMenu) {
                 ProcessLoadoutTap(x,y);
             } else {
@@ -293,7 +303,7 @@ public class GameEngine extends Thread{
     //process air input
     public static void processAirTap(int x, int y) {
         if (x / squareLength == 18 && y / squareLength == 10) {
-            GameView.showAir = !GameView.showAir;
+            GameView.activeScreen = GameView.Screen.MAIN_SCREEN;
         }
 
         else if (x / squareLength > 3 && y / squareLength >= 10 && x / squareLength < 10 && selectedPlane == null) {
@@ -370,6 +380,12 @@ public class GameEngine extends Thread{
             GameEngine.selectedPlane.unselect();
         }
 
+    }
+
+    public static void processTechTap(int x, int y) {
+        if (x / squareLength == 18 && y / squareLength == 10) {
+            GameView.activeScreen = GameView.Screen.MAIN_SCREEN;
+        }
     }
 
     public static void ProcessGroundUITap(int x, int y) {
@@ -564,62 +580,15 @@ public class GameEngine extends Thread{
             }
         }
 
-        //upgrade                                                             //TODO: Enable or remove this
-        if (x / squareLength == 16 && y / squareLength == 5 && theUnit != null && false) {
-            if (theUnit.unitType == "Infantry") {
-                if (theUnit.defence == Infantry.GreenDefence) {
-                    if (playing.ironStorage > 0) {
-                        theUnit.defence++;
-                        playing.ironStorage -= 1;
-                    }
-                }
-            }
-            if (theUnit.unitType == "Cavalry") {
-                if (theUnit.defence == Cavalry.GreenDefence) {
-                    if (playing.ironStorage >= 0) {
-                        theUnit.defence++;
-                        playing.ironStorage -= 1;
-                    }
-                }
-            }
-            if (theUnit.unitType == "Artillery") {
-                if (theUnit.defence == Artillery.GreenDefence) {
-                    if (playing.ironStorage > 1) {
-                        theUnit.defence++;
-                        playing.ironStorage -= 2;
-                    }
-                }
-            }
-            if (theUnit.unitType == "Armor") {
-                if (theUnit.defence == Armor.GreenDefence) {
-                    if (playing.ironStorage > 4) {
-                        theUnit.defence++;
-                        playing.ironStorage -= 5;
-                    }
-                }
-            }
-            if (theUnit.unitType == "Headquarters") {
-                if (theUnit.defence == Headquaters.GreenDefence) {
-                    if (playing.ironStorage > 3) {
-                        theUnit.defence++;
-                        playing.ironStorage -= 4;
-                    }
-                }
-            }
-            if (theUnit.unitType == "Anti air") {
-                if (theUnit.defence == MGInfantry.GreenDefence) {
-                    if (playing.ironStorage >= 1) {
-                        theUnit.defence++;
-                        playing.ironStorage -= 1;
-                    }
-                }
-            }
+        //tech screen
+        if (x / squareLength == 16 && y / squareLength == 5) {
+            GameView.activeScreen = GameView.Screen.TECH_SCREEN;
         }
 
 
         //show air
         if (x / squareLength == 18 && y / squareLength == 5) {
-            GameView.showAir = true;
+            GameView.activeScreen = GameView.Screen.AIR_SCREEN;
         }
         //switches market visibility if the button is pressed.
         if (x / squareLength == 5 && y / squareLength == 10) {

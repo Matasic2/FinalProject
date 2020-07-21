@@ -18,8 +18,14 @@ import com.google.android.gms.nearby.Nearby;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
+    enum Screen {
+       MAIN_SCREEN,
+       AIR_SCREEN,
+       TECH_SCREEN
+    }
+
     public static boolean shouldDrawUI = true;
-    public static boolean showAir = false;
+    public static Screen activeScreen = Screen.MAIN_SCREEN;
     public static Context theContext; //context of the View, required for adding textures to units in other classes.
     public static MainThread thread; //Game's thread.
     public static GameEngine grid = null; // Grid of the game
@@ -56,6 +62,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static movableLocation pointers5;
     public static movableLocation pointers6;
     public static movableLocation smoke;
+    public static movableLocation techSquare;
 
     public static movableLocation pointers99;
 
@@ -101,7 +108,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         units = new Units[0];
         resources = new Resources[0];
         theContext = this.getContext(); // Stores the context, see the variable comment above
-        showAir = false;
+        activeScreen = Screen.MAIN_SCREEN;
         showendTurnScreen = false;
         shouldDrawUI = true;
         selected = null;
@@ -153,6 +160,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         shieldDark = new movableLocation(theContext, 36, true);
         smoke = new movableLocation(theContext,37, false);
         smoke.icon = movableLocation.cutIconTransparency(smoke.icon, 0);
+        techSquare = new movableLocation(theContext, 38, true);
         //smoke.displacement = (int) ((double) GameEngine.squareLength * 0.5);
 
 
@@ -322,12 +330,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
 
 
-            if (showAir) {
+            if (activeScreen == Screen.AIR_SCREEN) {
                 drawAir(canvas);
+                return;
+            } else if (activeScreen == Screen.TECH_SCREEN) {
+                drawTech(canvas);
                 return;
             }
 
-            grid.draw(canvas, showAir);  //draws the grid first, because that is the bottom layer.
+            grid.draw(canvas, activeScreen == Screen.AIR_SCREEN);  //draws the grid first, because that is the bottom layer.
             if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("dev_mode") || MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
                 //draws markers
 
@@ -875,7 +886,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public static void drawAir(Canvas canvas) {
 
-        grid.draw(canvas, showAir);
+        grid.draw(canvas, activeScreen == Screen.AIR_SCREEN);
         pointers12.draw(canvas, 18, 10);
 
         Paint paint = new Paint();
@@ -978,5 +989,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             canvas.drawText("Health : " + GameEngine.selectedPlane.HP + "/" + GameEngine.selectedPlane.maxHP + " Repair : " + GameEngine.selectedPlane.healingRate, 1350 * FullscreenActivity.scaleFactor, 1360 * FullscreenActivity.scaleFactor, paint);
 
         }
+    }
+
+    public static void drawTech(Canvas canvas) {
+        techSquare.draw(canvas,1,1);
+        pointers12.draw(canvas, 18, 10);
     }
 }
