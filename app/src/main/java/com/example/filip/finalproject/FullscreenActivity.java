@@ -142,16 +142,24 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
             int currentX = (int) event.getX();
             int currentY = (int) event.getY();
 
-            if (Math.abs(currentX - lastDownX) < (40 * scaleFactor) && Math.abs(currentY - lastDownY) < (40 * scaleFactor)) {
+            if (!hasScrolled && (Math.abs(currentX - lastDownX) < (GameEngine.squareLength / 2) && Math.abs(currentY - lastDownY) < (GameEngine.squareLength / 2))) {
                 return true;
             }
             //don't allow moving screen around in air view
             if (GameView.activeScreen == GameView.Screen.AIR_SCREEN) {
                 return true;
             }
-            GameView.targetCameraX = currentX - lastDownX;
-            GameView.targetCameraY = currentY - lastDownY;
-            hasScrolled = true;
+
+            if (!hasScrolled) {
+                hasScrolled = true;
+                lastDownX = currentX;
+                lastDownY = currentY;
+            }
+
+            GameView.targetCameraX = (currentX - lastDownX) + GameView.cameraX;
+            GameView.targetCameraY = (currentY - lastDownY) + GameView.cameraY;
+            lastDownX = currentX;
+            lastDownY = currentY;
             return true;
         }
 
@@ -171,8 +179,8 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
         }
 
         else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            lastDownX = (int) event.getX() - GameView.cameraX;
-            lastDownY = (int) event.getY() - GameView.cameraY;
+            lastDownX = (int) event.getX();
+            lastDownY = (int) event.getY();
         }
         return true;
     }
