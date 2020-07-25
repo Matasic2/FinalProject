@@ -10,6 +10,8 @@ public class Map {
     public static int number_of_maps_available = 3;
 
     public static void generateMap(Bitmap map, Bitmap mapAir, Bitmap square) {
+
+        TechTree.initializeTechTree("skirmish");
         if (map_code == 2) {
 
             GameView.grid = new GameEngine(map, mapAir, square, 21, 12); // these lines create the board.

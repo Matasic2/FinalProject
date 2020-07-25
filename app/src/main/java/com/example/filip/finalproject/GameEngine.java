@@ -18,6 +18,7 @@ public class GameEngine extends Thread{
     public static final double SMOKE_WIDTH = 0.71;
     public static final int SMOKE_DURATION = 4;
     public static final int SMOKE_PRICE_OIL = 2;
+    public static final int RESEARCH_PER_TURN = 1;
 
     public static int width = 15;
     public static int heigth = 9;
@@ -385,6 +386,11 @@ public class GameEngine extends Thread{
     public static void processTechTap(int x, int y) {
         if (x / squareLength == 18 && y / squareLength == 10) {
             GameView.activeScreen = GameView.Screen.MAIN_SCREEN;
+        }
+
+        TechNode tappedTech = TechTree.findTappedTechNode(x,y);
+        if (tappedTech != null) {
+            TechTree.researchTech(tappedTech);
         }
     }
 
@@ -1526,6 +1532,14 @@ public class GameEngine extends Thread{
                 }
             }
         }
+
+        playing.researchPoints += RESEARCH_PER_TURN;
+        playing.foodStorage += playing.bonusFood;
+        playing.ironStorage += playing.bonusIron;
+        playing.oilStorage += playing.bonusOil;
+        playing.researchPoints += playing.bonusResearch;
+
+
         GameEngine.estimateResources();
         showMarket = false;
         showFactory = false;
@@ -1559,6 +1573,11 @@ public class GameEngine extends Thread{
                 }
             }
         }
+
+        addedfood += playing.bonusFood;
+        addediron += playing.bonusIron;
+        addedoil += playing.bonusOil;
+
         GameEngine.lastAddedResources[0] = addedfood;
         GameEngine.lastAddedResources[1] = addediron;
         GameEngine.lastAddedResources[2] = addedoil;

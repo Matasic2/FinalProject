@@ -3,11 +3,20 @@ package com.example.filip.finalproject;
 public class Player {
 
     public String color; //Player's color
+
     public int oilStorage = 0; //Player's oil storage value
     public int ironStorage = 0;//Player's iron storage value
     public int foodStorage = 0;//Player's food storage value
+    public int researchPoints = 10;
+
+    public int bonusFood = 0; //extra food that player gets at the start of every turn
+    public int bonusIron = 0;
+    public int bonusOil = 0;
+    public int bonusResearch = 0;
+
     public Planes[] hangar = new Planes[6];
     public boolean[][] upgrades = new boolean[5][3]; //Player's upgrades, empty and unused for now
+    public boolean[] techs = new boolean[0];
 
 
     public boolean isHuman; //is the player human

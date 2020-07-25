@@ -180,6 +180,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         mapAir = Bitmap.createScaledBitmap(mapAir, (int) (mapAir.getWidth() * FullscreenActivity.scaleFactor), (int) (mapAir.getHeight() * FullscreenActivity.scaleFactor), true);
         Bitmap square = BitmapFactory.decodeResource(this.getResources(), R.mipmap.square, o);
         square =  Bitmap.createScaledBitmap(square, (int) (square.getWidth() * FullscreenActivity.scaleFactor), (int) (square.getHeight() * FullscreenActivity.scaleFactor), true);
+        TechNode.icon = techSquare.icon;
 
             //skirmish
             if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") ||  MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
@@ -992,7 +993,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public static void drawTech(Canvas canvas) {
-        techSquare.draw(canvas,1,1);
+        TechTree.draw(canvas);
         pointers12.draw(canvas, 18, 10);
     }
 }
