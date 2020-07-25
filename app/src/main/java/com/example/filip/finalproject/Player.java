@@ -18,7 +18,6 @@ public class Player {
     public boolean[][] upgrades = new boolean[5][3]; //Player's upgrades, empty and unused for now
     public boolean[] techs = new boolean[0];
 
-
     public boolean isHuman; //is the player human
 
     Player (String str, boolean human) {
