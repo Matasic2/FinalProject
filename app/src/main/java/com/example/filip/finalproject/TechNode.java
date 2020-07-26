@@ -97,25 +97,25 @@ public class TechNode {
                 thePaint.setColor(Color.YELLOW);
                 canvas.drawText(
                         Integer.toString(foodPrice),
-                        (xRoot * FullscreenActivity.scaleFactor + 410 * FullscreenActivity.scaleFactor),
+                        (xRoot * FullscreenActivity.scaleFactor + 260 * FullscreenActivity.scaleFactor),
                         (yRoot * FullscreenActivity.scaleFactor + 45 * FullscreenActivity.scaleFactor),
                         thePaint);
                 thePaint.setColor(Color.argb(255, 204, 102, 0));
                 canvas.drawText(
                         Integer.toString(ironPrice),
-                        (xRoot * FullscreenActivity.scaleFactor + 460 * FullscreenActivity.scaleFactor),
+                        (xRoot * FullscreenActivity.scaleFactor + 310 * FullscreenActivity.scaleFactor),
                         (yRoot * FullscreenActivity.scaleFactor + 45 * FullscreenActivity.scaleFactor),
                         thePaint);
                 thePaint.setColor(Color.GRAY);
                 canvas.drawText(
                         Integer.toString(oilPrice),
-                        (xRoot * FullscreenActivity.scaleFactor + 410 * FullscreenActivity.scaleFactor),
+                        (xRoot * FullscreenActivity.scaleFactor + 260 * FullscreenActivity.scaleFactor),
                         (yRoot * FullscreenActivity.scaleFactor + 85 * FullscreenActivity.scaleFactor),
                         thePaint);
                 thePaint.setColor(Color.argb(255, 90, 90, 255));
                 canvas.drawText(
                         Integer.toString(researchPrice),
-                        (xRoot * FullscreenActivity.scaleFactor + 460 * FullscreenActivity.scaleFactor),
+                        (xRoot * FullscreenActivity.scaleFactor + 310 * FullscreenActivity.scaleFactor),
                         (yRoot * FullscreenActivity.scaleFactor + 85 * FullscreenActivity.scaleFactor),
                         thePaint);
             } else {
@@ -125,7 +125,7 @@ public class TechNode {
                 if (GameEngine.playing == GameEngine.red) {
                     thePaint.setColor(Color.RED);
                 }
-                canvas.drawRect((xRoot + 406) * FullscreenActivity.scaleFactor, (yRoot + 6) * FullscreenActivity.scaleFactor, (xRoot + 494) * FullscreenActivity.scaleFactor, (yRoot + 87) * FullscreenActivity.scaleFactor, thePaint);
+                canvas.drawRect((xRoot + 256) * FullscreenActivity.scaleFactor, (yRoot + 6) * FullscreenActivity.scaleFactor, (xRoot + 344) * FullscreenActivity.scaleFactor, (yRoot + 87) * FullscreenActivity.scaleFactor, thePaint);
             }
         }
 
