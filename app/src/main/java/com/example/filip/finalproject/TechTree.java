@@ -24,13 +24,13 @@ public class TechTree {
                 rootTech, null, 1,
                 100, 100,
                 "food1", "+1 food per turn", null, null,
-                0, 6, 6, 5
+                0, 1, 0, 4
         );
         TechNode infantry1 = new TechNode(
                 rootTech, null, 2,
                 1600, 100,
                 "infantry1", "+1 defence", "+1 ranged", "attack damage",
-                0, 6, 0, 5
+                0, 2, 0, 6
         );
         rootTech.children[0] = food1;
         rootTech.children[1] = infantry1;
@@ -40,13 +40,13 @@ public class TechTree {
                 food1, null, 3,
                 100, 400,
                 "food2", "+1 food per turn", null, null,
-                0, 6, 6, 5
+                0, 2, 2, 4
         );
         TechNode iron1 = new TechNode(
                 food1, null, 4,
                 550, 400,
                 "iron1", "+1 iron per turn", null, null,
-                0, 6, 0, 5
+                0, 2, 0, 4
         );
         food1.children[0] = food2;
         food1.children[1] = iron1;
@@ -57,23 +57,32 @@ public class TechTree {
                 food2, null, 5,
                 100, 700,
                 "food3", "+1 food per turn", null, null,
-                0, 6, 6, 5
+                0, 4, 4, 6
         );
         TechNode iron2 = new TechNode(
                 iron1, null, 6,
                 550, 700,
                 "iron1", "+1 iron per turn", null, null,
-                0, 6, 0, 5
+                0, 4, 4, 6
         );
         TechNode oil1 = new TechNode(
                 iron1, null, 7,
                 1000, 700,
-                "oil1", "+1 oil per turn", null, null,
-                0, 6, 0, 5
+                "oil2", "+1 oil per turn", null, null,
+                0, 4, 4, 6
         );
         food2.children[0] = food3;
         iron1.children[0] = iron2;
         iron1.children[1] = oil1;
+
+        TechNode food4 = new TechNode(
+                food3, null, 8,
+                100, 1000,
+                "food4", "+1 food per turn", null, null,
+                0, 4, 4, 6
+        );
+        food3.children = new TechNode[1];
+        food3.children[0] = food4;
     }
 
     private static TechNode findTappedNodeRecursive(TechNode current, int x, int y) {
@@ -154,6 +163,36 @@ public class TechTree {
             } else {
                 Infantry.RedDefence++;
             }
+        }
+
+        if (techNum == 3) {
+            GameEngine.playing.bonusFood++;
+            GameEngine.estimateResources();
+        }
+
+        if (techNum == 4) {
+            GameEngine.playing.bonusIron++;
+            GameEngine.estimateResources();
+        }
+
+        if (techNum == 5) {
+            GameEngine.playing.bonusFood++;
+            GameEngine.estimateResources();
+        }
+
+        if (techNum == 6) {
+            GameEngine.playing.bonusIron++;
+            GameEngine.estimateResources();
+        }
+
+        if (techNum == 7) {
+            GameEngine.playing.bonusOil++;
+            GameEngine.estimateResources();
+        }
+
+        if (techNum == 8) {
+            GameEngine.playing.bonusFood++;
+            GameEngine.estimateResources();
         }
     }
 }

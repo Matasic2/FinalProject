@@ -995,5 +995,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static void drawTech(Canvas canvas) {
         TechTree.draw(canvas);
         pointers12.draw(canvas, 18, 10);
+
+        Paint thePaint = new Paint();
+        thePaint.setTextSize(60 * FullscreenActivity.scaleFactor);
+        thePaint.setColor(Color.argb(255, 90, 90, 255));
+        canvas.drawText("Research points : " + GameEngine.playing.researchPoints + " (+" + GameEngine.playing.bonusResearch + ")", 100 * FullscreenActivity.scaleFactor, 1370 * FullscreenActivity.scaleFactor, thePaint);
     }
 }
