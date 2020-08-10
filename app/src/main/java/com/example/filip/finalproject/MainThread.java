@@ -16,6 +16,9 @@ public class MainThread extends Thread {
     public static boolean isRendering = false;
     public static boolean shouldPause = false;
 
+    public static boolean shouldCancelDrawing = false;
+    public static int techScreenCameraXLimit = 0;
+
     public long previousTime = 0;
 
     public MainThread(SurfaceHolder surfaceHolder, GameView gameView) {
@@ -55,10 +58,11 @@ public class MainThread extends Thread {
                 }
             }
 
-
-            if (this.canvas != null && drawSucceeded) {
+            if (this.canvas != null && drawSucceeded && !shouldCancelDrawing) {
                 surfaceHolder.unlockCanvasAndPost(canvas);
                 previousTime = System.currentTimeMillis();
+            } else if (shouldCancelDrawing) {
+                shouldCancelDrawing = false;
             }
             isRendering = false;
         }
@@ -94,26 +98,35 @@ public class MainThread extends Thread {
         GameView.cameraX = GameView.targetCameraX;
 
         //adjust camera
-        if (GameEngine.width > 15) {
+        if (GameView.activeScreen == GameView.Screen.TECH_SCREEN) {
             if (GameView.cameraX > 0) {
                 GameView.cameraX = 0;
+            } else if (GameView.cameraX < -techScreenCameraXLimit) {
+                GameView.cameraX = -techScreenCameraXLimit;
             }
-            if (GameView.cameraX < (15 - GameEngine.width) * GameEngine.squareLength) {
-                GameView.cameraX = (15 - GameEngine.width) * GameEngine.squareLength;
-            }
+
+            GameView.cameraY = 0;
         } else {
-            GameView.cameraX = 0;
-        }
-        if (GameEngine.heigth > 9) {
-            if (GameView.cameraY > 0) {
+            if (GameEngine.width > 15) {
+                if (GameView.cameraX > 0) {
+                    GameView.cameraX = 0;
+                }
+                if (GameView.cameraX < (15 - GameEngine.width) * GameEngine.squareLength) {
+                    GameView.cameraX = (15 - GameEngine.width) * GameEngine.squareLength;
+                }
+            } else {
+                GameView.cameraX = 0;
+            }
+            if (GameEngine.heigth > 9) {
+                if (GameView.cameraY > 0) {
+                    GameView.cameraY = 0;
+                }
+                if (GameView.cameraY < (9 - GameEngine.heigth) * GameEngine.squareLength) {
+                    GameView.cameraY = (9 - GameEngine.heigth) * GameEngine.squareLength;
+                }
+            } else {
                 GameView.cameraY = 0;
             }
-            if (GameView.cameraY < (9 - GameEngine.heigth) * GameEngine.squareLength) {
-                GameView.cameraY = (9 - GameEngine.heigth ) * GameEngine.squareLength;
-            }
-        } else {
-            GameView.cameraY = 0;
         }
-
     }
 }

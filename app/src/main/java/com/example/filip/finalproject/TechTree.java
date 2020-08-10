@@ -12,12 +12,17 @@ public class TechTree {
             return;
         }
 
+        MainThread.techScreenCameraXLimit = (int) (4000 * FullscreenActivity.scaleFactor);
+
         GameEngine.green.techs = new boolean[9];
         GameEngine.red.techs = new boolean[9];
         GameEngine.green.techs[0] = true;
         GameEngine.red.techs[0] = true;
         rootTech = new TechNode();
         rootTech.name = "rootTech";
+
+        GameEngine.green.bonusResearch = 2;
+        GameEngine.red.bonusResearch = 2;
 
         rootTech.children = new TechNode[2];
         TechNode food1 = new TechNode(

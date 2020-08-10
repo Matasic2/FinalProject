@@ -55,6 +55,7 @@ public class TechNode {
         if (parent != null) { //if its null its root tech so skip it
             int xRoot = (int) (x * FullscreenActivity.scaleFactor);
             int yRoot = (int) (y * FullscreenActivity.scaleFactor);
+            xRoot += GameView.cameraX;
 
             Paint thePaint = new Paint();
             thePaint.setTextSize(40 * FullscreenActivity.scaleFactor);

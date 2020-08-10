@@ -250,10 +250,10 @@ public class GameEngine extends Thread{
 
             } else if (GameView.activeScreen == GameView.Screen.TECH_SCREEN) {
                 processTechTap(x,y);
-                FullscreenActivity.memory.add(new Integer((x * FullscreenActivity.widthfullscreen + y) * -1));
+                FullscreenActivity.memory.add(new Integer((x - GameView.cameraX) * FullscreenActivity.widthfullscreen + (y - GameView.cameraY)));
 
                 if (gameIsMultiplayer) {
-                    MultiplayerConnection.sendGameData(2,x,y);
+                    MultiplayerConnection.sendGameData(1,x- GameView.cameraX,y - GameView.cameraY);
                 }
 
             } else {
@@ -385,10 +385,11 @@ public class GameEngine extends Thread{
 
     public static void processTechTap(int x, int y) {
         if (x / squareLength == 18 && y / squareLength == 10) {
-            GameView.activeScreen = GameView.Screen.MAIN_SCREEN;
+            switchToMainScreen();
+            return;
         }
 
-        TechNode tappedTech = TechTree.findTappedTechNode(x,y);
+        TechNode tappedTech = TechTree.findTappedTechNode(x + GameView.cameraX,y + GameView.cameraY );
         if (tappedTech != null) {
             TechTree.researchTech(tappedTech);
         }
@@ -588,7 +589,7 @@ public class GameEngine extends Thread{
 
         //tech screen
         if (x / squareLength == 16 && y / squareLength == 5) {
-            GameView.activeScreen = GameView.Screen.TECH_SCREEN;
+            switchToTechScreen();
         }
 
 
@@ -1772,6 +1773,20 @@ public class GameEngine extends Thread{
             }
         }
         return true;
+    }
+
+    public static void switchToTechScreen() {
+        GameView.activeScreen = GameView.Screen.TECH_SCREEN;
+       // MainThread.shouldCancelDrawing = true;
+        GameView.targetCameraX = 0;
+        GameView.targetCameraY = 0;
+    }
+
+    public static void switchToMainScreen() {
+        GameView.activeScreen = GameView.Screen.MAIN_SCREEN;
+       // MainThread.shouldCancelDrawing = true;
+        GameView.targetCameraX = 0;
+        GameView.targetCameraY = 0;
     }
 
 }
