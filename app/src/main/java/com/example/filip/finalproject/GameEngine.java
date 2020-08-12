@@ -388,8 +388,9 @@ public class GameEngine extends Thread{
             switchToMainScreen();
             return;
         }
-
-        TechNode tappedTech = TechTree.findTappedTechNode(x + GameView.cameraX,y + GameView.cameraY );
+        x = x  - GameView.cameraX;
+        y = y  - GameView.cameraY;
+        TechNode tappedTech = TechTree.findTappedTechNode((int) (x * FullscreenActivity.scaleFactor), (int) (y * FullscreenActivity.scaleFactor));
         if (tappedTech != null) {
             TechTree.researchTech(tappedTech);
         }

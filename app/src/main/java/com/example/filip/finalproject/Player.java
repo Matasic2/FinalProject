@@ -15,7 +15,8 @@ public class Player {
     public int bonusResearch = 0;
 
     public Planes[] hangar = new Planes[6];
-    public boolean[][] upgrades = new boolean[5][3]; //Player's upgrades, empty and unused for now
+    public boolean[][] upgrades = new boolean[5][3]; //Player's loadout menu upgrades
+    public boolean[][] upgradesUnlocked = new boolean[5][3]; //Player's loadout menu upgrades TODO: FIX
     public boolean[] techs = new boolean[0];
 
     public boolean isHuman; //is the player human
@@ -28,6 +29,12 @@ public class Player {
         for (int i = 0; i < upgrades.length; i++) {
             for (int j = 0; j < upgrades[i].length; j++) {
                 upgrades[i][j] = false;
+            }
+        }
+
+        for (int i = 0; i < upgradesUnlocked.length; i++) {
+            for (int j = 0; j < upgradesUnlocked[i].length; j++) {
+                upgradesUnlocked[i][j] = true;
             }
         }
     }
@@ -44,6 +51,11 @@ public class Player {
         } else if (unitType == "Armor") {
             x = 3;
         }
+
+        if (!upgradesUnlocked[x][y]) {
+            return;
+        }
+
         upgrades[x][y] = !upgrades[x][y];
 
         int factor = 1;

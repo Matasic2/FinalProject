@@ -6,39 +6,52 @@ import android.graphics.Canvas;
 public class TechTree {
 
     public static TechNode rootTech;
+    public static String scenario = "";
 
     public static void initializeTechTree(String scenario) {
         if (!scenario.equals("skirmish")) {
             return;
         }
 
+        TechTree.scenario = scenario;
+
         MainThread.techScreenCameraXLimit = (int) (4000 * FullscreenActivity.scaleFactor);
 
-        GameEngine.green.techs = new boolean[9];
-        GameEngine.red.techs = new boolean[9];
+        GameEngine.green.techs = new boolean[20];
+        GameEngine.red.techs = new boolean[20];
         GameEngine.green.techs[0] = true;
         GameEngine.red.techs[0] = true;
         rootTech = new TechNode();
         rootTech.name = "rootTech";
 
+        for (int i = 0; i < GameEngine.green.upgradesUnlocked.length; i++) {
+            for (int j = 0; j < GameEngine.green.upgradesUnlocked[i].length; j++) {
+                if (i == 1 || i == 3) {
+                    GameEngine.green.upgradesUnlocked[i][j] = false;
+                }
+            }
+        }
+        for (int i = 0; i < GameEngine.red.upgradesUnlocked.length; i++) {
+            for (int j = 0; j < GameEngine.red.upgradesUnlocked[i].length; j++) {
+                if (i == 1 || i == 3) {
+                    GameEngine.red.upgradesUnlocked[i][j] = false;
+                }
+            }
+        }
+
         GameEngine.green.bonusResearch = 2;
         GameEngine.red.bonusResearch = 2;
 
-        rootTech.children = new TechNode[2];
+        //----------------------------------Economy Upgrades---------------------------------------
+        rootTech.children = new TechNode[3];
         TechNode food1 = new TechNode(
                 rootTech, null, 1,
                 100, 100,
                 "food1", "+1 food per turn", null, null,
                 0, 1, 0, 4
         );
-        TechNode infantry1 = new TechNode(
-                rootTech, null, 2,
-                1600, 100,
-                "infantry1", "+1 defence", "+1 ranged", "attack damage",
-                0, 2, 0, 6
-        );
+
         rootTech.children[0] = food1;
-        rootTech.children[1] = infantry1;
 
         food1.children = new TechNode[2];
         TechNode food2 = new TechNode(
@@ -88,6 +101,51 @@ public class TechTree {
         );
         food3.children = new TechNode[1];
         food3.children[0] = food4;
+
+
+        //----------------------------------Infantry Upgrades---------------------------------------
+        TechNode infantry1 = new TechNode(
+                rootTech, null, 2,
+                1900, 100,
+                "infantry1", "+1 defence", "", "",
+                0, 2, 0, 6
+        );
+        rootTech.children[1] = infantry1;
+        infantry1.children = new TechNode[3];
+
+        TechNode infantryStorm = new TechNode(
+                infantry1, null, 9,
+                1450, 400,
+                "infantryStorm", "Unlock upgrade 1", "", "",
+                0, 2, 0, 6
+        );
+        TechNode infantryArmor = new TechNode(
+                infantry1, null, 10,
+                1900, 400,
+                "infantryArmor", "+1 defence", "Unlock upgrade 2", "",
+                0, 2, 0, 6
+        );
+        TechNode infantryAT = new TechNode(
+                infantry1, null, 11,
+                2350, 400,
+                "infantryAT", "Unlock upgrade 3", "", "",
+                0, 2, 0, 6
+        );
+        infantry1.children[0] = infantryStorm;
+        infantry1.children[1] = infantryArmor;
+        infantry1.children[2] = infantryAT;
+
+        //----------------------------------Armor Upgrades---------------------------------------
+
+        TechNode armor1 = new TechNode(
+                rootTech, null, 12,
+                3200, 100,
+                "armor1", "unlock all upgrades", "", "",
+                0, 2, 0, 6
+        );
+        rootTech.children[2] = armor1;
+        //armor1.children = new TechNode[3];
+
     }
 
     private static TechNode findTappedNodeRecursive(TechNode current, int x, int y) {
@@ -198,6 +256,30 @@ public class TechTree {
         if (techNum == 8) {
             GameEngine.playing.bonusFood++;
             GameEngine.estimateResources();
+        }
+
+        if (techNum == 9) {
+            GameEngine.playing.upgradesUnlocked[1][0] = true;
+        }
+
+        if (techNum == 10) {
+            GameEngine.playing.upgradesUnlocked[1][1] = true;
+            if (player == GameEngine.green) {
+                Infantry.GreenDefence++;
+            } else {
+                Infantry.RedDefence++;
+            }
+        }
+
+        if (techNum == 11) {
+            GameEngine.playing.upgradesUnlocked[1][2] = true;
+
+        }
+
+        if (techNum == 12) {
+            GameEngine.playing.upgradesUnlocked[3][0] = true;
+            GameEngine.playing.upgradesUnlocked[3][1] = true;
+            GameEngine.playing.upgradesUnlocked[3][2] = true;
         }
     }
 }

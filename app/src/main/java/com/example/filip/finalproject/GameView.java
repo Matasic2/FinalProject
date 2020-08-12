@@ -63,6 +63,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static movableLocation pointers6;
     public static movableLocation smoke;
     public static movableLocation techSquare;
+    public static movableLocation techIcon;
 
     public static movableLocation pointers99;
 
@@ -161,6 +162,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         smoke = new movableLocation(theContext,37, false);
         smoke.icon = movableLocation.cutIconTransparency(smoke.icon, 0);
         techSquare = new movableLocation(theContext, 38, true);
+        techIcon = new movableLocation(theContext, 39, true);
         //smoke.displacement = (int) ((double) GameEngine.squareLength * 0.5);
 
 
@@ -502,6 +504,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             pointers6.draw(canvas, 18, 3);
             pointers99.draw(canvas, 5, 9);
             pointers12.draw(canvas, 18, 5);
+            techIcon.draw(canvas, 16, 5);
+
 
             if (GameEngine.showMarket) {
                 if (GameEngine.playing == GameEngine.green) {
@@ -797,17 +801,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         binocDark.draw(canvas,12,4);
                     }
 
-                        if (GameEngine.playing.upgrades[0][1]) {
-                            shield.draw(canvas, 12 ,6);
-                        } else {
-                            shieldDark.draw(canvas,12,6);
-                        }
+                    if (GameEngine.playing.upgrades[0][1]) {
+                        shield.draw(canvas, 12 ,6);
+                    } else {
+                        shieldDark.draw(canvas,12,6);
+                    }
 
-                        if (GameEngine.playing.upgrades[0][2]) {
-                            shield.draw(canvas, 12 ,8);
-                        } else {
-                            shieldDark.draw(canvas,12,8);
-                        }
+                    if (GameEngine.playing.upgrades[0][2]) {
+                        shield.draw(canvas, 12 ,8);
+                    } else {
+                        shieldDark.draw(canvas,12,8);
+                    }
                 }
 
                     if (GameEngine.loadoutMenuUnit == "Infantry") {
