@@ -7,9 +7,30 @@ public class TechTree {
 
     public static TechNode rootTech;
     public static String scenario = "";
+    public static boolean techIsEnabled = true;
 
     public static void initializeTechTree(String scenario) {
         if (!scenario.equals("skirmish")) {
+            return;
+        }
+
+        if (!techIsEnabled) {
+
+            for (int i = 0; i < GameEngine.green.upgradesUnlocked.length; i++) {
+                for (int j = 0; j < GameEngine.green.upgradesUnlocked[i].length; j++) {
+                    if (i == 1 || i == 3) {
+                        GameEngine.green.upgradesUnlocked[i][j] = true;
+                    }
+                }
+            }
+            for (int i = 0; i < GameEngine.red.upgradesUnlocked.length; i++) {
+                for (int j = 0; j < GameEngine.red.upgradesUnlocked[i].length; j++) {
+                    if (i == 1 || i == 3) {
+                        GameEngine.red.upgradesUnlocked[i][j] = true;
+                    }
+                }
+            }
+
             return;
         }
 
@@ -207,8 +228,7 @@ public class TechTree {
         }
     }
 
-    public static void draw(Canvas canvas) {
-        rootTech.draw(canvas);
+    public static void draw(Canvas canvas) { rootTech.draw(canvas);
     }
 
     public static void addTechToPlayer(TechNode node, Player player) {

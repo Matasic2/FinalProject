@@ -589,7 +589,7 @@ public class GameEngine extends Thread{
         }
 
         //tech screen
-        if (x / squareLength == 16 && y / squareLength == 5) {
+        if (x / squareLength == 16 && y / squareLength == 5 && TechTree.techIsEnabled) {
             switchToTechScreen();
         }
 

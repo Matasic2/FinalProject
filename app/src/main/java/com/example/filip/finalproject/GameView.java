@@ -504,7 +504,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             pointers6.draw(canvas, 18, 3);
             pointers99.draw(canvas, 5, 9);
             pointers12.draw(canvas, 18, 5);
-            techIcon.draw(canvas, 16, 5);
+
+            if (TechTree.techIsEnabled) {
+                techIcon.draw(canvas, 16, 5);
+            }
 
 
             if (GameEngine.showMarket) {

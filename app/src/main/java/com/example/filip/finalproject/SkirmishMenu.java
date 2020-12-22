@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -73,6 +75,19 @@ public class SkirmishMenu extends AppCompatActivity {
                 ((TextView)findViewById(R.id.textView2)).setText("Map mode : " + new Integer(Map.map_code).toString());
             }
         });
+
+        CheckBox checkbox = findViewById(R.id.checkbox);
+        checkbox.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                if(((CompoundButton) view).isChecked()){
+                    TechTree.techIsEnabled = true;
+                } else {
+                    TechTree.techIsEnabled = false;
+                }
+
+            }
+        });
+        checkbox.setChecked(true);
     }
 
     @Override
