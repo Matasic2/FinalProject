@@ -114,6 +114,7 @@ public class GameEngine extends Thread{
         Armor.restoreDefaultValues();
 
         ReplayMenu.replayMapMode = Map.map_code; //store map for replay
+        ReplayMenu.replayTechEnabled = TechTree.techIsEnabled;
 
     }
 

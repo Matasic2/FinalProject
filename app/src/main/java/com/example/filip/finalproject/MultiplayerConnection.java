@@ -127,12 +127,14 @@ public class MultiplayerConnection {
         connection.hostGameInternal();
         GameEngine.gameIsMultiplayer = true;
         GameEngine.isHostPhone = true;
+        TechTree.techIsEnabled = false;
     }
 
     public static void joinGame() {
         connection.joinGameInternal();
         GameEngine.gameIsMultiplayer = true;
         GameEngine.isHostPhone = false;
+        TechTree.techIsEnabled = false;
     }
 
 

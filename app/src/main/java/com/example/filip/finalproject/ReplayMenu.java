@@ -13,6 +13,7 @@ import android.widget.EditText;
 public class ReplayMenu extends AppCompatActivity {
 
     public static int replayMapMode = 0;
+    public static boolean replayTechEnabled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +25,7 @@ public class ReplayMenu extends AppCompatActivity {
                 MainMenu.scenario = "Skirmish";
                 GameEngine.replayMode = true;
                 GameEngine.gameIsMultiplayer = false;
+                TechTree.techIsEnabled = replayTechEnabled;
                 EditText simpleEditText = (EditText) findViewById(R.id.editText);
                 String userText = simpleEditText.getText().toString();
                 GameEngine.replayActionDelay = Integer.parseInt(userText);
