@@ -102,13 +102,13 @@ public class MultiplayerConnection {
                         /* endpointName= */ "Device A",
                         /* serviceId= */ "com.landsOfBattle",
                         connectionLifecycleCallback,
-                        new AdvertisingOptions(Strategy.P2P_POINT_TO_POINT));
+                        new AdvertisingOptions(Strategy.P2P_STAR));
     }
 
     private void startDiscovery() {
         connectionsClient.startDiscovery(
                 "com.landsOfBattle",endpointDiscoveryCallback,
-                new DiscoveryOptions(Strategy.P2P_POINT_TO_POINT));
+                new DiscoveryOptions(Strategy.P2P_STAR));
     }
 
     private void hostGameInternal() {
