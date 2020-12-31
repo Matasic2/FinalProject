@@ -1183,7 +1183,7 @@ public class GameEngine extends Thread{
         int attackerDamage;
         int defenderDamage;
 
-        if ((attacker.attack1Range >= getSquareDistance           //and check if unit is in range of first (stronger) attack.
+        if ((attacker.attack1Range >= getSquareDistance           //check if unit is in range of first (stronger) attack.
                 (getCoordinates(attacker)[0], getCoordinates(defender)[0],
                         getCoordinates(attacker)[1], getCoordinates(defender)[1]))) {
             attackerDamage = attacker.attack1;
@@ -1196,11 +1196,11 @@ public class GameEngine extends Thread{
             return;
         }
 
-        if ((defender.attack1Range >= getSquareDistance           //and check if unit is in range of first (stronger) attack.
+        if ((defender.attack1Range >= getSquareDistance           //check if unit is in range of first (stronger) attack.
                 (getCoordinates(defender)[0], getCoordinates(attacker)[0],
                         getCoordinates(defender)[1], getCoordinates(attacker)[1]))) {
             defenderDamage = defender.attack1 - 1;
-        } else if ((defender.attack2Range >= getSquareDistance           //and check if unit is in range of first (stronger) attack.
+        } else if ((defender.attack2Range >= getSquareDistance           //check if unit is in range of first (stronger) attack.
                 (getCoordinates(defender)[0], getCoordinates(attacker)[0],
                         getCoordinates(defender)[1], getCoordinates(attacker)[1]))) {
             defenderDamage = defender.attack2 - 1;
@@ -1235,7 +1235,7 @@ public class GameEngine extends Thread{
                 finalDamageFactor = attackerTimeToKill;
                 DamageUnit(attackerDamage, defender, getCoordinates(defender)[0], getCoordinates(defender)[1]);
                 if (attacker.defence < (int) (defenderDamage * finalDamageFactor)) {
-                    attacker.HP = attacker.HP - (int) ((defenderDamage * finalDamageFactor) - attacker.defence);
+                    attacker.HP -= (int) ((defenderDamage * finalDamageFactor) - attacker.defence);
                     if (attacker.HP <= 0) {
                         attacker.HP = 1;
                     }
@@ -1246,7 +1246,7 @@ public class GameEngine extends Thread{
                 finalDamageFactor = defenderTimeToKill;
                 DamageUnit(defenderDamage, attacker, getCoordinates(attacker)[0], getCoordinates(attacker)[1]);
                 if (defender.defence < (int) (attackerDamage * finalDamageFactor)) {
-                    defender.HP = defender.HP - (int) ((attackerDamage * finalDamageFactor) - defender.defence);
+                    defender.HP -=  (int) ((attackerDamage * finalDamageFactor) - defender.defence);
                     if (defender.HP <= 0) {
                         defender.HP = 1;
                     }
@@ -1255,7 +1255,7 @@ public class GameEngine extends Thread{
                 }
             }
 
-        } else {
+        } else { //both units will survive, so damage them both
             DamageUnit(attackerDamage, defender, getCoordinates(defender)[0], getCoordinates(defender)[1]);
             DamageUnit(defenderDamage, attacker, getCoordinates(attacker)[0], getCoordinates(attacker)[1]);
         }

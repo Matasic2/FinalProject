@@ -7,7 +7,7 @@ public class TechTree {
 
     public static TechNode rootTech;
     public static String scenario = "";
-    public static boolean techIsEnabled = true;
+    public static boolean techIsEnabled = false;
 
     public static void initializeTechTree(String scenario) {
         if (!scenario.equals("skirmish")) {

@@ -84,6 +84,10 @@ public class Units {
         this.healRate = healRate;
     }
 
+    public Units() {
+
+    }
+
     //creates a new unit, initialize icon to it's unit type, attribute attack, defence and HP values, and set the owner. It also adds it to GaveView's units array and to GameEngine's Object[][] array.
     public Units(Context context, int x, int y, Player player, String unitType) {
         //see above for meaning of these values
