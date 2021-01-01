@@ -45,7 +45,7 @@ public class Planes {
             for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
                 for (int j = row * 3; j < (row + 1) * 3; j++) {
                     if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
-                        GameEngine.DamageUnit(groundAttack, GameEngine.BoardSprites[i][j],i,j);
+                        GameEngine.DamageUnit(groundAttack, GameEngine.BoardSprites[i][j],i,j, 3);
                     }
                 }
             }

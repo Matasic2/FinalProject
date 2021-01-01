@@ -1192,7 +1192,7 @@ public class GameEngine extends Thread{
         }
 
         if (!returnFireEnabled) {
-            DamageUnit(attackerDamage, defender, getCoordinates(defender)[0], getCoordinates(defender)[1]);
+            DamageUnit(attackerDamage, defender, getCoordinates(defender)[0], getCoordinates(defender)[1], 0);
             return;
         }
 
@@ -1224,7 +1224,8 @@ public class GameEngine extends Thread{
             }
 
             if (attackerTimeToKill == defenderTimeToKill) {
-                DamageUnit(attackerDamage, defender, getCoordinates(defender)[0], getCoordinates(defender)[1]);
+                DamageUnit(attackerDamage, defender, getCoordinates(defender)[0], getCoordinates(defender)[1], 1);
+                message += " received: " + (attacker.HP - 1);
                 attacker.HP = 1;
                 return;
             }
@@ -1233,73 +1234,95 @@ public class GameEngine extends Thread{
 
             if (attackerTimeToKill < defenderTimeToKill) {
                 finalDamageFactor = attackerTimeToKill;
-                DamageUnit(attackerDamage, defender, getCoordinates(defender)[0], getCoordinates(defender)[1]);
-                if (attacker.defence < (int) (defenderDamage * finalDamageFactor)) {
-                    attacker.HP -= (int) ((defenderDamage * finalDamageFactor) - attacker.defence);
+                DamageUnit(attackerDamage, defender, getCoordinates(defender)[0], getCoordinates(defender)[1], 1);
+                if ((int) ((defenderDamage - attacker.defence) * finalDamageFactor) > 0) {
+                    attacker.HP -= (int) ((defenderDamage - attacker.defence) * finalDamageFactor);
                     if (attacker.HP <= 0) {
+                        message += " received: " + (attacker.HP - 1);
                         attacker.HP = 1;
+                    } else {
+                        message += " received: " + (int) ((defenderDamage - attacker.defence) * finalDamageFactor);
                     }
                 } else {
+                    message += " received: 0";
                     return;
                 }
             } else {
                 finalDamageFactor = defenderTimeToKill;
-                DamageUnit(defenderDamage, attacker, getCoordinates(attacker)[0], getCoordinates(attacker)[1]);
-                if (defender.defence < (int) (attackerDamage * finalDamageFactor)) {
-                    defender.HP -=  (int) ((attackerDamage * finalDamageFactor) - defender.defence);
+                if ((int) ((attackerDamage - defender.defence) * finalDamageFactor) > 0) {
+                    message = "Damage given: " + (int) ((attackerDamage - defender.defence) * finalDamageFactor);
+                    defender.HP -=  (int) ((attackerDamage - defender.defence) * finalDamageFactor);
                     if (defender.HP <= 0) {
                         defender.HP = 1;
                     }
                 } else {
-                    return;
+                    message = "Damage given: 0";
                 }
+                DamageUnit(defenderDamage, attacker, getCoordinates(attacker)[0], getCoordinates(attacker)[1], 2);
             }
 
         } else { //both units will survive, so damage them both
-            DamageUnit(attackerDamage, defender, getCoordinates(defender)[0], getCoordinates(defender)[1]);
-            DamageUnit(defenderDamage, attacker, getCoordinates(attacker)[0], getCoordinates(attacker)[1]);
+            DamageUnit(attackerDamage, defender, getCoordinates(defender)[0], getCoordinates(defender)[1], 1);
+            DamageUnit(defenderDamage, attacker, getCoordinates(attacker)[0], getCoordinates(attacker)[1], 2);
         }
 
     }
     //damages the unit at given coordinates
-    public static void DamageUnit(int damage, Units u, int x, int y) {
+    //message codes: 0- only do damage to unit 1- first damage in duel (and first part of message) 2- second damage in duel (second part of message) 3- dont display messages
+    public static void DamageUnit(int damage, Units u, int x, int y, int messageCode) {
         lastUnit = new Units(u, GameView.theContext);
         lastCoordinates[0] = u.coordinates[0];
         lastCoordinates[1] = u.coordinates[1];
-        if (BoardSprites[x][y].defence >= damage) {
+
+        if (damage <= BoardSprites[x][y].defence) {
             showMarket = false;
-            message = u.unitType + " at "+ (x + c) + ", " + (y + c) + " was not damaged";
-        }   else {
-            BoardSprites[x][y].HP = BoardSprites[x][y].HP - (damage - BoardSprites[x][y].defence);
-            //if unit has less than 1HP, remove it
-            showMarket = false;
+            if (messageCode == 0) {
+                message = u.unitType + " at " + (x + c) + ", " + (y + c) + " was not damaged";
+            } else if (messageCode == 1) {
+                message = "Damage given: 0";
+            } else if (messageCode == 2) {
+                message += " received: 0";
+            }
+            return;
+        }
+
+        BoardSprites[x][y].HP = BoardSprites[x][y].HP - (damage - BoardSprites[x][y].defence);
+        //if unit has less than 1HP, remove it
+        showMarket = false;
+        if (messageCode == 0) {
             message = u.unitType + " at " + (x + c) + ", " + (y + c) + " damaged by " + (damage - BoardSprites[x][y].defence);
-            if (BoardSprites[x][y].HP <= 0) {
-                BoardSprites[x][y] = null;
-                for (int i = 0; i < GameView.units.length; i++) {
-                    if (GameView.units[i] == u) {
-                        if (u.owner == GameEngine.playing) {
-                            unselectFriendly();
-                        } else {
-                            unselectEnemy();
-                        }
-                        GameView.removeSprite(i);
-                        showMarket = false;
+        } else if (messageCode == 1) {
+            message = "Damage given: " + (damage - BoardSprites[x][y].defence);
+        } else if (messageCode == 2) {
+            message += " received: " + (damage - BoardSprites[x][y].defence);
+        }
+        if (BoardSprites[x][y].HP <= 0) {
+            BoardSprites[x][y] = null;
+            for (int i = 0; i < GameView.units.length; i++) {
+                if (GameView.units[i] == u) {
+                    if (u.owner == GameEngine.playing) {
+                        unselectFriendly();
+                    } else {
+                        unselectEnemy();
+                    }
+                    GameView.removeSprite(i);
+                    showMarket = false;
+                    if (messageCode == 0) {
                         message = u.unitType + " at " + (x + c) + ", " + (y + c) + " is destroyed";
-                        if (u.unitType.equals("Headquarters")) {
-                            if (theUnit != null && theUnit.hasMove) {
-                                theUnit.hasAttack = false;
-                            }
-                            //if units doesn't have a move, un-select it
-                            if (theUnit != null && !theUnit.hasMove) {
-                                theUnit.hasAttack = false;
-                                checkAction(theUnit);
-                            }
-                            unselectAll();
-                            message = "HQ has been destroyed, " + playing.color + " player wins!";
-                            FullscreenActivity.theActivity.vibrate();
-                            showMarket = false;
+                    }
+                    if (u.unitType.equals("Headquarters")) {
+                        if (theUnit != null && theUnit.hasMove) {
+                            theUnit.hasAttack = false;
                         }
+                        //if units doesn't have a move, un-select it
+                        if (theUnit != null && !theUnit.hasMove) {
+                            theUnit.hasAttack = false;
+                            checkAction(theUnit);
+                        }
+                        unselectAll();
+                        message = "HQ has been destroyed, " + playing.color + " player wins!";
+                        FullscreenActivity.theActivity.vibrate();
+                        showMarket = false;
                     }
                 }
             }
