@@ -952,7 +952,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         //draw air line position for planes to place
         for (int i = 0; i < GameEngine.airLinesCount; i++) {
             airline.draw(canvas, 0, (int) (3 * i * GameEngine.airLineYScaleFactor * GameEngine.squareLength + GameEngine.airLineYScaleFactor * GameEngine.squareLength),null, true);
-            airliner.draw(canvas, (int) (17.8f * GameEngine.squareLength), (int) (3 * i * GameEngine.airLineYScaleFactor * GameEngine.squareLength + GameEngine.airLineYScaleFactor * GameEngine.squareLength), null,true);
+            airliner.draw(canvas, (int) (17.716f * GameEngine.squareLength), (int) (3 * i * GameEngine.airLineYScaleFactor * GameEngine.squareLength + GameEngine.airLineYScaleFactor * GameEngine.squareLength), null,true);
         }
 
 
@@ -992,9 +992,27 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 paint.setColor(Color.RED);
             }
 
-            canvas.drawText("Air attack :   " + GameEngine.selectedPlane.airAttack + " Air defence : " + GameEngine.selectedPlane.defence, 1350 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, paint);
-            canvas.drawText("Ground attack : " + GameEngine.selectedPlane.groundAttack, 1350 * FullscreenActivity.scaleFactor, 1310 * FullscreenActivity.scaleFactor, paint);
-            canvas.drawText("Health : " + GameEngine.selectedPlane.HP + "/" + GameEngine.selectedPlane.maxHP + " Repair : " + GameEngine.selectedPlane.healingRate, 1350 * FullscreenActivity.scaleFactor, 1360 * FullscreenActivity.scaleFactor, paint);
+            canvas.drawText("Air attack :   " + GameEngine.selectedPlane.airAttack, 1350 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, paint);
+            canvas.drawText("Air defence : " + GameEngine.selectedPlane.defence, 1350 * FullscreenActivity.scaleFactor, 1305 * FullscreenActivity.scaleFactor, paint);
+            canvas.drawText("Ground attack : " + GameEngine.selectedPlane.groundAttack, 1350 * FullscreenActivity.scaleFactor, 1355 * FullscreenActivity.scaleFactor, paint);
+            canvas.drawText("Health : " + GameEngine.selectedPlane.HP + "/" + GameEngine.selectedPlane.maxHP + " Repair : " + GameEngine.selectedPlane.healingRate, 1350 * FullscreenActivity.scaleFactor, 1405 * FullscreenActivity.scaleFactor, paint);
+
+
+        }
+
+        if (GameEngine.selectedEnemyPlane != null) {
+            paint = new Paint();
+            paint.setTextSize(36 * FullscreenActivity.scaleFactor);
+            if (GameEngine.playing == GameEngine.green) {
+                paint.setColor(Color.RED);
+            } else if (GameEngine.playing == GameEngine.red) {
+                paint.setColor(Color.GREEN);
+            }
+
+            canvas.drawText("Air attack :   " + GameEngine.selectedEnemyPlane.airAttack, 1800 * FullscreenActivity.scaleFactor, 1260 * FullscreenActivity.scaleFactor, paint);
+            canvas.drawText("Air defence : " + GameEngine.selectedEnemyPlane.defence, 1800 * FullscreenActivity.scaleFactor, 1305 * FullscreenActivity.scaleFactor, paint);
+            canvas.drawText("Ground attack : " + GameEngine.selectedEnemyPlane.groundAttack, 1800 * FullscreenActivity.scaleFactor, 1355 * FullscreenActivity.scaleFactor, paint);
+            canvas.drawText("Health : " + GameEngine.selectedEnemyPlane.HP + "/" + GameEngine.selectedEnemyPlane.maxHP + " Repair : " + GameEngine.selectedEnemyPlane.healingRate, 1800 * FullscreenActivity.scaleFactor, 1405 * FullscreenActivity.scaleFactor, paint);
 
         }
     }

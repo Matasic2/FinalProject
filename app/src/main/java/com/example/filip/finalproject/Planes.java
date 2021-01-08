@@ -15,6 +15,7 @@ public class Planes {
     public int HP; //Current HP of the unit
     public int maxHP; //Max HP of the unit
     public int healingRate; //how many health is gained after spending one turn in hangar
+    public boolean isDeployed = false; //is unit deployed on the line or is it in hangar
 
     Planes(Context context, Player player, Bitmap icon, String name) {
         this.owner = player;
@@ -23,17 +24,27 @@ public class Planes {
     }
 
     public void draw(Canvas canvas, int x, int y) {
-        canvas.drawBitmap(icon, x * GameEngine.squareLength, y * GameEngine.squareLength, null);
+        Bitmap toDraw = icon;
+        toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
+        canvas.drawBitmap(toDraw, x * GameEngine.squareLength, y * GameEngine.squareLength, null);
     }
 
     public void draw(Canvas canvas, double x, double y) {
-        canvas.drawBitmap(icon, (int)(x * GameEngine.squareLength), (int) (y * GameEngine.squareLength), null);
+        Bitmap toDraw = icon;
+        toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
+        canvas.drawBitmap(toDraw, (int)(x * GameEngine.squareLength), (int) (y * GameEngine.squareLength), null);
     }
 
     public void select() {
         GameEngine.selectedPlane = this;
         getSelectedIcon();
     }
+    public void selectEnemy() {
+        GameEngine.selectedEnemyPlane = this;
+        getSelectedIcon();
+    }
+
+
     public void attack(int row, int column, int airAttack, int groundAttack){
         if (GameEngine.planeLines[row][column] != null) {
             GameEngine.planeLines[row][column].HP -= (airAttack - GameEngine.planeLines[row][column].defence);
@@ -127,6 +138,7 @@ public class Planes {
         for (int i = 0; i < owner.hangar.length; i++) {
             if (owner.hangar[i] == null) {
                 owner.hangar[i] = this;
+                isDeployed = false;
                 return;
             }
         }
@@ -163,13 +175,11 @@ public class Planes {
     public void unselect() {
         if (planeType.equals("Fighter")) {
             if (this.owner.equals(GameEngine.green)) {
-                GameEngine.selectedPlane = null;
                 BitmapFactory.Options o = new BitmapFactory.Options();
                 o.inScaled = false;
                 Bitmap icontemp = BitmapFactory.decodeResource(GameView.theContext.getResources(), R.drawable.fitg, o);
                 this.icon = Bitmap.createScaledBitmap(icontemp, (int) (icontemp.getWidth() * FullscreenActivity.scaleFactor), (int) (icontemp.getHeight() * FullscreenActivity.scaleFactor), true);
             } else {
-                GameEngine.selectedPlane = null;
                 BitmapFactory.Options o = new BitmapFactory.Options();
                 o.inScaled = false;
                 Bitmap icontemp = BitmapFactory.decodeResource(GameView.theContext.getResources(), R.drawable.fitr, o);
@@ -177,13 +187,11 @@ public class Planes {
             }
         } else if (planeType.equals("Bomber")) {
             if (this.owner.equals(GameEngine.green)) {
-                GameEngine.selectedPlane = null;
                 BitmapFactory.Options o = new BitmapFactory.Options();
                 o.inScaled = false;
                 Bitmap icontemp = BitmapFactory.decodeResource(GameView.theContext.getResources(), R.drawable.bomg, o);
                 this.icon = Bitmap.createScaledBitmap(icontemp, (int) (icontemp.getWidth() * FullscreenActivity.scaleFactor), (int) (icontemp.getHeight() * FullscreenActivity.scaleFactor), true);
             } else {
-                GameEngine.selectedPlane = null;
                 BitmapFactory.Options o = new BitmapFactory.Options();
                 o.inScaled = false;
                 Bitmap icontemp = BitmapFactory.decodeResource(GameView.theContext.getResources(), R.drawable.bomr, o);
