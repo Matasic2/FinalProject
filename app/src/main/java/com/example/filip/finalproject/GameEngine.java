@@ -15,6 +15,12 @@ import static com.example.filip.finalproject.MainThread.canvas;
 // Class that will run the game and manage all the events.
 public class GameEngine extends Thread{
 
+    public enum PREV_MOVE {
+        NONE,
+        MOVE,
+        ATTACK
+    }
+
     public static final double SMOKE_WIDTH = 0.71;
     public static final int SMOKE_DURATION = 4;
     public static final int SMOKE_PRICE_OIL = 2;
@@ -38,6 +44,8 @@ public class GameEngine extends Thread{
     public Bitmap emptySquare;
     public static Bitmap emptyAirLine; //air grid
     public static Units lastUnit; //stores the last unit which made some action
+    public static PREV_MOVE prevoiusMove = PREV_MOVE.NONE;
+    public static Units lastEnemyUnit; //stores the last enemy unit which made some action
     public static Units theUnit = null; // Selected unit, unlike the selected unit in GameView class this unit is the actual selected unit.
     public static SelectedUnit selected = null; // Selected unit, reference is not the same as the (selected) Unit itself.
     public static Planes selectedPlane = null; //selected plane
@@ -56,7 +64,7 @@ public class GameEngine extends Thread{
     public static String loadoutMenuUnit = "";
     public static String message = ""; //stores message to user
     public static int c = 0; //offset for x and y coordinate message, if set to 0 top left will be 0,0 if set to 1 top left will be 1,1
-    public static int[] lastCoordinates = new int[2]; //coordinates of last action
+    public static int[] lastCoordinates = new int[4]; //coordinates of last action
     public static Units[] queue = new Units[0]; // stores all units that will be deployed
     public static Player AIPlayer = null;
     public static boolean[] fogOfWarIsRevealedForGreen = new boolean[3];
@@ -77,7 +85,9 @@ public class GameEngine extends Thread{
         fogOfWarIsRevealedForGreen = new boolean[fogOfWarIsRevealedForGreen.length];
         fogOfWarIsRevealedForRed = new boolean[fogOfWarIsRevealedForRed.length];
         planeLines = new Planes[planeLines.length][planeLines[0].length];
+        prevoiusMove = PREV_MOVE.NONE;
         lastUnit = null; //stores the last unit which made some action
+        lastEnemyUnit = null; //stores the last unit which made some action
         theUnit = null; // Selected unit, unlike the selected unit in GameView class this unit is the actual selected unit.
         selected = null; // Selected unit, reference is not the same as the (selected) Unit itself.
         enemyTappedUnit = null; //same as above, but of opponent
@@ -99,7 +109,7 @@ public class GameEngine extends Thread{
             GameEngine.message = "Tap anywhere to start replay";
         }
 
-        lastCoordinates = new int[2]; //coordinates of last action
+        lastCoordinates = new int[4]; //coordinates of last action
         queue = new Units[0]; // stores all units that will be deployed
         c = 0;
         AI.unitOrders = new String[0];
@@ -606,8 +616,9 @@ public class GameEngine extends Thread{
         }*/
 
         //Undo undo
-        if (x / squareLength == 18 && y / squareLength == 3 && theUnit != null && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
-            if (lastUnit == null) {
+        if (x / squareLength == 18 && y / squareLength == 3 && prevoiusMove != PREV_MOVE.NONE && theUnit != null && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
+
+            if (prevoiusMove == PREV_MOVE.MOVE) {
                 BoardSprites[theUnit.coordinates[0]][theUnit.coordinates[1]] = null;
                 theUnit.coordinates[0] = lastCoordinates[0];
                 theUnit.coordinates[1] = lastCoordinates[1];
@@ -628,23 +639,30 @@ public class GameEngine extends Thread{
                 unselectFriendly();
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
+                lastUnit = null;
+                lastEnemyUnit = null;
+                prevoiusMove = PREV_MOVE.NONE;
+                estimateResources();
                 return;
-            } else {
+            } else if (prevoiusMove == PREV_MOVE.ATTACK) {
                 Units u = BoardSprites[lastCoordinates[0]][lastCoordinates[1]];
-                for (int i = 0; i < GameView.units.length; i++) {
-                    if (GameView.units[i] == u) {
-                        GameView.removeSprite(i);
-                    }
-                }
+                Units u2 = BoardSprites[lastCoordinates[2]][lastCoordinates[3]];
+                GameView.removeSprite(u);
+                GameView.removeSprite(u2);
 
                 BoardSprites[lastCoordinates[0]][lastCoordinates[1]] = lastUnit;
                 lastUnit.coordinates[0] = lastCoordinates[0];
                 lastUnit.coordinates[1] = lastCoordinates[1];
 
-                Units[] toReturn = new Units[GameView.units.length + 1];
+                BoardSprites[lastCoordinates[2]][lastCoordinates[3]] = lastEnemyUnit;
+                lastEnemyUnit.coordinates[0] = lastCoordinates[2];
+                lastEnemyUnit.coordinates[1] = lastCoordinates[3];
+
+                Units[] toReturn = new Units[GameView.units.length + 2];
                 for (int k = 0; k < GameView.units.length; k++) {
                     toReturn[k] = GameView.units[k];
                 }
+                toReturn[toReturn.length - 2] = lastEnemyUnit;
                 toReturn[toReturn.length - 1] = lastUnit;
                 GameView.units = toReturn;
 
@@ -653,6 +671,9 @@ public class GameEngine extends Thread{
                 unselectAll();
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
+                lastUnit = null;
+                lastEnemyUnit = null;
+                prevoiusMove = PREV_MOVE.NONE;
             }
         }
 
@@ -700,6 +721,8 @@ public class GameEngine extends Thread{
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
             lastUnit = null;
+            lastEnemyUnit = null;
+            prevoiusMove = PREV_MOVE.NONE;
         }
         //switch loadout to infantry
         if (x / squareLength == 9 && y / squareLength == 10 && showMarket) {
@@ -718,6 +741,8 @@ public class GameEngine extends Thread{
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
             lastUnit = null;
+            lastEnemyUnit = null;
+            prevoiusMove = PREV_MOVE.NONE;
         }
         //buys new MGInfantry
         if (x / squareLength == 11 && y / squareLength == 10 && showMarket) {
@@ -742,6 +767,8 @@ public class GameEngine extends Thread{
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
             lastUnit = null;
+            lastEnemyUnit = null;
+            prevoiusMove = PREV_MOVE.NONE;
         }
         //switch loadout to artillery
         if (x / squareLength == 13 && y / squareLength == 10 && showMarket) {
@@ -760,6 +787,8 @@ public class GameEngine extends Thread{
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
             lastUnit = null;
+            lastEnemyUnit = null;
+            prevoiusMove = PREV_MOVE.NONE;
         }
         //switch loadout to armor
         if (x / squareLength == 7 && y / squareLength == 10 && showFactory) {
@@ -778,6 +807,8 @@ public class GameEngine extends Thread{
             lastCoordinates[0] = 125;
             lastCoordinates[1] = 125;
             lastUnit = null;
+            lastEnemyUnit = null;
+            prevoiusMove = PREV_MOVE.NONE;
         }
 
         //playing.addPlane(new ReconPlane(GameView.theContext, playing));
@@ -799,6 +830,8 @@ public class GameEngine extends Thread{
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
                 lastUnit = null;
+                lastEnemyUnit = null;
+                prevoiusMove = PREV_MOVE.NONE;
             }
         }
 
@@ -821,6 +854,8 @@ public class GameEngine extends Thread{
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
                 lastUnit = null;
+                lastEnemyUnit = null;
+                prevoiusMove = PREV_MOVE.NONE;
             }
         }
 
@@ -902,6 +937,8 @@ public class GameEngine extends Thread{
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
                 lastUnit = null;
+                lastEnemyUnit = null;
+                prevoiusMove = PREV_MOVE.NONE;
                 return;
             } else if (BoardSprites[x / squareLength][y / squareLength].owner != playing && getFogOfWar(playing)[x / squareLength][y / squareLength]) {
                 enemyTappedUnit = BoardSprites[x / squareLength][y / squareLength];
@@ -909,6 +946,8 @@ public class GameEngine extends Thread{
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
                 lastUnit = null;
+                lastEnemyUnit = null;
+                prevoiusMove = PREV_MOVE.NONE;
             }
         }
 
@@ -1225,6 +1264,8 @@ public class GameEngine extends Thread{
             lastCoordinates[0] = selected.coordinates[0];
             lastCoordinates[1] = selected.coordinates[1];
             lastUnit = null;
+            lastEnemyUnit = null;
+            prevoiusMove = PREV_MOVE.MOVE;
         }
         u.moveTo(x,y);
         BoardSprites[x][y] = u;
@@ -1244,8 +1285,13 @@ public class GameEngine extends Thread{
 
     public static void attackUnit(Units attacker, Units defender) {
         lastUnit = new Units(defender, GameView.theContext);
+        lastEnemyUnit = new Units(attacker, GameView.theContext);
+        prevoiusMove = PREV_MOVE.ATTACK;
+
         lastCoordinates[0] = defender.coordinates[0];
         lastCoordinates[1] = defender.coordinates[1];
+        lastCoordinates[2] = attacker.coordinates[0];
+        lastCoordinates[3] = attacker.coordinates[1];
 
         int attackerDamage;
         int defenderDamage;
@@ -1337,7 +1383,7 @@ public class GameEngine extends Thread{
     //damages the unit at given coordinates
     //message codes: 0- only do damage to unit 1- first damage in duel (and first part of message) 2- second damage in duel (second part of message) 3- dont display messages
     public static void DamageUnit(int damage, Units u, int x, int y, int messageCode) {
-        lastUnit = new Units(u, GameView.theContext);
+        //lastUnit = new Units(u, GameView.theContext);
         lastCoordinates[0] = u.coordinates[0];
         lastCoordinates[1] = u.coordinates[1];
 
@@ -1365,33 +1411,29 @@ public class GameEngine extends Thread{
         }
         if (BoardSprites[x][y].HP <= 0) {
             BoardSprites[x][y] = null;
-            for (int i = 0; i < GameView.units.length; i++) {
-                if (GameView.units[i] == u) {
-                    if (u.owner == GameEngine.playing) {
-                        unselectFriendly();
-                    } else {
-                        unselectEnemy();
-                    }
-                    GameView.removeSprite(i);
-                    showMarket = false;
-                    if (messageCode == 0) {
-                        message = u.unitType + " at " + (x + c) + ", " + (y + c) + " is destroyed";
-                    }
-                    if (u.unitType.equals("Headquarters")) {
-                        if (theUnit != null && theUnit.hasMove) {
+            if (u.owner == GameEngine.playing) {
+                unselectFriendly();
+            } else {
+                unselectEnemy();
+            }
+            GameView.removeSprite(u);
+            showMarket = false;
+            if (messageCode == 0) {
+                message = u.unitType + " at " + (x + c) + ", " + (y + c) + " is destroyed";
+            }
+            if (u.unitType.equals("Headquarters")) {
+                if (theUnit != null && theUnit.hasMove) {
                             theUnit.hasAttack = false;
-                        }
-                        //if units doesn't have a move, un-select it
-                        if (theUnit != null && !theUnit.hasMove) {
-                            theUnit.hasAttack = false;
-                            checkAction(theUnit);
-                        }
-                        unselectAll();
-                        message = "HQ has been destroyed, " + playing.color + " player wins!";
-                        FullscreenActivity.theActivity.vibrate();
-                        showMarket = false;
-                    }
                 }
+                //if units doesn't have a move, un-select it
+                if (theUnit != null && !theUnit.hasMove) {
+                    theUnit.hasAttack = false;
+                    checkAction(theUnit);
+                }
+                unselectAll();
+                message = "HQ has been destroyed, " + playing.color + " player wins!";
+                FullscreenActivity.theActivity.vibrate();
+                showMarket = false;
             }
         }
 

@@ -881,13 +881,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     //removes the sprite (drawing of a unit), called when unit is deleted.
-    public static void removeSprite (int index) {
-        Units[] toReplace = new Units[units.length - 1];
-        for (int i = 0; i < index; i++) {
-            toReplace[i] = units[i];
+    public static void removeSprite (Units u) {
+        if (units.length == 0) {
+            return;
         }
-        for (int i = index; i < toReplace.length; i++) {
+        Units[] toReplace = new Units[units.length - 1];
+        int i = 0;
+        while (units[i] != u && i < units.length - 1) {
+            toReplace[i] = units[i];
+            i++;
+        }
+        while (i < toReplace.length) {
             toReplace[i] = units[i + 1];
+            i++;
         }
         units = toReplace;
     }
@@ -915,7 +921,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
 
-        //TODO: SCALE!!
         for (int i = 0; i < GameEngine.smokeMap.length; i++) {
             for (int j = 0; j < GameEngine.smokeMap[i].length; j++) {
                 if (GameEngine.smokeMap[i][j] > 0) {
