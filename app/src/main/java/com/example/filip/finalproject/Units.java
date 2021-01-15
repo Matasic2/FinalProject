@@ -35,9 +35,9 @@ public class Units {
     public int movement; //Movement distance of the unit
     public int visibilityRange; //how far the unit can see
     public int airAttack;
-    public int healRate = 0;
+    public int healRate;
 
-    public int fuelConsumption = 0;
+    public int fuelConsumption;
     public boolean specialIsActivated = false;
 
     public List<Bitmap> upgrades = new LinkedList<>();
@@ -244,7 +244,10 @@ public class Units {
         this.coordinates[1] = 125;
         this.visibilityRange = u.visibilityRange; //how far the unit can see
         this.airAttack = u.airAttack;
-
+        this.healRate = u.healRate;
+        this.fuelConsumption = u.fuelConsumption;
+        this.specialIsActivated = u.specialIsActivated;
+        this.upgrades = u.upgrades;
 
         //these if statements get the icon of constructed unit
         if (owner == GameEngine.green && unitType.equals("Infantry")) {

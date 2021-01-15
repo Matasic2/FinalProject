@@ -616,7 +616,7 @@ public class GameEngine extends Thread{
         }*/
 
         //Undo undo
-        if (x / squareLength == 18 && y / squareLength == 3 && prevoiusMove != PREV_MOVE.NONE && theUnit != null && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
+        if (x / squareLength == 18 && y / squareLength == 3 && prevoiusMove != PREV_MOVE.NONE && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
 
             if (prevoiusMove == PREV_MOVE.MOVE) {
                 BoardSprites[theUnit.coordinates[0]][theUnit.coordinates[1]] = null;
@@ -666,6 +666,9 @@ public class GameEngine extends Thread{
                 toReturn[toReturn.length - 1] = lastUnit;
                 GameView.units = toReturn;
 
+                if (theUnit == null) {
+                    theUnit = lastEnemyUnit;
+                }
                 theUnit.brightenIcon();
                 theUnit.hasAttack = true;
                 unselectAll();
@@ -1384,8 +1387,8 @@ public class GameEngine extends Thread{
     //message codes: 0- only do damage to unit 1- first damage in duel (and first part of message) 2- second damage in duel (second part of message) 3- dont display messages
     public static void DamageUnit(int damage, Units u, int x, int y, int messageCode) {
         //lastUnit = new Units(u, GameView.theContext);
-        lastCoordinates[0] = u.coordinates[0];
-        lastCoordinates[1] = u.coordinates[1];
+        //lastCoordinates[0] = u.coordinates[0];
+        //lastCoordinates[1] = u.coordinates[1];
 
         if (damage <= BoardSprites[x][y].defence) {
             showMarket = false;

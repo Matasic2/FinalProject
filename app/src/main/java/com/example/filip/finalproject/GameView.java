@@ -882,7 +882,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     //removes the sprite (drawing of a unit), called when unit is deleted.
     public static void removeSprite (Units u) {
-        if (units.length == 0) {
+        if (units.length == 0 || u == null) {
             return;
         }
         Units[] toReplace = new Units[units.length - 1];
