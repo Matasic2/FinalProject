@@ -564,7 +564,9 @@ public class GameEngine extends Thread{
                     theUnit.HP += theUnit.healRate;
                     theUnit.hasAttack = false;
                     theUnit.hasMove = false;
-                    theUnit.specialIsActivated = true; // healing counts as special move
+                    if (theUnit.unitType.equals("Armor")) {
+                        theUnit.specialIsActivated = true; // armor can't heal and activate special
+                    }
                 }
                 if (theUnit.HP > theUnit.maxHP) {
                     theUnit.HP = theUnit.maxHP;
