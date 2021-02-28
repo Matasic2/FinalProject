@@ -18,8 +18,13 @@ public class GameEngine extends Thread{
     public enum PREV_MOVE {
         NONE,
         MOVE,
-        ATTACK
+        ATTACK,
+        BLIND_FIRE
     }
+
+    public static boolean undoIsAllowed = true;
+    public static boolean  returnFireEnabled = true;
+    public static boolean noReturnFireIfNotRevealed = true;
 
     public static final double SMOKE_WIDTH = 0.71;
     public static final int SMOKE_DURATION = 4;
@@ -71,8 +76,6 @@ public class GameEngine extends Thread{
     public static boolean[] fogOfWarIsRevealedForRed = new boolean[3];
     public static int[][] smokeMap = new int[15][9]; //represents if smoke exists on a tile, number represents how long should smoke remain
     public static boolean smokeFireActive = false;
-
-    public static boolean  returnFireEnabled = true;
 
     public static int[] lastAddedResources = new int[3]; //memorizes last added resources, to display next to storage
     public static boolean gameIsMultiplayer = false;
@@ -617,8 +620,8 @@ public class GameEngine extends Thread{
             return;
         }*/
 
-        //Undo undo
-        if (x / squareLength == 18 && y / squareLength == 3 && prevoiusMove != PREV_MOVE.NONE && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
+        //Undo
+        if (undoIsAllowed && x / squareLength == 18 && y / squareLength == 3 && prevoiusMove != PREV_MOVE.NONE && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
 
             if (prevoiusMove == PREV_MOVE.MOVE) {
                 BoardSprites[theUnit.coordinates[0]][theUnit.coordinates[1]] = null;
@@ -680,6 +683,11 @@ public class GameEngine extends Thread{
                 lastEnemyUnit = null;
                 prevoiusMove = PREV_MOVE.NONE;
             }
+        } else if (!undoIsAllowed && x / squareLength == 18 && y / squareLength == 3) {
+            message = "Undo is not allowed";
+            showFactory = false;
+            showMarket = false;
+            return;
         }
 
         //tech screen
@@ -906,9 +914,11 @@ public class GameEngine extends Thread{
 
         //if user taps on empty square with no units selected, do nothing
         if (selected == null && BoardSprites[x / squareLength][y / squareLength] == null) {
+            message = "Coordinates: " + (x / squareLength) + ", " + (y / squareLength);
             return;
         }
 
+        //artillery's smoke ability
         if (smokeFireActive && theUnit != null && theUnit.unitType.equals("Artillery")) {
             int distance = getSquareDistance(x / squareLength, theUnit.coordinates[0], y / squareLength, theUnit.coordinates[1]);
             if (distance > theUnit.attack2Range || distance == 0) {    //cancel action
@@ -953,6 +963,45 @@ public class GameEngine extends Thread{
                 lastUnit = null;
                 lastEnemyUnit = null;
                 prevoiusMove = PREV_MOVE.NONE;
+            }
+        }
+
+        // if user taps with unit selected on a square covered in FOW, try to fire blindly or do nothing
+        if (theUnit != null && getFogOfWar(playing)[x / squareLength][y / squareLength] == false) {
+            if (theUnit != null &&
+                    (theUnit.attack2Range >= getSquareDistance           //and check if unit is in range of first (stronger) attack.
+                            (getCoordinates(theUnit)[0], x / squareLength,
+                                    getCoordinates(theUnit)[1], y / squareLength))
+                    && theUnit.hasAttack == true) {
+                if (BoardSprites[x / squareLength][y / squareLength] != null && BoardSprites[x / squareLength][y / squareLength].owner != theUnit.owner) {
+                    attackUnit(theUnit, BoardSprites[x / squareLength][y / squareLength]);
+                }
+                //DamageUnit(theUnit.attack1, BoardSprites[x / squareLength][y / squareLength], x / squareLength, y / squareLength); //and then move the unit, and un-select it.
+                message = "Fired on " + (x / squareLength) + ", " + (y / squareLength);
+                //if unit has a move, don't un-select it yet.
+                if (theUnit == null) {
+                    return;
+                }
+                if (theUnit != null && theUnit.hasMove) {
+                    theUnit.hasAttack = false;
+                    return;
+                }
+                //if units doesn't have a move, un-select it
+                if (theUnit != null && !theUnit.hasMove) {
+                    theUnit.hasAttack = false;
+                    checkAction(theUnit);
+                    return;
+                }
+            } else if (!theUnit.hasAttack){
+                message = "No attack left to fire on " + (x / squareLength) + ", " + (y / squareLength);
+                showMarket = false;
+                showFactory = false;
+                return;
+            } else {
+                message = "Too far away to fire on " + (x / squareLength) + ", " + (y / squareLength);
+                showMarket = false;
+                showFactory = false;
+                return;
             }
         }
 
@@ -1323,6 +1372,12 @@ public class GameEngine extends Thread{
                         getCoordinates(defender)[1], getCoordinates(attacker)[1]))) {
             defenderDamage = defender.attack2 - 1;
         } else {
+            defenderDamage = 0;
+        }
+
+        Player notPlaying = playing == red? green:red;
+        int[] attackerCoordinates = getCoordinates(attacker);
+        if (noReturnFireIfNotRevealed && getFogOfWar(notPlaying)[attackerCoordinates[0]][attackerCoordinates[1]] == false) {
             defenderDamage = 0;
         }
 
@@ -1741,6 +1796,7 @@ public class GameEngine extends Thread{
         GameEngine.lastAddedResources[2] = addedoil;
     }
 
+    //True: tile is revealed
     public static boolean[][] getFogOfWar(Player player) {
         boolean[][] tile_is_visible = new boolean[width][heigth];
 
