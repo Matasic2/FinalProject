@@ -913,7 +913,7 @@ public class GameEngine extends Thread{
         //}
 
         //if user taps on empty square with no units selected, do nothing
-        if (selected == null && BoardSprites[x / squareLength][y / squareLength] == null) {
+        if (selected == null && enemySelected == null && BoardSprites[x / squareLength][y / squareLength] == null) {
             message = "Coordinates: " + (x / squareLength) + ", " + (y / squareLength);
             return;
         }
@@ -993,12 +993,12 @@ public class GameEngine extends Thread{
                     return;
                 }
             } else if (!theUnit.hasAttack){
-                message = "No attack left to fire on " + (x / squareLength) + ", " + (y / squareLength);
+                message = "No attack left to blindly fire on " + (x / squareLength) + ", " + (y / squareLength);
                 showMarket = false;
                 showFactory = false;
                 return;
             } else {
-                message = "Too far away to fire on " + (x / squareLength) + ", " + (y / squareLength);
+                message = "Too far away to blindly fire on " + (x / squareLength) + ", " + (y / squareLength);
                 showMarket = false;
                 showFactory = false;
                 return;
@@ -1071,9 +1071,9 @@ public class GameEngine extends Thread{
         }
 
         //If user taps on a square that is out of range while some unit is selected, unselect it
-        if (selected != null) {
+        if (BoardSprites[x / squareLength][y / squareLength] == null) {
             //if (!FullscreenActivity.hasScrolled) {
-            unselectFriendly();
+            unselectAll();
             //}
             return;
         }
@@ -1919,6 +1919,12 @@ public class GameEngine extends Thread{
                 }
             }
              */
+        }
+
+        //reveal a tile where enemy selected unit is
+        if (enemySelected != null) {
+            int[] coords = getCoordinates(enemyTappedUnit);
+            tile_is_visible[coords[0]][coords[1]] = true;
         }
 
         return tile_is_visible;
