@@ -366,7 +366,7 @@ public class GameEngine extends Thread{
                     green.removeFromHanger(selectedPlane);
                     selectedPlane.isDeployed = true;
                     selectedPlane = null;
-                    green.oilStorage--;
+                    playing.oilStorage--;
                 } else if (selectedPlane.isDeployed) {
                     for (int i = 0; i < planeLines.length; i++) {
                         if (planeLines[i][0] == selectedPlane) {
@@ -428,7 +428,7 @@ public class GameEngine extends Thread{
                     red.removeFromHanger(selectedPlane);
                     selectedPlane.isDeployed = true;
                     selectedPlane = null;
-                    green.oilStorage--;
+                    playing.oilStorage--;
                 } else if (selectedPlane.isDeployed) {
                     for (int i = 0; i < planeLines.length; i++) {
                         if (planeLines[i][1] == selectedPlane) {
@@ -561,7 +561,7 @@ public class GameEngine extends Thread{
         }
 
         //heal the unit if the button is pressed
-        if (x / squareLength == 18 && y / squareLength == 1 && selected != null) {
+        if (x / squareLength == 18 && y / squareLength == 1 && selected != null && !theUnit.specialIsActivated) {
             if (theUnit.HP != theUnit.maxHP) {
                 if (theUnit.hasAttack && theUnit.hasMove) {
                     theUnit.HP += theUnit.healRate;
@@ -610,8 +610,9 @@ public class GameEngine extends Thread{
             return;
         }
 
-        //deploy, not used atm
-        /**if (selected == null && (((x / squareLength == 2 && y / squareLength == 2) && (playing == green && BoardSprites[2][2] == null)) ||
+        /**deploy, not used atm
+
+         if (selected == null && (((x / squareLength == 2 && y / squareLength == 2) && (playing == green && BoardSprites[2][2] == null)) ||
                 (((x / squareLength == 12 && y / squareLength == 6) && (playing == red && BoardSprites[12][6] == null))))) {
             GameEngine.showMarket = !GameEngine.showMarket;
             if (showFactory == true) {
