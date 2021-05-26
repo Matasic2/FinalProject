@@ -13,7 +13,7 @@ public class Infantry extends Units {
     public static int GreenHP = 7; // HP value of Green's Infantry, this value can be changed
     public static int GreenMovement = 2; // Movement value of Green's Infantry, this value can be changed
     public static int GreenVisibility = 4; // Movement value of Green's Infantry, this value can be changed
-    public static int greenAirAttack = 1;
+    public static int greenAirAttack = 2;
     
     //cost of Infantry unit
     public static int greenFoodPrice = 3;
@@ -35,7 +35,7 @@ public class Infantry extends Units {
     public static int RedHP = 7; // HP value of Red's Infantry, this value can be changed
     public static int RedMovement = 2; // Movement value of Red's Infantry, this value can be changed
     public static int RedVisibility = 4; // Movement value of Green's Infantry, this value can be changed
-    public static int redAirAttack = 1;
+    public static int redAirAttack = 2;
 
     Infantry(Context context, int x, int y, Player player) {
         super(context, x, y, player, "Infantry");

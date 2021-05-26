@@ -43,6 +43,7 @@ public class GameEngine extends Thread{
     public static double airLineYScaleFactor;
 
     public static int airLinesCount;
+    public static int tappedAirLine = -1;
     public static int turnCount = 0;
     public static int squareLength = (int) (128  * FullscreenActivity.scaleFactor); //scales square length, dependent on scale factor
     public Bitmap image; // Image of the grid
@@ -331,6 +332,9 @@ public class GameEngine extends Thread{
         //green's air tap
         else if (x / squareLength > 3 && y / squareLength >= 10 && x / squareLength < 10 && selectedPlane != null && selectedPlane.isDeployed && playing == green) {
 
+            tappedAirLine = -1;
+            GameView.airMissionSelection = -1;
+
             if (playing.hangar[(x/squareLength) - 4] != null) {
                 selectedPlane.unselect();
                 playing.hangar[(x/squareLength) - 4].select();
@@ -347,26 +351,28 @@ public class GameEngine extends Thread{
                 }
                 unselectFriendlyPlanes();
             }
+
         }
 
         else if (x/squareLength < 2 && playing == green && y / squareLength < 9) {
 
-            //y represents plane line after this
+            //y represents plane line
             y = y / (int) (3 * GameEngine.airLineYScaleFactor * GameEngine.squareLength);
             if (planeLines[y][0] != null) {
                 if (selectedPlane != null) {
                     unselectFriendlyPlanes();
                 }
                 planeLines[y][0].select();
+                GameView.airMissionSelection = 0;
+                tappedAirLine = y;
             }
 
             else if (selectedPlane != null) {
                 if (!selectedPlane.isDeployed && planeLines[y][0] == null && green.oilStorage > 0) {
-                    planeLines[y][0] = selectedPlane;
-                    green.removeFromHanger(selectedPlane);
-                    selectedPlane.isDeployed = true;
-                    selectedPlane = null;
-                    playing.oilStorage--;
+                    if (GameView.airMissionSelection == -1) {
+                        tappedAirLine = y;
+                        GameView.airMissionSelection = 0;
+                    }
                 } else if (selectedPlane.isDeployed) {
                     for (int i = 0; i < planeLines.length; i++) {
                         if (planeLines[i][0] == selectedPlane) {
@@ -375,8 +381,49 @@ public class GameEngine extends Thread{
                     }
                     selectedPlane.unselect();
                     planeLines[y][0] = selectedPlane;
+                    tappedAirLine = -1;
+                    GameView.airMissionSelection = -1;
                     selectedPlane = null;
                 }
+            }
+        }
+
+        else if (GameView.airMissionSelection == 0 && x/squareLength == 6 && (playing.oilStorage > 0 || selectedPlane.isDeployed)) {
+
+            if (y/squareLength == 3) {
+                GameView.airMissionSelection = 1;
+            }
+            if (y/squareLength == 5 && selectedPlane.planeType.equals("Fighter")) {
+                GameView.airMissionSelection = 2;
+            }
+            if (y/squareLength == 5 && selectedPlane.planeType.equals("Bomber")) {
+                GameView.airMissionSelection = 3;
+            }
+            if (y/squareLength == 7 && selectedPlane.planeType.equals("Fighter")) {
+                GameView.airMissionSelection = 3;
+            }
+            if (y/squareLength == 7 && selectedPlane.planeType.equals("Bomber")) {
+                GameView.airMissionSelection = 4;
+            }
+
+            if (GameView.airMissionSelection < 1) {
+                return;
+            }
+
+            if (selectedPlane.isDeployed) {
+                selectedPlane.airMission = GameView.airMissionSelection;
+                unselectFriendlyPlanes();
+                GameView.airMissionSelection = -1;
+                tappedAirLine = -1;
+            } else {
+                planeLines[tappedAirLine][0] = selectedPlane;
+                green.removeFromHanger(selectedPlane);
+                selectedPlane.isDeployed = true;
+                selectedPlane.airMission = GameView.airMissionSelection;
+                selectedPlane = null;
+                GameView.airMissionSelection = -1;
+                tappedAirLine = -1;
+                playing.oilStorage--;
             }
         }
 
@@ -457,8 +504,10 @@ public class GameEngine extends Thread{
             if (selectedPlane != null) {
                 selectedPlane.unselect();
                 selectedPlane = null;
+                tappedAirLine = -1;
+                GameView.airMissionSelection = -1;
             }
-            else if (selectedEnemyPlane != null) {
+            if (selectedEnemyPlane != null) {
                 selectedEnemyPlane.unselect();
                 selectedEnemyPlane = null;
             }
@@ -1538,7 +1587,8 @@ public class GameEngine extends Thread{
     public static void unselectAllPlanes() {
         unselectFriendlyPlanes();
         unselectEnemyPlanes();
-
+        GameView.airMissionSelection = -1;
+        tappedAirLine = -1;
     }
     //deploys next unit in queue
     public static void nextInQueue(){

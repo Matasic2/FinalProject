@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 public class Planes {
+    public static Bitmap[] missionIcons = new Bitmap[5]; //icons for air missions, 0 is reserved for empty
     public Bitmap icon; // Unit's icon
     public String planeType; // type of unit, for example if this unit is infantry, string will equal "Infantry"
     public Player owner; //Player that owns the figure
@@ -16,6 +17,7 @@ public class Planes {
     public int maxHP; //Max HP of the unit
     public int healingRate; //how many health is gained after spending one turn in hangar
     public boolean isDeployed = false; //is unit deployed on the line or is it in hangar
+    public int airMission = 0; //air mission performed by plane
 
     Planes(Context context, Player player, Bitmap icon, String name) {
         this.owner = player;
@@ -27,6 +29,15 @@ public class Planes {
         Bitmap toDraw = icon;
         toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
         canvas.drawBitmap(toDraw, x * GameEngine.squareLength, y * GameEngine.squareLength, null);
+    }
+
+    public void drawWithMission(Canvas canvas, double x, double y) {
+        Bitmap toDraw = icon;
+        toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
+        canvas.drawBitmap(toDraw, (int)(x * GameEngine.squareLength), (int) (y * GameEngine.squareLength), null);
+
+        Bitmap airMissionIcon = missionIcons[this.airMission];
+        canvas.drawBitmap(airMissionIcon, (int)((x+1) * GameEngine.squareLength), (int) (y * GameEngine.squareLength), null);
     }
 
     public void draw(Canvas canvas, double x, double y) {
@@ -98,7 +109,10 @@ public class Planes {
         for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
             for (int j = line * 3; j < (line+1) * 3; j++) {
                 if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
-                    this.HP -= GameEngine.BoardSprites[i][j].airAttack;
+                    if (GameEngine.BoardSprites[i][j].airAttack <= this.defence) {
+                        continue;
+                    }
+                    this.HP -= (GameEngine.BoardSprites[i][j].airAttack - this.defence);
                 }
             }
         }
@@ -173,6 +187,7 @@ public class Planes {
     }
 
     public void unselect() {
+
         if (planeType.equals("Fighter")) {
             if (this.owner.equals(GameEngine.green)) {
                 BitmapFactory.Options o = new BitmapFactory.Options();

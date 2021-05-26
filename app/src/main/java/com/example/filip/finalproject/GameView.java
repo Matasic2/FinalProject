@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.support.constraint.solver.widgets.Rectangle;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 import android.content.Context;
@@ -34,6 +35,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static Units[] units = new Units[0]; // Array of units that will be drawn, they don't have the physical location on board (In GameEngine class, BoardSprites does that).
     public static Resources[] resources = new Resources[0]; // Array of resources that will be drawn, they don't have the physical location on board (In GameEngine class, BoardResources does that).
     public static boolean showendTurnScreen = false;
+    public static int airMissionSelection = -1; //-1 means don't show the menu, 0 no mission selected, 1+ air mission selected for each plane
 
     public static int cameraX = 0;
     public static int cameraY = 0;
@@ -184,6 +186,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         square =  Bitmap.createScaledBitmap(square, (int) (square.getWidth() * FullscreenActivity.scaleFactor), (int) (square.getHeight() * FullscreenActivity.scaleFactor), true);
         TechNode.icon = techSquare.icon;
 
+        Bitmap[] airMissionIcons = new Bitmap[5];
+        airMissionIcons[0] = pointers9.icon;
+        airMissionIcons[1] = binoc.icon;
+        airMissionIcons[2] = shield.icon;
+        airMissionIcons[3] = techIcon.icon;
+        airMissionIcons[4] = pointers99.icon;
+        Planes.missionIcons = airMissionIcons;
+
             //skirmish
             if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") ||  MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
                 Map.generateMap(map, mapAir, square);
@@ -256,11 +266,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             GameEngine.estimateResources();
             thread.start(); // starts the tread
 
+
         if (!GameEngine.replayMode) {
             GameEngine.load(); //load previous game if exists
         }
-
-
 
         if (!GameEngine.red.isHuman) {
             AI.initializeAI();
@@ -341,7 +350,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 return;
             }
 
-            grid.draw(canvas, activeScreen == Screen.AIR_SCREEN);  //draws the grid first, because that is the bottom layer.
+            grid.draw(canvas, false);  //draws the grid first, because that is the bottom layer.
             if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("dev_mode") || MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
                 //draws markers
 
@@ -385,8 +394,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
 
             for (int i = 0; i < resources.length; i++) {
-                int x = resources[i].coordinates[0];
-                int y = resources[i].coordinates[1];
                 resources[i].draw(canvas); //draws the units from units array found in GameView class.
             }
 
@@ -975,7 +982,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         for (int i = 0; i < GameEngine.planeLines.length; i++) {
             for (int j = 0; j < GameEngine.planeLines[i].length; j++) {
                 if (GameEngine.planeLines[i][j] != null) {
-                    GameEngine.planeLines[i][j].draw(canvas, 19*j, (3 * i * GameEngine.airLineYScaleFactor + GameEngine.airLineYScaleFactor));
+                    GameEngine.planeLines[i][j].drawWithMission(canvas, 19*j, (3 * i * GameEngine.airLineYScaleFactor + GameEngine.airLineYScaleFactor));
                 }
             }
         }
@@ -987,7 +994,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawText("Oil : " + GameEngine.playing.oilStorage + " (+" + GameEngine.lastAddedResources[2] + ")", 50 * FullscreenActivity.scaleFactor, 1360 * FullscreenActivity.scaleFactor, paint2);
 
         //draw info of selected plane
-
         if (GameEngine.selectedPlane != null) {
             paint = new Paint();
             paint.setTextSize(36 * FullscreenActivity.scaleFactor);
@@ -1002,7 +1008,26 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             canvas.drawText("Ground attack : " + GameEngine.selectedPlane.groundAttack, 1350 * FullscreenActivity.scaleFactor, 1355 * FullscreenActivity.scaleFactor, paint);
             canvas.drawText("Health : " + GameEngine.selectedPlane.HP + "/" + GameEngine.selectedPlane.maxHP + " Repair : " + GameEngine.selectedPlane.healingRate, 1350 * FullscreenActivity.scaleFactor, 1405 * FullscreenActivity.scaleFactor, paint);
 
+            if (airMissionSelection >= 0) {
+                Paint paint3 = new Paint();
+                paint3.setColor(Color.argb(255, 10, 10, 10));
+                Rect rectangle = new Rect((int)(750 * FullscreenActivity.scaleFactor),
+                        (int)(384 * FullscreenActivity.scaleFactor),
+                        (int)(1776 * FullscreenActivity.scaleFactor),
+                        (int)(1200 * FullscreenActivity.scaleFactor));
+                canvas.drawRect(rectangle,paint3);
 
+                if (GameEngine.selectedPlane.planeType.equals("Fighter")) {
+                    binoc.draw(canvas, 6 ,3);
+                    shield.draw(canvas, 6, 5);
+                    techIcon.draw(canvas,6,7);
+                }
+                else if (GameEngine.selectedPlane.planeType.equals("Bomber")) {
+                    binoc.draw(canvas, 6 ,3);
+                    techIcon.draw(canvas, 6, 5);
+                    pointers99.draw(canvas,6,7);
+                }
+            }
         }
 
         if (GameEngine.selectedEnemyPlane != null) {
@@ -1018,7 +1043,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             canvas.drawText("Air defence : " + GameEngine.selectedEnemyPlane.defence, 1800 * FullscreenActivity.scaleFactor, 1305 * FullscreenActivity.scaleFactor, paint);
             canvas.drawText("Ground attack : " + GameEngine.selectedEnemyPlane.groundAttack, 1800 * FullscreenActivity.scaleFactor, 1355 * FullscreenActivity.scaleFactor, paint);
             canvas.drawText("Health : " + GameEngine.selectedEnemyPlane.HP + "/" + GameEngine.selectedEnemyPlane.maxHP + " Repair : " + GameEngine.selectedEnemyPlane.healingRate, 1800 * FullscreenActivity.scaleFactor, 1405 * FullscreenActivity.scaleFactor, paint);
-
         }
     }
 
