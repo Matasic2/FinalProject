@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 public class Planes {
+
     public static Bitmap[] missionIcons = new Bitmap[5]; //icons for air missions, 0 is reserved for empty
     public Bitmap icon; // Unit's icon
     public String planeType; // type of unit, for example if this unit is infantry, string will equal "Infantry"
@@ -18,11 +19,32 @@ public class Planes {
     public int healingRate; //how many health is gained after spending one turn in hangar
     public boolean isDeployed = false; //is unit deployed on the line or is it in hangar
     public int airMission = 0; //air mission performed by plane
+    //air missions: 0=none, 1=scout, 2=intercept, 3=ground attack, 4=line attack
 
     Planes(Context context, Player player, Bitmap icon, String name) {
         this.owner = player;
         this.icon = icon;
         this.planeType = name;
+    }
+
+    public int getAirAttack(){
+        if (airMission == 2) {
+            return airAttack += 1;
+        } else if (airMission == 3 && planeType.equals("Fighter")) {
+            return airAttack /= 2;
+        }
+        return airAttack;
+    }
+
+    public int getGroundAttack(){
+        return groundAttack;
+    }
+
+    public int getDefence(){
+        if (airMission == 1) {
+            return defence += 1;
+        }
+        return defence;
     }
 
     public void draw(Canvas canvas, int x, int y) {
@@ -55,10 +77,41 @@ public class Planes {
         getSelectedIcon();
     }
 
+    public void performAirMission(int row, int column) {
+        if (airMission == 0) {
+            GameEngine.message = "ERROR! AIR MISSION IS 0";
+            groundPlane();
+            GameEngine.planeLines[row][column] = null;
+            return;
+        }
 
-    public void attack(int row, int column, int airAttack, int groundAttack){
+        if (airMission == 1) {
+
+            if (column == 0) {
+                GameEngine.revealLineOfFOW(GameEngine.green, row);
+            } else {
+                GameEngine.revealLineOfFOW(GameEngine.red, row);
+            }
+
+        } else if (airMission == 2) {
+
+            //TODO
+
+        } else if (airMission == 3) {
+            
+        } else if (airMission == 4) {
+
+        } else {
+            GameEngine.message = "ERROR! AIR MISSION IS LARGER THAN 4!";
+            groundPlane();
+            GameEngine.planeLines[row][column] = null;
+            return;
+        }
+        takeGroundDamage(row);
+
+
         if (GameEngine.planeLines[row][column] != null) {
-            GameEngine.planeLines[row][column].HP -= (airAttack - GameEngine.planeLines[row][column].defence);
+            GameEngine.planeLines[row][column].HP -= (getAirAttack() - GameEngine.planeLines[row][column].getDefence());
             if (GameEngine.planeLines[row][column].HP <= 0) {
                 GameEngine.planeLines[row][column] = null;
             }
@@ -67,40 +120,11 @@ public class Planes {
             for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
                 for (int j = row * 3; j < (row + 1) * 3; j++) {
                     if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
-                        GameEngine.DamageUnit(groundAttack, GameEngine.BoardSprites[i][j],i,j, 3);
+                        GameEngine.DamageUnit(getGroundAttack(), GameEngine.BoardSprites[i][j],i,j, 3);
                     }
                 }
             }
 
-            /**
-            if (row == 0) {
-                for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
-                    for (int j = 0; j < 3; j++) {
-                        if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
-                            GameEngine.DamageUnit(groundAttack, GameEngine.BoardSprites[i][j],i,j);
-                        }
-                    }
-                }
-            }
-            if (row == 1) {
-                for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
-                    for (int j = 3; j < 6; j++) {
-                        if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
-                            GameEngine.DamageUnit(groundAttack, GameEngine.BoardSprites[i][j],i,j);
-                        }
-                    }
-                }
-            }
-            if (row == 2) {
-                for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
-                    for (int j = 6; j < 9; j++) {
-                        if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
-                            GameEngine.DamageUnit(groundAttack, GameEngine.BoardSprites[i][j],i,j);
-                        }
-                    }
-                }
-            }
-             */
         }
     }
 
@@ -109,43 +133,13 @@ public class Planes {
         for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
             for (int j = line * 3; j < (line+1) * 3; j++) {
                 if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
-                    if (GameEngine.BoardSprites[i][j].airAttack <= this.defence) {
+                    if (GameEngine.BoardSprites[i][j].airAttack <= this.getDefence()) {
                         continue;
                     }
-                    this.HP -= (GameEngine.BoardSprites[i][j].airAttack - this.defence);
+                    this.HP -= (GameEngine.BoardSprites[i][j].airAttack - this.getDefence());
                 }
             }
         }
-
-        /**
-        if (line == 0) {
-            for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
-                for (int j = 0; j < 3; j++) {
-                    if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
-                        this.HP -= GameEngine.BoardSprites[i][j].airAttack;
-                    }
-                }
-            }
-        }
-        if (line == 1) {
-            for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
-                for (int j = 3; j < 6; j++) {
-                    if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
-                        this.HP -= GameEngine.BoardSprites[i][j].airAttack;
-                    }
-                }
-            }
-        }
-        if (line == 2) {
-            for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
-                for (int j = 6; j < 9; j++) {
-                    if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
-                        this.HP -= GameEngine.BoardSprites[i][j].airAttack;
-                    }
-                }
-            }
-        }
-         */
     }
 
     public void groundPlane() {

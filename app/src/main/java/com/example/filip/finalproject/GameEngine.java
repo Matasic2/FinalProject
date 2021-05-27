@@ -1683,19 +1683,8 @@ public class GameEngine extends Thread{
             }
 
             for (int i = 0; i < airLinesCount; i++) {
-                if (planeLines[i][0] != null) {
-                    planeLines[i][0].takeGroundDamage(i);
-                }
                 if (planeLines[i][1] != null) {
-                    planeLines[i][1].attack(i,0, planeLines[i][1].airAttack,  planeLines[i][1].groundAttack);
-                    if (planeLines[i][0] != null) {
-                        planeLines[i][1].attack(i,1, planeLines[i][0].airAttack,  planeLines[i][0].groundAttack);
-                    }
-                    if (planeLines[i][1] != null) {
-                        fogOfWarIsRevealedForRed[i] = true;
-                        planeLines[i][1].groundPlane();
-                        planeLines[i][1] = null;
-                    }
+                    planeLines[i][1].performAirMission(i,1);
                 }
             }
             for (int i = 0; i < fogOfWarIsRevealedForGreen.length; i++) {
@@ -1717,19 +1706,8 @@ public class GameEngine extends Thread{
             }
 
             for (int i = 0; i < airLinesCount; i++) {
-                if (planeLines[i][1] != null) {
-                    planeLines[i][1].takeGroundDamage(i);
-                }
                 if (planeLines[i][0] != null) {
-                    planeLines[i][0].attack(i,1, planeLines[i][0].airAttack,  planeLines[i][0].groundAttack);
-                    if (planeLines[i][1] != null) {
-                        planeLines[i][0].attack(i,0, planeLines[i][1].airAttack,  planeLines[i][1].groundAttack);
-                    }
-                    if (planeLines[i][0] != null) {
-                        fogOfWarIsRevealedForGreen[i] = true;
-                        planeLines[i][0].groundPlane();
-                        planeLines[i][0] = null;
-                    }
+                    planeLines[i][0].performAirMission(i,0);
                 }
             }
             for (int i = 0; i < fogOfWarIsRevealedForGreen.length; i++) {
@@ -2010,6 +1988,14 @@ public class GameEngine extends Thread{
         getReachableTilesRecursive(xCoord, yCoord, range, tiles);
         tiles[xCoord][yCoord] = false;
         return tiles;
+    }
+
+    public static void revealLineOfFOW(Player player, int line) {
+        if (player == green) {
+            fogOfWarIsRevealedForGreen[line] = true;
+        } else {
+            fogOfWarIsRevealedForRed[line] = true;
+        }
     }
 
     public static double distanceFromLineToPoint(double x1, double y1, double x2, double y2, double smokeX, double smokeY) {
