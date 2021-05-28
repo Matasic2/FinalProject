@@ -321,16 +321,18 @@ public class GameEngine extends Thread{
     //process air input
     public static void processAirTap(int x, int y) {
         if (x / squareLength == 18 && y / squareLength == 10) {
-            GameView.activeScreen = GameView.Screen.MAIN_SCREEN;
             unselectAllPlanes();
+            tappedAirLine = -1;
+            GameView.airMissionSelection = -1;
+            GameView.activeScreen = GameView.Screen.MAIN_SCREEN;
         }
 
         else if (x / squareLength > 3 && y / squareLength >= 10 && x / squareLength < 10 && selectedPlane == null) {
             playing.selectPlane((x/squareLength) - 4);
         }
 
-        //green's air tap
-        else if (x / squareLength > 3 && y / squareLength >= 10 && x / squareLength < 10 && selectedPlane != null && selectedPlane.isDeployed && playing == green) {
+
+        else if (x / squareLength > 3 && y / squareLength >= 10 && x / squareLength < 10 && selectedPlane != null && selectedPlane.isDeployed) {
 
             tappedAirLine = -1;
             GameView.airMissionSelection = -1;
@@ -341,7 +343,7 @@ public class GameEngine extends Thread{
             }
 
             else if (playing.hangarHasEmptySlots()) {
-                selectedPlane.groundPlane();
+                groundPlane(selectedPlane);
                 playing.oilStorage++;
 
                 for (int i = 0; i < planeLines.length; i++) {
@@ -354,6 +356,7 @@ public class GameEngine extends Thread{
 
         }
 
+        //green's air tap
         else if (x/squareLength < 2 && playing == green && y / squareLength < 9) {
 
             //y represents plane line
@@ -388,6 +391,63 @@ public class GameEngine extends Thread{
             }
         }
 
+        else if (x/squareLength > 17 && playing == green && y / squareLength < 9) {
+            y = y / (int) (3 * GameEngine.airLineYScaleFactor * GameEngine.squareLength);
+            if (planeLines[y][1] != null) {
+                if (selectedEnemyPlane != null) {
+                    unselectEnemyPlanes();
+                }
+                planeLines[y][1].selectEnemy();
+            }
+        }
+
+        //red's air tap
+
+        else if (x/squareLength > 17 && playing == red && y / squareLength < 9) {
+
+            //y represents plane line
+            y = y / (int) (3 * GameEngine.airLineYScaleFactor * GameEngine.squareLength);
+            if (planeLines[y][1] != null) {
+                if (selectedPlane != null) {
+                    unselectFriendlyPlanes();
+                }
+                planeLines[y][1].select();
+                GameView.airMissionSelection = 0;
+                tappedAirLine = y;
+            }
+
+            else if (selectedPlane != null) {
+                if (!selectedPlane.isDeployed && planeLines[y][1] == null && red.oilStorage > 0) {
+                    if (GameView.airMissionSelection == -1) {
+                        tappedAirLine = y;
+                        GameView.airMissionSelection = 0;
+                    }
+                } else if (selectedPlane.isDeployed) {
+                    for (int i = 0; i < planeLines.length; i++) {
+                        if (planeLines[i][1] == selectedPlane) {
+                            planeLines[i][1] = null;
+                        }
+                    }
+                    selectedPlane.unselect();
+                    planeLines[y][1] = selectedPlane;
+                    tappedAirLine = -1;
+                    GameView.airMissionSelection = -1;
+                    selectedPlane = null;
+                }
+            }
+        }
+
+        else if (x/squareLength < 2 && playing == red && y / squareLength < 9) {
+            y = y / (int) (3 * GameEngine.airLineYScaleFactor * GameEngine.squareLength);
+            if (planeLines[y][0] != null) {
+                if (selectedEnemyPlane != null) {
+                    unselectEnemyPlanes();
+                }
+                planeLines[y][0].selectEnemy();
+            }
+        }
+
+        //end red's tap
         else if (GameView.airMissionSelection == 0 && x/squareLength == 6 && (playing.oilStorage > 0 || selectedPlane.isDeployed)) {
 
             if (y/squareLength == 3) {
@@ -416,8 +476,9 @@ public class GameEngine extends Thread{
                 GameView.airMissionSelection = -1;
                 tappedAirLine = -1;
             } else {
-                planeLines[tappedAirLine][0] = selectedPlane;
-                green.removeFromHanger(selectedPlane);
+                int playingAirLine = playing == green? 0:1;
+                planeLines[tappedAirLine][playingAirLine] = selectedPlane;
+                playing.removeFromHanger(selectedPlane);
                 selectedPlane.isDeployed = true;
                 selectedPlane.airMission = GameView.airMissionSelection;
                 selectedPlane = null;
@@ -427,79 +488,6 @@ public class GameEngine extends Thread{
             }
         }
 
-        else if (x/squareLength > 17 && playing == green && y / squareLength < 9) {
-            y = y / (int) (3 * GameEngine.airLineYScaleFactor * GameEngine.squareLength);
-            if (planeLines[y][1] != null) {
-                if (selectedEnemyPlane != null) {
-                    unselectEnemyPlanes();
-                }
-                planeLines[y][1].selectEnemy();
-            }
-        }
-
-        //red's air tap
-        else if (x / squareLength > 3 && y / squareLength >= 10 && x / squareLength < 10 && selectedPlane != null && selectedPlane.isDeployed && playing == red) {
-
-            if (playing.hangar[(x/squareLength) - 4] != null) {
-                selectedPlane.unselect();
-                playing.hangar[(x/squareLength) - 4].select();
-            }
-
-            else if (playing.hangarHasEmptySlots()) {
-                selectedPlane.groundPlane();
-                playing.oilStorage++;
-
-                for (int i = 0; i < planeLines.length; i++) {
-                    if (planeLines[i][1] == selectedPlane) {
-                        planeLines[i][1] = null;
-                    }
-                }
-                unselectFriendlyPlanes();
-            }
-        }
-
-        else if (x/squareLength > 17 && playing == red && y / squareLength < 9) {
-
-            //y represents plane line after this
-            y = y / (int) (3 * GameEngine.airLineYScaleFactor * GameEngine.squareLength);
-            if (planeLines[y][1] != null) {
-                if (selectedPlane != null) {
-                    unselectFriendlyPlanes();
-                }
-                planeLines[y][1].select();
-            }
-
-            else if (selectedPlane != null) {
-                if (!selectedPlane.isDeployed && planeLines[y][1] == null && red.oilStorage > 0) {
-                    planeLines[y][1] = selectedPlane;
-                    red.removeFromHanger(selectedPlane);
-                    selectedPlane.isDeployed = true;
-                    selectedPlane = null;
-                    playing.oilStorage--;
-                } else if (selectedPlane.isDeployed) {
-                    for (int i = 0; i < planeLines.length; i++) {
-                        if (planeLines[i][1] == selectedPlane) {
-                            planeLines[i][1] = null;
-                        }
-                    }
-                    selectedPlane.unselect();
-                    planeLines[y][1] = selectedPlane;
-                    selectedPlane = null;
-                }
-            }
-        }
-
-        else if (x/squareLength < 2 && playing == red && y / squareLength < 9) {
-            y = y / (int) (3 * GameEngine.airLineYScaleFactor * GameEngine.squareLength);
-            if (planeLines[y][0] != null) {
-                if (selectedEnemyPlane != null) {
-                    unselectEnemyPlanes();
-                }
-                planeLines[y][0].selectEnemy();
-            }
-        }
-
-        //end red's tap
         else {
             if (selectedPlane != null) {
                 selectedPlane.unselect();
@@ -1671,11 +1659,26 @@ public class GameEngine extends Thread{
             }
         }
 
+        //autoheals player's units if unit has move and attack left
+        for (int i = 0; i < BoardSprites.length; i++) {
+            for (int j = 0; j < BoardSprites[i].length; j++) {
+                if (BoardSprites[i][j] != null && BoardSprites[i][j].owner == playing) {
+                    if (BoardSprites[i][j].hasAttack && BoardSprites[i][j].hasMove) {
+                        BoardSprites[i][j].HP += BoardSprites[i][j].healRate;
+                        if (BoardSprites[i][j].HP > BoardSprites[i][j].maxHP) {
+                            BoardSprites[i][j].HP = BoardSprites[i][j].maxHP;
+                        }
+                        BoardSprites[i][j].hasAttack = false;
+                        BoardSprites[i][j].hasMove = false;
+                    }
+                }
+            }
+        }
+
         if (playing == green) {
             for (int i = 0; i < playing.hangar.length; i++) {
                 if (playing.hangar[i] != null) {
                     playing.hangar[i].HP += playing.hangar[i].healingRate;
-
                     if (playing.hangar[i].HP > playing.hangar[i].maxHP) {
                         playing.hangar[i].HP = playing.hangar[i].maxHP;
                     }
@@ -1684,7 +1687,7 @@ public class GameEngine extends Thread{
 
             for (int i = 0; i < airLinesCount; i++) {
                 if (planeLines[i][1] != null) {
-                    planeLines[i][1].performAirMission(i,1);
+                    performAirMission(planeLines[i][1],i,1);
                 }
             }
             for (int i = 0; i < fogOfWarIsRevealedForGreen.length; i++) {
@@ -1707,7 +1710,7 @@ public class GameEngine extends Thread{
 
             for (int i = 0; i < airLinesCount; i++) {
                 if (planeLines[i][0] != null) {
-                    planeLines[i][0].performAirMission(i,0);
+                    performAirMission(planeLines[i][0],i,0);
                 }
             }
             for (int i = 0; i < fogOfWarIsRevealedForGreen.length; i++) {
@@ -1725,33 +1728,6 @@ public class GameEngine extends Thread{
                     BoardSprites[i][j].hasAttack = true;
                     BoardSprites[i][j].specialIsActivated = false;
                     BoardSprites[i][j].brightenIcon();
-                }
-                if (BoardSprites[i][j] != null && BoardSprites[i][j].owner != playing) {
-                    if (BoardSprites[i][j].hasAttack && BoardSprites[i][j].hasMove) {
-                        if (BoardSprites[i][j].unitType.equals("Armor")) {
-                            BoardSprites[i][j].HP += Armor.healedBy;
-                        }
-                        else if (BoardSprites[i][j].unitType.equals("Cavalry")) {
-                            BoardSprites[i][j].HP += Cavalry.healedBy;
-                        }
-                        else if (BoardSprites[i][j].unitType.equals("Infantry")) {
-                            BoardSprites[i][j].HP += Infantry.healedBy;
-                        }
-                        else if (BoardSprites[i][j].unitType.equals("Artillery")) {
-                            BoardSprites[i][j].HP += Artillery.healedBy;
-                        }
-                        else if (BoardSprites[i][j].unitType.equals("Anti air")) {
-                            BoardSprites[i][j].HP += MGInfantry.healedBy;
-                        }
-                        else if (BoardSprites[i][j].unitType.equals("Heavy Tank")) {
-                            BoardSprites[i][j].HP += HeavyTank.healedBy;
-                        }
-                        BoardSprites[i][j].hasAttack = false;
-                        BoardSprites[i][j].hasMove = false;
-                    }
-                    if (BoardSprites[i][j].HP > BoardSprites[i][j].maxHP) {
-                        BoardSprites[i][j].HP = BoardSprites[i][j].maxHP;
-                    }
                 }
             }
         }
@@ -1823,6 +1799,90 @@ public class GameEngine extends Thread{
         GameEngine.lastAddedResources[0] = addedfood;
         GameEngine.lastAddedResources[1] = addediron;
         GameEngine.lastAddedResources[2] = addedoil;
+    }
+
+    public static void performAirMission(Planes plane, int row, int column) {
+        if (plane.airMission == 0) {
+            message = "ERROR! AIR MISSION IS 0";
+            groundPlane(plane);
+            planeLines[row][column] = null;
+            return;
+        } else if (plane.airMission > 4) {
+            message = "ERROR! AIR MISSION IS LARGER THAN 4!";
+            groundPlane(plane);
+            planeLines[row][column] = null;
+            return;
+        }
+
+        //reveal tiles
+        if (column == 0) {
+            revealLineOfFOW(GameEngine.green, row);
+        } else {
+            revealLineOfFOW(GameEngine.red, row);
+        }
+
+        //deal damage to ground
+        if (plane.airMission == 3 || plane.airMission == 4) { //TODO: separate cases for 3 and 4
+            for (int i = 0; i < BoardSprites.length; i++) {
+                for (int j = row * 3; j < (row + 1) * 3; j++) {
+                    if (BoardSprites[i][j] != null && BoardSprites[i][j].owner != plane.owner) {
+                        DamageUnit(plane.getGroundAttack(), BoardSprites[i][j], i, j, 3);
+                    }
+                }
+            }
+        }
+
+        //deal and take damage to enemy air
+        int otherColumn = column==0? 1:0;
+        if (planeLines[row][otherColumn] != null) {
+            Planes otherPlane = planeLines[row][otherColumn];
+            if (otherPlane.getAirAttack() > plane.getDefence()) {
+                plane.HP -= (otherPlane.getAirAttack() - plane.getDefence());
+            }
+            if (plane.getAirAttack() > otherPlane.getDefence()) {
+                otherPlane.HP -= (plane.getAirAttack() - otherPlane.getDefence());
+            }
+
+            if (otherPlane.HP <= 0) {
+                otherPlane = null;
+            }
+
+            planeLines[row][otherColumn] = otherPlane;
+        }
+
+        takeGroundDamage(plane, row);
+
+        if (plane.HP <= 0) {
+            planeLines[row][column] = null;
+            return;
+        }
+        groundPlane(plane);
+        planeLines[row][column] = null;
+    }
+
+    public static void takeGroundDamage(Planes plane, int line) {
+
+        for (int i = 0; i < BoardSprites.length; i++) {
+            for (int j = line * 3; j < (line+1) * 3; j++) {
+                if (BoardSprites[i][j] != null && BoardSprites[i][j].owner != plane.owner) {
+                    if (BoardSprites[i][j].airAttack <= plane.getDefence()) {
+                        continue;
+                    }
+                    plane.HP -= (BoardSprites[i][j].airAttack - plane.getDefence());
+                }
+            }
+        }
+    }
+
+    public static void groundPlane(Planes plane) {
+        plane.airMission = 0;
+        for (int i = 0; i < plane.owner.hangar.length; i++) {
+            if (plane.owner.hangar[i] == null) {
+                plane.owner.hangar[i] = plane;
+                plane.isDeployed = false;
+                return;
+            }
+        }
     }
 
     //True: tile is revealed

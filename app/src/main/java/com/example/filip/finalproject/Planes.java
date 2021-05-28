@@ -29,20 +29,23 @@ public class Planes {
 
     public int getAirAttack(){
         if (airMission == 2) {
-            return airAttack += 1;
+            return airAttack + 1;
         } else if (airMission == 3 && planeType.equals("Fighter")) {
-            return airAttack /= 2;
+            return airAttack / 2;
         }
         return airAttack;
     }
 
     public int getGroundAttack(){
+        if (airMission == 1 || airMission == 2) {
+            groundAttack = 0;
+        }
         return groundAttack;
     }
 
     public int getDefence(){
         if (airMission == 1) {
-            return defence += 1;
+            return defence + 2;
         }
         return defence;
     }
@@ -53,13 +56,14 @@ public class Planes {
         canvas.drawBitmap(toDraw, x * GameEngine.squareLength, y * GameEngine.squareLength, null);
     }
 
-    public void drawWithMission(Canvas canvas, double x, double y) {
+    public void drawWithMission(Canvas canvas, double x, double y, boolean missionIconIsToTheRight) {
         Bitmap toDraw = icon;
         toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
         canvas.drawBitmap(toDraw, (int)(x * GameEngine.squareLength), (int) (y * GameEngine.squareLength), null);
 
+        int factor = missionIconIsToTheRight? 1:-1;
         Bitmap airMissionIcon = missionIcons[this.airMission];
-        canvas.drawBitmap(airMissionIcon, (int)((x+1) * GameEngine.squareLength), (int) (y * GameEngine.squareLength), null);
+        canvas.drawBitmap(airMissionIcon, (int)((x+factor) * GameEngine.squareLength), (int) (y * GameEngine.squareLength), null);
     }
 
     public void draw(Canvas canvas, double x, double y) {
@@ -75,81 +79,6 @@ public class Planes {
     public void selectEnemy() {
         GameEngine.selectedEnemyPlane = this;
         getSelectedIcon();
-    }
-
-    public void performAirMission(int row, int column) {
-        if (airMission == 0) {
-            GameEngine.message = "ERROR! AIR MISSION IS 0";
-            groundPlane();
-            GameEngine.planeLines[row][column] = null;
-            return;
-        }
-
-        if (airMission == 1) {
-
-            if (column == 0) {
-                GameEngine.revealLineOfFOW(GameEngine.green, row);
-            } else {
-                GameEngine.revealLineOfFOW(GameEngine.red, row);
-            }
-
-        } else if (airMission == 2) {
-
-            //TODO
-
-        } else if (airMission == 3) {
-            
-        } else if (airMission == 4) {
-
-        } else {
-            GameEngine.message = "ERROR! AIR MISSION IS LARGER THAN 4!";
-            groundPlane();
-            GameEngine.planeLines[row][column] = null;
-            return;
-        }
-        takeGroundDamage(row);
-
-
-        if (GameEngine.planeLines[row][column] != null) {
-            GameEngine.planeLines[row][column].HP -= (getAirAttack() - GameEngine.planeLines[row][column].getDefence());
-            if (GameEngine.planeLines[row][column].HP <= 0) {
-                GameEngine.planeLines[row][column] = null;
-            }
-        }
-        else {
-            for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
-                for (int j = row * 3; j < (row + 1) * 3; j++) {
-                    if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
-                        GameEngine.DamageUnit(getGroundAttack(), GameEngine.BoardSprites[i][j],i,j, 3);
-                    }
-                }
-            }
-
-        }
-    }
-
-    public void takeGroundDamage(int line) {
-
-        for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
-            for (int j = line * 3; j < (line+1) * 3; j++) {
-                if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != this.owner) {
-                    if (GameEngine.BoardSprites[i][j].airAttack <= this.getDefence()) {
-                        continue;
-                    }
-                    this.HP -= (GameEngine.BoardSprites[i][j].airAttack - this.getDefence());
-                }
-            }
-        }
-    }
-
-    public void groundPlane() {
-        for (int i = 0; i < owner.hangar.length; i++) {
-            if (owner.hangar[i] == null) {
-                owner.hangar[i] = this;
-                isDeployed = false;
-                return;
-            }
-        }
     }
 
     public void getSelectedIcon() {

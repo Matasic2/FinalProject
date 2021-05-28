@@ -982,7 +982,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         for (int i = 0; i < GameEngine.planeLines.length; i++) {
             for (int j = 0; j < GameEngine.planeLines[i].length; j++) {
                 if (GameEngine.planeLines[i][j] != null) {
-                    GameEngine.planeLines[i][j].drawWithMission(canvas, 19*j, (3 * i * GameEngine.airLineYScaleFactor + GameEngine.airLineYScaleFactor));
+                    if (j == 0) {
+                        GameEngine.planeLines[i][j].drawWithMission(canvas, 19*j, (3 * i * GameEngine.airLineYScaleFactor + GameEngine.airLineYScaleFactor), true);
+                    } else {
+                        GameEngine.planeLines[i][j].drawWithMission(canvas, 19*j, (3 * i * GameEngine.airLineYScaleFactor + GameEngine.airLineYScaleFactor), false);
+                    }
                 }
             }
         }

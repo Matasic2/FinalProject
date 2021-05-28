@@ -39,9 +39,9 @@ public class Map {
             new oil(GameView.theContext, 1, 5, 1, 6);
             new Iron(GameView.theContext, 0, 6, 1, 6);
 
-            new Food(GameView.theContext, 7, 1, 8, 1);
-            new oil(GameView.theContext, 8, 0, 8, 1);
-            new Iron(GameView.theContext, 8, 2, 8, 1);
+            new Food(GameView.theContext, 6, 1, 7, 1);
+            new oil(GameView.theContext, 7, 0, 7, 1);
+            new Iron(GameView.theContext, 7, 2, 7, 1);
 
             // next lines generate red's "natural resources" (the resources which are expected to be controlled by red player).
             new Food(GameView.theContext, 18, 11, 18, 10);
@@ -176,9 +176,9 @@ public class Map {
             new oil(GameView.theContext, 1, 6, 1, 7);
             new Iron(GameView.theContext, 0, 7, 1, 7);
 
-            new Food(GameView.theContext, 6, 1, 7, 1);
-            new oil(GameView.theContext, 7, 0, 7, 1);
-            new Iron(GameView.theContext, 7, 2, 7, 1);
+            new Food(GameView.theContext, 5, 1, 6, 1);
+            new oil(GameView.theContext, 6, 0, 6, 1);
+            new Iron(GameView.theContext, 6, 2, 6, 1);
 
             // next lines generate red's "natural resources" (the resources which are expected to be controlled by red player).
             new Food(GameView.theContext, 13, 6, 13, 7);
@@ -235,7 +235,7 @@ public class Map {
         if (map_code == 2) {
             GameView.pointers.draw(canvas, 1, 6);
             GameView.pointers.draw(canvas, 18, 5);
-            GameView.pointers1.draw(canvas, 8, 1);
+            GameView.pointers1.draw(canvas, 7, 1);
             GameView.pointers1.draw(canvas, 3, 10);
             GameView.pointers2.draw(canvas, 12, 10);
             GameView.pointers2.draw(canvas, 17, 1);
@@ -246,7 +246,7 @@ public class Map {
         } else if (map_code == 0) {
             GameView.pointers.draw(canvas, 1, 7);
             GameView.pointers.draw(canvas, 13, 1);
-            GameView.pointers1.draw(canvas, 7, 1);
+            GameView.pointers1.draw(canvas, 6, 1);
             GameView.pointers2.draw(canvas, 8, 7);
         }
     }
