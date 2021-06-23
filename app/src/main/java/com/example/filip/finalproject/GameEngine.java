@@ -1821,8 +1821,9 @@ public class GameEngine extends Thread{
             revealLineOfFOW(GameEngine.red, row);
         }
 
+        int otherColumn = column==0? 1:0;
         //deal damage to ground
-        if (plane.airMission == 3 || plane.airMission == 4) { //TODO: separate cases for 3 and 4
+        if (plane.airMission == 3) {
             for (int i = 0; i < BoardSprites.length; i++) {
                 for (int j = row * 3; j < (row + 1) * 3; j++) {
                     if (BoardSprites[i][j] != null && BoardSprites[i][j].owner != plane.owner) {
@@ -1832,8 +1833,20 @@ public class GameEngine extends Thread{
             }
         }
 
+        if (plane.airMission == 4) { //same as above, but check if intercepted
+
+            if (!(planeLines[row][otherColumn] != null && planeLines[row][otherColumn].airMission == 2)) {
+                for (int i = 0; i < BoardSprites.length; i++) {
+                    for (int j = row * 3; j < (row + 1) * 3; j++) {
+                        if (BoardSprites[i][j] != null && BoardSprites[i][j].owner != plane.owner) {
+                            DamageUnit(plane.getGroundAttack(), BoardSprites[i][j], i, j, 3);
+                        }
+                    }
+                }
+            }
+        }
+
         //deal and take damage to enemy air
-        int otherColumn = column==0? 1:0;
         if (planeLines[row][otherColumn] != null) {
             Planes otherPlane = planeLines[row][otherColumn];
             if (otherPlane.getAirAttack() > plane.getDefence()) {
@@ -1850,7 +1863,9 @@ public class GameEngine extends Thread{
             planeLines[row][otherColumn] = otherPlane;
         }
 
-        takeGroundDamage(plane, row);
+        if (plane.HP > 0 && plane.airMission != 1) {
+            takeGroundDamage(plane, row);
+        }
 
         if (plane.HP <= 0) {
             planeLines[row][column] = null;
@@ -1865,10 +1880,7 @@ public class GameEngine extends Thread{
         for (int i = 0; i < BoardSprites.length; i++) {
             for (int j = line * 3; j < (line+1) * 3; j++) {
                 if (BoardSprites[i][j] != null && BoardSprites[i][j].owner != plane.owner) {
-                    if (BoardSprites[i][j].airAttack <= plane.getDefence()) {
-                        continue;
-                    }
-                    plane.HP -= (BoardSprites[i][j].airAttack - plane.getDefence());
+                    plane.HP -= BoardSprites[i][j].airAttack;
                 }
             }
         }

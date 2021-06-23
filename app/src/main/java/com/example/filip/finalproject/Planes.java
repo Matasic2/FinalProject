@@ -30,16 +30,24 @@ public class Planes {
     public int getAirAttack(){
         if (airMission == 2) {
             return airAttack + 1;
-        } else if (airMission == 3 && planeType.equals("Fighter")) {
+        }
+
+        else if (airMission == 3) {
             return airAttack / 2;
         }
+
+        else if (airMission == 4) {
+            return airAttack - 1;
+        }
+
         return airAttack;
     }
 
     public int getGroundAttack(){
         if (airMission == 1 || airMission == 2) {
-            groundAttack = 0;
+            return 0;
         }
+
         return groundAttack;
     }
 
@@ -47,6 +55,11 @@ public class Planes {
         if (airMission == 1) {
             return defence + 2;
         }
+
+        else if (airMission == 3) {
+            return defence - 1;
+        }
+
         return defence;
     }
 
