@@ -36,10 +36,6 @@ public class Planes {
             return airAttack / 2;
         }
 
-        else if (airMission == 4) {
-            return airAttack - 1;
-        }
-
         return airAttack;
     }
 
@@ -48,15 +44,16 @@ public class Planes {
             return 0;
         }
 
+        if (airMission == 4) {
+            return groundAttack * 2;
+        }
+
         return groundAttack;
     }
 
     public int getDefence(){
-        if (airMission == 1) {
-            return defence + 2;
-        }
 
-        else if (airMission == 3) {
+        if (airMission == 3) {
             return defence - 1;
         }
 

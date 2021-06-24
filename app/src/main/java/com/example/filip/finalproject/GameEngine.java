@@ -1815,18 +1815,23 @@ public class GameEngine extends Thread{
         }
 
         //reveal tiles
-        if (column == 0) {
-            revealLineOfFOW(GameEngine.green, row);
-        } else {
-            revealLineOfFOW(GameEngine.red, row);
+        if (plane.airMission == 1) {
+            if (column == 0) {
+                revealLineOfFOW(GameEngine.green, row);
+            } else {
+                revealLineOfFOW(GameEngine.red, row);
+            }
         }
 
         int otherColumn = column==0? 1:0;
         //deal damage to ground
         if (plane.airMission == 3) {
+
+            boolean[][] fogOfWar = getFogOfWar(plane.owner);
+
             for (int i = 0; i < BoardSprites.length; i++) {
                 for (int j = row * 3; j < (row + 1) * 3; j++) {
-                    if (BoardSprites[i][j] != null && BoardSprites[i][j].owner != plane.owner) {
+                    if (fogOfWar[i][j] && BoardSprites[i][j] != null && BoardSprites[i][j].owner != plane.owner) {
                         DamageUnit(plane.getGroundAttack(), BoardSprites[i][j], i, j, 3);
                     }
                 }
@@ -1835,10 +1840,12 @@ public class GameEngine extends Thread{
 
         if (plane.airMission == 4) { //same as above, but check if intercepted
 
+            boolean[][] fogOfWar = getFogOfWar(plane.owner);
+
             if (!(planeLines[row][otherColumn] != null && planeLines[row][otherColumn].airMission == 2)) {
                 for (int i = 0; i < BoardSprites.length; i++) {
                     for (int j = row * 3; j < (row + 1) * 3; j++) {
-                        if (BoardSprites[i][j] != null && BoardSprites[i][j].owner != plane.owner) {
+                        if (fogOfWar[i][j] && BoardSprites[i][j] != null && BoardSprites[i][j].owner != plane.owner) {
                             DamageUnit(plane.getGroundAttack(), BoardSprites[i][j], i, j, 3);
                         }
                     }

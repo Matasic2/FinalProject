@@ -1028,14 +1028,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
                     paint.setTextSize(40);
                     canvas.drawText("Scouting mission", 900 * FullscreenActivity.scaleFactor, 430 * FullscreenActivity.scaleFactor, paint);
-                    canvas.drawText("+2 air defence", 900 * FullscreenActivity.scaleFactor, 480 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("reveals tiles", 900 * FullscreenActivity.scaleFactor, 480 * FullscreenActivity.scaleFactor, paint);
                     canvas.drawText("no damage from and to ground", 900 * FullscreenActivity.scaleFactor, 530 * FullscreenActivity.scaleFactor, paint);
 
                     canvas.drawText("Intercept mission", 900 * FullscreenActivity.scaleFactor, 680 * FullscreenActivity.scaleFactor, paint);
                     canvas.drawText("+1 air attack", 900 * FullscreenActivity.scaleFactor, 730 * FullscreenActivity.scaleFactor, paint);
                     canvas.drawText("no damage to ground", 900 * FullscreenActivity.scaleFactor, 780 * FullscreenActivity.scaleFactor, paint);
 
-                    canvas.drawText("Single ground tile attack mission", 900 * FullscreenActivity.scaleFactor, 930 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("Ground attack mission", 900 * FullscreenActivity.scaleFactor, 930 * FullscreenActivity.scaleFactor, paint);
                     canvas.drawText("-1 air defence", 900 * FullscreenActivity.scaleFactor, 980 * FullscreenActivity.scaleFactor, paint);
                     canvas.drawText("1/2 air attack", 900 * FullscreenActivity.scaleFactor, 1030 * FullscreenActivity.scaleFactor, paint);
                 }
@@ -1046,15 +1046,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
                     paint.setTextSize(40);
                     canvas.drawText("Scouting mission", 900 * FullscreenActivity.scaleFactor, 430 * FullscreenActivity.scaleFactor, paint);
-                    canvas.drawText("+2 air defence", 900 * FullscreenActivity.scaleFactor, 480 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("reveals tiles", 900 * FullscreenActivity.scaleFactor, 480 * FullscreenActivity.scaleFactor, paint);
                     canvas.drawText("no damage from and to ground", 900 * FullscreenActivity.scaleFactor, 530 * FullscreenActivity.scaleFactor, paint);
 
-                    canvas.drawText("Single ground tile attack mission", 900 * FullscreenActivity.scaleFactor, 680 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("Ground attack mission", 900 * FullscreenActivity.scaleFactor, 680 * FullscreenActivity.scaleFactor, paint);
                     canvas.drawText("-1 air defence", 900 * FullscreenActivity.scaleFactor, 730 * FullscreenActivity.scaleFactor, paint);
                     canvas.drawText("1/2 air attack", 900 * FullscreenActivity.scaleFactor, 780 * FullscreenActivity.scaleFactor, paint);
 
                     canvas.drawText("Line ground attack mission", 900 * FullscreenActivity.scaleFactor, 930 * FullscreenActivity.scaleFactor, paint);
-                    canvas.drawText("-1 air attack", 900 * FullscreenActivity.scaleFactor, 980 * FullscreenActivity.scaleFactor, paint);
+                    canvas.drawText("double ground attack", 900 * FullscreenActivity.scaleFactor, 980 * FullscreenActivity.scaleFactor, paint);
                     canvas.drawText("no damage to ground if intercepted", 900 * FullscreenActivity.scaleFactor, 1030 * FullscreenActivity.scaleFactor, paint);
                 }
             }

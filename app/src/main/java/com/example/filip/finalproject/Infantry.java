@@ -10,18 +10,18 @@ public class Infantry extends Units {
     public static int GreenFirstAttackRange = 1; //  Green Infantry's first attack range, this value can be changed
     public static int GreenSecondAttackRange = 5; //  Green Infantry's second attack value, this value can be changed
     public static int GreenDefence = 1; // Defence value of Green's Infantry, this value can be changed
-    public static int GreenHP = 7; // HP value of Green's Infantry, this value can be changed
+    public static int GreenHP = 8; // HP value of Green's Infantry, this value can be changed
     public static int GreenMovement = 2; // Movement value of Green's Infantry, this value can be changed
     public static int GreenVisibility = 4; // Movement value of Green's Infantry, this value can be changed
     public static int greenAirAttack = 2;
     
     //cost of Infantry unit
-    public static int greenFoodPrice = 3;
-    public static int greenIronPrice = 0;
+    public static int greenFoodPrice = 4;
+    public static int greenIronPrice = 1;
     public static int greenOilPrice = 0;
 
-    public static int redFoodPrice = 3;
-    public static int redIronPrice = 0;
+    public static int redFoodPrice = 4;
+    public static int redIronPrice = 1;
     public static int redOilPrice = 0;
 
     //How much health will the unit gain if healed
@@ -32,7 +32,7 @@ public class Infantry extends Units {
     public static int RedFirstAttackRange = 1; //  Red Infantry's first attack range, this value can be changed
     public static int RedSecondAttackRange = 5; //  Red Infantry's second attack value, this value can be changed
     public static int RedDefence = 1; // Defence value of Red's Infantry, this value can be changed
-    public static int RedHP = 7; // HP value of Red's Infantry, this value can be changed
+    public static int RedHP = 8; // HP value of Red's Infantry, this value can be changed
     public static int RedMovement = 2; // Movement value of Red's Infantry, this value can be changed
     public static int RedVisibility = 4; // Movement value of Green's Infantry, this value can be changed
     public static int redAirAttack = 2;
@@ -86,18 +86,18 @@ public class Infantry extends Units {
         GreenFirstAttackRange = 1; //  Green Infantry's first attack range, this value can be changed
         GreenSecondAttackRange = 5; //  Green Infantry's second attack value, this value can be changed
         GreenDefence = 1; // Defence value of Green's Infantry, this value can be changed
-        GreenHP = 7; // HP value of Green's Infantry, this value can be changed
+        GreenHP = 8; // HP value of Green's Infantry, this value can be changed
         GreenMovement = 2; // Movement value of Green's Infantry, this value can be changed
         GreenVisibility = 4; // Movement value of Green's Infantry, this value can be changed
         greenAirAttack = 1;
 
         //cost of Infantry unit
-        greenFoodPrice = 3;
-        greenIronPrice = 0;
+        greenFoodPrice = 4;
+        greenIronPrice = 1;
         greenOilPrice = 0;
 
-        redFoodPrice = 3;
-        redIronPrice = 0;
+        redFoodPrice = 4;
+        redIronPrice = 1;
         redOilPrice = 0;
 
         //How much health will the unit gain if healed
@@ -108,7 +108,7 @@ public class Infantry extends Units {
         RedFirstAttackRange = 1; //  Red Infantry's first attack range, this value can be changed
         RedSecondAttackRange = 5; //  Red Infantry's second attack value, this value can be changed
         RedDefence = 1; // Defence value of Red's Infantry, this value can be changed
-        RedHP = 7; // HP value of Red's Infantry, this value can be changed
+        RedHP = 8; // HP value of Red's Infantry, this value can be changed
         RedMovement = 2; // Movement value of Red's Infantry, this value can be changed
         RedVisibility = 4; // Movement value of Green's Infantry, this value can be changed
         redAirAttack = 1;

@@ -56,25 +56,64 @@ public class Player {
             return;
         }
 
-        upgrades[x][y] = !upgrades[x][y];
-
         int factor = 1;
-        if (!upgrades[x][y]) {
+        if (upgrades[x][y]) {
             factor = -1;
         }
 
         if (x == 0) {
+
+            for (int i = 0; i < 3; i++) {
+                if (i != y && upgrades[x][i]) {
+                    upgrades[x][i] = false;
+                    Cavalry.adjustUpgrade(this, -1, i);
+                    break;
+                }
+            }
+
             Cavalry.adjustUpgrade(this, factor, y);
         }
-        if (x == 1) {
+
+        else if (x == 1) {
+
+            for (int i = 0; i < 3; i++) {
+                if (i != y && upgrades[x][i]) {
+                    upgrades[x][i] = false;
+                    Infantry.adjustUpgrade(this, -1, i);
+                    break;
+                }
+            }
+
             Infantry.adjustUpgrade(this, factor, y);
         }
-        if (x == 2) {
+
+        else if (x == 2) {
+
+            for (int i = 0; i < 3; i++) {
+                if (i != y && upgrades[x][i]) {
+                    upgrades[x][i] = false;
+                    Artillery.adjustUpgrade(this, -1, i);
+                    break;
+                }
+            }
+
             Artillery.adjustUpgrade(this, factor, y);
         }
-        if (x == 3) {
+
+        else if (x == 3) {
+
+            for (int i = 0; i < 3; i++) {
+                if (i != y && upgrades[x][i]) {
+                    upgrades[x][i] = false;
+                    Armor.adjustUpgrade(this, -1, i);
+                    break;
+                }
+            }
+
             Armor.adjustUpgrade(this, factor, y);
         }
+
+        upgrades[x][y] = !upgrades[x][y];
     }
 
     public static String print(Player p) {

@@ -10,7 +10,7 @@ public class ReconPlane extends Planes {
     public static int greenGroundAttack = 2; // Damage done by second attack, usually does less damage but has higher range then first attack.
     public static int greenDefence = 1; //Unit's defence value. Damage to HP is calculated by HP -= (damage - defence). For example, if unit has 3hp, 1 defence and gets attacked by unit which has 2 attack damage, new HP will be 2.
     public static int greenMaxHP = 20; //Max HP of the unit
-    public static int greenRepairRate = 4;
+    public static int greenRepairRate = 5;
 
     public static int foodPrice = 2;
     public static int ironPrice = 2;
@@ -20,7 +20,7 @@ public class ReconPlane extends Planes {
     public static int redGroundAttack = 2; // Damage done by second attack, usually does less damage but has higher range then first attack.
     public static int redDefence = 1; //Unit's defence value. Damage to HP is calculated by HP -= (damage - defence). For example, if unit has 3hp, 1 defence and gets attacked by unit which has 2 attack damage, new HP will be 2.
     public static int redMaxHP = 20; //Max HP of the unit
-    public static int redRepairRate = 4;
+    public static int redRepairRate = 5;
 
     ReconPlane(Context context, Player player) {
         super(context, player, null, "Fighter");
