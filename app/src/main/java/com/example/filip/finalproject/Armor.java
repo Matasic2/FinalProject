@@ -54,7 +54,7 @@ public class Armor extends Units {
                 Armor.GreenVisibility += 2 * factor;
             }
             if (number == 1) {
-                Armor.greenIronPrice += 3 * factor;
+                Armor.greenIronPrice += 2 * factor;
                 Armor.GreenDefence += 1 * factor;
             }
             if (number == 2) {

@@ -51,30 +51,34 @@ public class Infantry extends Units {
             if (number == 0) {
                 //Infantry.greenFoodPrice += 1 * factor;
                 Infantry.greenIronPrice += 1 * factor;
+                Infantry.greenFoodPrice += 1 * factor;
                 Infantry.GreenFirstAttackRange += 1 * factor;
+                Infantry.GreenHP += 2 * factor;
                 Infantry.GreenAttack1 += 10 * factor;
             }
             if (number == 1) {
-                Infantry.greenIronPrice += 2 * factor;
+                Infantry.greenIronPrice += 1 * factor;
                 Infantry.GreenDefence += 1 * factor;
             }
             if (number == 2) {
-                Infantry.greenFoodPrice += 2 * factor;
+                Infantry.greenFoodPrice += 1 * factor;
                 Infantry.GreenAttack2 += 1 * factor;
             }
         } else if (player == GameEngine.red) {
             if (number == 0) {
                 //Infantry.redFoodPrice += 1 * factor;
                 Infantry.redIronPrice += 1 * factor;
+                Infantry.redFoodPrice += 1 * factor;
                 Infantry.RedFirstAttackRange += 1 * factor;
+                Infantry.RedHP += 2 * factor;
                 Infantry.RedAttack1 += 10 * factor;
             }
             if (number == 1) {
-                Infantry.redIronPrice += 2 * factor;
+                Infantry.redIronPrice += 1 * factor;
                 Infantry.RedDefence += 1 * factor;
             }
             if (number == 2) {
-                Infantry.redFoodPrice += 2 * factor;
+                Infantry.redFoodPrice += 1 * factor;
                 Infantry.RedAttack2 += 1 * factor;
             }
         }

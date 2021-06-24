@@ -15,7 +15,7 @@ public class Bomber extends  Planes{
 
     public static int foodPrice = 2;
     public static int ironPrice = 3;
-    public static int oilPrice = 5;
+    public static int oilPrice = 4;
 
     public static int redAirAttack =  4;//Damage done by first attack.
     public static int redGroundAttack = 4; // Damage done by second attack, usually does less damage but has higher range then first attack.
