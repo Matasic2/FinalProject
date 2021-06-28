@@ -1,2 +1,3 @@
 - players can move forward to reveal the location of enemy units, then undo to save their move
 - players can fire blindly then undo the action if no damage was taken (meaning no unit is present on that tile) until their unit was damaged(combat occured so an enemy unit is present)
+- loading replay can be undeterministic, especially when playing vs Ai

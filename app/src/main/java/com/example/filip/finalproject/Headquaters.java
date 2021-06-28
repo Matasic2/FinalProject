@@ -13,7 +13,6 @@ public class Headquaters extends Units{
     public static int GreenHP = 30; // HP value of Green's HQ, this value can be changed
     public static int GreenMovement = 0; // Movement value of Green's HQ, this value can be changed
     public static int GreenVisibility = 6; // Movement value of Green's Infantry, this value can be changed
-    public static int greenAirAttack = 1;
 
     public static int healedBy = 4;
 
@@ -31,9 +30,9 @@ public class Headquaters extends Units{
     Headquaters(Context context, int x, int y, Player player) {
         super(context, x, y, player, "Headquarters");
         if (player.color.equals("green")) {
-            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement,GreenVisibility,greenAirAttack, healedBy);
+            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement,GreenVisibility, healedBy);
         } else {
-            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility,redAirAttack, healedBy);
+            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility, healedBy);
         }
 
     }

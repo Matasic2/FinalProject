@@ -117,12 +117,12 @@ public class MainThread extends Thread {
             } else {
                 GameView.cameraX = 0;
             }
-            if (GameEngine.heigth > 9) {
+            if (GameEngine.height > 9) {
                 if (GameView.cameraY > 0) {
                     GameView.cameraY = 0;
                 }
-                if (GameView.cameraY < (9 - GameEngine.heigth) * GameEngine.squareLength) {
-                    GameView.cameraY = (9 - GameEngine.heigth) * GameEngine.squareLength;
+                if (GameView.cameraY < (9 - GameEngine.height) * GameEngine.squareLength) {
+                    GameView.cameraY = (9 - GameEngine.height) * GameEngine.squareLength;
                 }
             } else {
                 GameView.cameraY = 0;

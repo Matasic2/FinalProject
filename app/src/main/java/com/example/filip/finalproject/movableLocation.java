@@ -341,26 +341,5 @@ public class movableLocation {
             canvas.drawBitmap(icon, (x * GameEngine.squareLength) + displacement + GameView.cameraX, (y * GameEngine.squareLength) + displacement + GameView.cameraY, null);
         }
     }
-    public void draw(Canvas canvas, float x, int y) {
-        canvas.drawBitmap(icon, (x*GameEngine.squareLength) + GameView.cameraX + displacement,(y*GameEngine.squareLength) + displacement + GameView.cameraY, null);
-    }
-    public void draw(Canvas canvas, int x, int y, Paint paint, boolean isAir) {
-        if (!isAir) return; //only for air right now
-        canvas.drawBitmap(icon, x,y, paint);
-    }
 
-    public void draw(Canvas canvas, Paint paint,double  x, double y, boolean scaleForAir) {
-        if (scaleForAir) {
-            x = x * GameEngine.squareLength * GameEngine.airLineXScaleFactor;
-            x += 2.5 * GameEngine.squareLength;
-            y = y * GameEngine.squareLength * GameEngine.airLineYScaleFactor;
-            Bitmap toDraw = icon;
-            toDraw = Bitmap.createScaledBitmap(toDraw,(int)(icon.getWidth() * GameEngine.airLineXScaleFactor), (int)(icon.getHeight()  * GameEngine.airLineYScaleFactor), true);
-            canvas.drawBitmap(toDraw, (int) x, (int) y, paint);
-        }
-        else {
-            Bitmap toDraw = icon;
-            canvas.drawBitmap(toDraw, (int) x * FullscreenActivity.scaleFactor, (int) y * FullscreenActivity.scaleFactor, paint);
-        }
-    }
 }

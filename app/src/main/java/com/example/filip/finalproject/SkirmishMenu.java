@@ -78,7 +78,7 @@ public class SkirmishMenu extends AppCompatActivity {
 
         CheckBox checkbox = findViewById(R.id.checkbox);
         checkbox.setChecked(false);
-        checkbox.setOnClickListener(new View.OnClickListener() {
+        /**checkbox.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if(((CompoundButton) view).isChecked()){
                     TechTree.techIsEnabled = true;
@@ -87,7 +87,7 @@ public class SkirmishMenu extends AppCompatActivity {
                 }
 
             }
-        });
+        });*/
     }
 
     @Override

@@ -9,20 +9,16 @@ public class Map {
     public static int map_code = 0;
     public static int number_of_maps_available = 3;
 
-    public static void generateMap(Bitmap map, Bitmap mapAir, Bitmap square) {
+    public static void generateMap(Bitmap map, Bitmap square) {
 
-        TechTree.initializeTechTree("skirmish");
+        //TechTree.initializeTechTree("skirmish");
         if (map_code == 2) {
 
-            GameView.grid = new GameEngine(map, mapAir, square, 21, 12); // these lines create the board.
+            GameView.grid = new GameEngine(map, square, 21, 12); // these lines create the board.
 
             GameEngine.redDeployX = 17;
             GameEngine.redDeployY = 9;
 
-            GameEngine.airLinesCount = 4;
-            GameEngine.airLineXScaleFactor = 15.0f/21.0f; //15 is standard number of x squares and 21 is map's number of x squares
-            GameEngine.airLineYScaleFactor = 9.0f/12.0f; //same as above
-            GameEngine.planeLines = new Planes[4][2];
             GameEngine.fogOfWarIsRevealedForGreen = new boolean[4];
             GameEngine.fogOfWarIsRevealedForRed = new boolean[4];
 
@@ -105,12 +101,10 @@ public class Map {
                 }
             }
         } else if (map_code == 1) {
-            GameView.grid = new GameEngine(map, mapAir, square, 15, 3); // these lines create the board.
+            GameView.grid = new GameEngine(map, square, 15, 3); // these lines create the board.
             GameEngine.redDeployX = 12;
             GameEngine.redDeployY = 2;
-            GameEngine.airLinesCount = 1;
-            GameEngine.airLineXScaleFactor = 1;
-            GameEngine.airLineYScaleFactor = 1;
+
 
             // next lines generate green's "natural resources" (the resources which are expected to be controlled by green player).
             new Food(GameView.theContext, 1, 0, 1, 1);
@@ -157,12 +151,9 @@ public class Map {
             }
         } else if (map_code == 0) {
 
-            GameView.grid = new GameEngine(map, mapAir, square, 15, 9); // these lines create the board.
+            GameView.grid = new GameEngine(map, square, 15, 9); // these lines create the board.
             GameEngine.redDeployX = 12;
             GameEngine.redDeployY = 6;
-            GameEngine.airLinesCount = 3;
-            GameEngine.airLineXScaleFactor = 1;
-            GameEngine.airLineYScaleFactor = 1;
             GameEngine.playing = GameEngine.green;
 
             // next lines generate green's "natural resources" (the resources which are expected to be controlled by green player).
@@ -227,8 +218,6 @@ public class Map {
                 }
             }
         }
-        // this will scale air layout                         //add  * GameEngine.airLineXScaleFactor is x also needs scaling
-         GameEngine.emptyAirLine = Bitmap.createScaledBitmap(mapAir, (int) (mapAir.getWidth()), (int) (mapAir.getHeight() * GameEngine.airLineYScaleFactor), true);
     }
 
     public static void drawMapFeatures(Canvas canvas) {

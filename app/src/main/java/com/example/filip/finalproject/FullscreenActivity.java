@@ -145,11 +145,6 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
             if (!hasScrolled && (Math.abs(currentX - lastDownX) < (GameEngine.squareLength / 2) && Math.abs(currentY - lastDownY) < (GameEngine.squareLength / 2))) {
                 return true;
             }
-            //don't allow moving screen around in air view
-            if (GameView.activeScreen == GameView.Screen.AIR_SCREEN) {
-                return true;
-            }
-
             if (!hasScrolled) {
                 hasScrolled = true;
                 lastDownX = currentX;

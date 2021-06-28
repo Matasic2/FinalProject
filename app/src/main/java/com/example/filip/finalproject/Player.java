@@ -14,10 +14,9 @@ public class Player {
     public int bonusOil = 0;
     public int bonusResearch = 0;
 
-    public Planes[] hangar = new Planes[6];
     public boolean[][] upgrades = new boolean[5][3]; //Player's loadout menu upgrades
     public boolean[][] upgradesUnlocked = new boolean[5][3]; //Player's loadout menu upgrades TODO: FIX
-    public boolean[] techs = new boolean[0];
+    //public boolean[] techs = new boolean[0];
 
     public boolean isHuman; //is the player human
 
@@ -120,36 +119,4 @@ public class Player {
         return p.color;
     }
 
-    public void addPlane(Planes plane) {
-        for (int i = 0; i < hangar.length; i++) {
-            if (hangar[i] == null) {
-                hangar[i] = plane;
-                return;
-            }
-        }
-    }
-
-    public boolean hangarHasEmptySlots() {
-        for (int i = 0; i < hangar.length; i++) {
-            if (hangar[i] == null) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void selectPlane(int index) {
-        if (hangar[index] != null) {
-            hangar[index].select();
-        }
-    }
-
-    public void removeFromHanger(Planes plane) {
-        for (int i = 0; i < hangar.length; i++) {
-            if (hangar[i] != null && hangar[i].equals(plane)) {
-                hangar[i].unselect();
-                hangar[i] = null;
-            }
-        }
-    }
 }

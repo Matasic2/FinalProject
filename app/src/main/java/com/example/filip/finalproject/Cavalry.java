@@ -13,7 +13,6 @@ public class Cavalry extends Units{
     public static int GreenHP = 6; // HP value of Green's Cavalry, this value can be changed
     public static int GreenMovement = 3; // Movement value of Green's Cavalry, this value can be changed
     public static int GreenVisibility = 7; // Movement value of Green's Infantry, this value can be changed
-    public static int greenAirAttack = 1;
 
     //cost of Cavalry unit
     public static int greenFoodPrice = 1;
@@ -35,15 +34,14 @@ public class Cavalry extends Units{
     public static int RedHP = 6; // HP value of Red's Cavalry, this value can be changed
     public static int RedMovement = 3; // Movement value of Red's Cavalry, this value can be changed
     public static int RedVisibility = 7; // Movement value of Green's Infantry, this value can be changed
-    public static int redAirAttack = 1;
 
 
     Cavalry(Context context, int x, int y, Player player) {
         super(context, x, y, player, "Cavalry");
         if (player.color.equals("green")) {
-            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement,GreenVisibility,greenAirAttack, healedBy);
+            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement,GreenVisibility, healedBy);
         } else {
-            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility,redAirAttack, healedBy);
+            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility, healedBy);
         }
 
     }
@@ -89,7 +87,6 @@ public class Cavalry extends Units{
         GreenHP = 6; // HP value of Green's Cavalry, this value can be changed
         GreenMovement = 3; // Movement value of Green's Cavalry, this value can be changed
         GreenVisibility = 7; // Movement value of Green's Infantry, this value can be changed
-        greenAirAttack = 0;
 
         //cost of Cavalry unit
         greenFoodPrice = 1;
@@ -111,7 +108,6 @@ public class Cavalry extends Units{
         RedHP = 6; // HP value of Red's Cavalry, this value can be changed
         RedMovement = 3; // Movement value of Red's Cavalry, this value can be changed
         RedVisibility = 7; // Movement value of Green's Infantry, this value can be changed
-        redAirAttack = 0;
     }
 
 }

@@ -25,7 +25,7 @@ public class ReplayMenu extends AppCompatActivity {
                 MainMenu.scenario = "Skirmish";
                 GameEngine.replayMode = true;
                 GameEngine.gameIsMultiplayer = false;
-                TechTree.techIsEnabled = replayTechEnabled;
+                //TechTree.techIsEnabled = replayTechEnabled;
                 EditText simpleEditText = (EditText) findViewById(R.id.editText);
                 String userText = simpleEditText.getText().toString();
                 GameEngine.replayActionDelay = Integer.parseInt(userText);

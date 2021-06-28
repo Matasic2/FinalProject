@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-
+/** UNUSED
 public class TechNode {
 
     public static Bitmap icon;
@@ -140,3 +140,4 @@ public class TechNode {
 
 
 }
+*/

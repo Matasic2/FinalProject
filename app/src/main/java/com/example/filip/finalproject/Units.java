@@ -34,7 +34,6 @@ public class Units {
     public int maxHP; //Max HP of the unit
     public int movement; //Movement distance of the unit
     public int visibilityRange; //how far the unit can see
-    public int airAttack;
     public int healRate;
 
     public int fuelConsumption;
@@ -70,7 +69,7 @@ public class Units {
        GameEngine.BoardSprites[coordinates[0]][coordinates[1]] = this;
    }*/
     //see above for meaning of these values
-    public void setParameters(int atc1, int atc2, int atc1r, int atc2r, int def, int hp, int maxhp, int mov, int visibility, int airAttack, int healRate) {
+    public void setParameters(int atc1, int atc2, int atc1r, int atc2r, int def, int hp, int maxhp, int mov, int visibility, int healRate) {
         this.attack1 = atc1;
         this.attack2 = atc2;
         this.attack1Range = atc1r;
@@ -80,7 +79,6 @@ public class Units {
         this.maxHP = maxhp;
         this.movement = mov;
         this.visibilityRange = visibility;
-        this.airAttack = airAttack;
         this.healRate = healRate;
     }
 
@@ -243,7 +241,6 @@ public class Units {
         this.coordinates[0] = 125;
         this.coordinates[1] = 125;
         this.visibilityRange = u.visibilityRange; //how far the unit can see
-        this.airAttack = u.airAttack;
         this.healRate = u.healRate;
         this.fuelConsumption = u.fuelConsumption;
         this.specialIsActivated = u.specialIsActivated;
@@ -576,25 +573,12 @@ public class Units {
         drawUpgrades(canvas, coordinates[0] * GameEngine.squareLength + GameView.cameraX + (int) displacement, coordinates[1] * GameEngine.squareLength + GameView.cameraY);
     }
     //Same as above, but draw then on given coordinates instead of unit's current coordinates.
-    public void draw(Canvas canvas, Paint paint,double  x, double y, boolean scaleForAir) {
-        if (scaleForAir) {
-            x = x * GameEngine.squareLength * GameEngine.airLineXScaleFactor;
-            x += 2.5 * GameEngine.squareLength;
-            y = y * GameEngine.squareLength * GameEngine.airLineYScaleFactor;
-            Bitmap toDraw = icon;
-            toDraw = Bitmap.createScaledBitmap(toDraw,(int)(icon.getWidth() * GameEngine.airLineXScaleFactor), (int)(icon.getHeight()  * GameEngine.airLineYScaleFactor), true);
-            toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
-            canvas.drawBitmap(toDraw, (int) x, (int) y, paint);
-            drawUpgrades(canvas, (int) (x - iconUpgradeScale),
-                    (int) (y - iconUpgradeScale), GameEngine.airLineXScaleFactor, GameEngine.airLineYScaleFactor);
-        }
-        else {
-            Bitmap toDraw = icon;
-            toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
-            canvas.drawBitmap(toDraw, (int) x * FullscreenActivity.scaleFactor, (int) y * FullscreenActivity.scaleFactor, paint);
-            drawUpgrades(canvas, (int) (x - iconUpgradeScale),
-                    (int) (y - iconUpgradeScale));
-        }
+    public void draw(Canvas canvas, Paint paint,double  x, double y) {
+        Bitmap toDraw = icon;
+        toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
+        canvas.drawBitmap(toDraw, (int) x * FullscreenActivity.scaleFactor, (int) y * FullscreenActivity.scaleFactor, paint);
+        drawUpgrades(canvas, (int) (x - iconUpgradeScale),
+                (int) (y - iconUpgradeScale));
     }
 
     public void draw(Canvas canvas, double xx, double yy) {

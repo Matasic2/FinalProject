@@ -13,7 +13,6 @@ public class Armor extends Units {
     public static int GreenHP = 20; // HP value of Green's Armor, this value can be changed
     public static int GreenMovement = 2; // Movement value of Green's Armor, this value can be changed
     public static int GreenVisibility = 4; // Movement value of Green's Infantry, this value can be changed
-    public static int greenAirAttack = 0;
 
     //cost of Armor unit
     public static int greenFoodPrice = 6;
@@ -35,14 +34,13 @@ public class Armor extends Units {
     public static int RedHP = 20; // HP value of Red's Armor, this value can be changed
     public static int RedMovement = 2; // Movement value of Red's Armor, this value can be changed
     public static int RedVisibility = 4; // Movement value of Green's Infantry, this value can be changed
-    public static int redAirAttack = 0;
 
     Armor(Context context, int x, int y, Player player) {
         super(context, x, y, player, "Armor");
         if (player.color.equals("green")) {
-            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement, GreenVisibility, greenAirAttack, healedBy);
+            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement, GreenVisibility, healedBy);
         } else {
-            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility, redAirAttack, healedBy);
+            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility, healedBy);
         }
         this.fuelConsumption = 1;
     }
@@ -86,7 +84,6 @@ public class Armor extends Units {
         GreenHP = 20; // HP value of Green's Armor, this value can be changed
         GreenMovement = 2; // Movement value of Green's Armor, this value can be changed
         GreenVisibility = 4; // Movement value of Green's Infantry, this value can be changed
-        greenAirAttack = 0;
 
         //cost of Armor unit
         greenFoodPrice = 6;
@@ -108,7 +105,6 @@ public class Armor extends Units {
         RedHP = 20; // HP value of Red's Armor, this value can be changed
         RedMovement = 2; // Movement value of Red's Armor, this value can be changed
         RedVisibility = 4; // Movement value of Green's Infantry, this value can be changed
-        redAirAttack = 0;
     }
 
 }
