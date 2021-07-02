@@ -69,7 +69,7 @@ public class Units {
        GameEngine.BoardSprites[coordinates[0]][coordinates[1]] = this;
    }*/
     //see above for meaning of these values
-    public void setParameters(int atc1, int atc2, int atc1r, int atc2r, int def, int hp, int maxhp, int mov, int visibility, int healRate) {
+    public void setParameters(int atc1, int atc2, int atc1r, int atc2r, int def, int hp, int maxhp, int mov, int visibility, int healRate, int fuelConsumption) {
         this.attack1 = atc1;
         this.attack2 = atc2;
         this.attack1Range = atc1r;
@@ -80,6 +80,7 @@ public class Units {
         this.movement = mov;
         this.visibilityRange = visibility;
         this.healRate = healRate;
+        this.fuelConsumption = fuelConsumption;
     }
 
     public Units() {

@@ -10,9 +10,10 @@ public class Armor extends Units {
     public static int GreenFirstAttackRange = 1; //  Green Armor's first attack range, this value can be changed
     public static int GreenSecondAttackRange = 4; //  Green Armor's second attack value, this value can be changed
     public static int GreenDefence = 2; // Defence value of Green's Armor, this value can be changed
-    public static int GreenHP = 20; // HP value of Green's Armor, this value can be changed
+    public static int GreenHP = 25; // HP value of Green's Armor, this value can be changed
     public static int GreenMovement = 2; // Movement value of Green's Armor, this value can be changed
     public static int GreenVisibility = 4; // Movement value of Green's Infantry, this value can be changed
+    public static int greenFuelConsumption = 1;
 
     //cost of Armor unit
     public static int greenFoodPrice = 6;
@@ -23,26 +24,28 @@ public class Armor extends Units {
     public static int redIronPrice = 5;
     public static int redOilPrice = 15;
 
+
+
     //How much health will the unit gain if healed
-    public static int healedBy = 3;
+    public static int healedBy = 4;
 
     public static int RedAttack1 = 10; // Red Armor's first attack value, this value can be changed
     public static int RedAttack2 = 5; //  Red Armor's first attack value, this value can be changed
     public static int RedFirstAttackRange = 1; //  Red Armor's first attack range, this value can be changed
     public static int RedSecondAttackRange = 4; //  Red Armor's second attack value, this value can be changed
     public static int RedDefence = 2; // Defence value of Red's Armor, this value can be changed
-    public static int RedHP = 20; // HP value of Red's Armor, this value can be changed
+    public static int RedHP = 25; // HP value of Red's Armor, this value can be changed
     public static int RedMovement = 2; // Movement value of Red's Armor, this value can be changed
     public static int RedVisibility = 4; // Movement value of Green's Infantry, this value can be changed
+    public static int redFuelConsumption = 1;
 
     Armor(Context context, int x, int y, Player player) {
         super(context, x, y, player, "Armor");
         if (player.color.equals("green")) {
-            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement, GreenVisibility, healedBy);
+            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement, GreenVisibility, healedBy, greenFuelConsumption);
         } else {
-            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility, healedBy);
+            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility, healedBy, redFuelConsumption);
         }
-        this.fuelConsumption = 1;
     }
 
     public static void adjustUpgrade(Player player, int factor, int number) {
@@ -52,7 +55,7 @@ public class Armor extends Units {
                 Armor.GreenVisibility += 2 * factor;
             }
             if (number == 1) {
-                Armor.greenIronPrice += 3 * factor;
+                Armor.greenIronPrice += 2 * factor;
                 Armor.GreenDefence += 1 * factor;
             }
             if (number == 2) {
@@ -81,9 +84,10 @@ public class Armor extends Units {
         GreenFirstAttackRange = 1; //  Green Armor's first attack range, this value can be changed
         GreenSecondAttackRange = 4; //  Green Armor's second attack value, this value can be changed
         GreenDefence = 2; // Defence value of Green's Armor, this value can be changed
-        GreenHP = 20; // HP value of Green's Armor, this value can be changed
+        GreenHP = 25; // HP value of Green's Armor, this value can be changed
         GreenMovement = 2; // Movement value of Green's Armor, this value can be changed
         GreenVisibility = 4; // Movement value of Green's Infantry, this value can be changed
+        greenFuelConsumption = 1;
 
         //cost of Armor unit
         greenFoodPrice = 6;
@@ -95,16 +99,17 @@ public class Armor extends Units {
         redOilPrice = 15;
 
         //How much health will the unit gain if healed
-        healedBy = 3;
+        healedBy = 4;
 
         RedAttack1 = 10; // Red Armor's first attack value, this value can be changed
         RedAttack2 = 5; //  Red Armor's first attack value, this value can be changed
         RedFirstAttackRange = 1; //  Red Armor's first attack range, this value can be changed
         RedSecondAttackRange = 4; //  Red Armor's second attack value, this value can be changed
         RedDefence = 2; // Defence value of Red's Armor, this value can be changed
-        RedHP = 20; // HP value of Red's Armor, this value can be changed
+        RedHP = 25; // HP value of Red's Armor, this value can be changed
         RedMovement = 2; // Movement value of Red's Armor, this value can be changed
         RedVisibility = 4; // Movement value of Green's Infantry, this value can be changed
+        redFuelConsumption = 1;
     }
 
 }

@@ -75,19 +75,6 @@ public class SkirmishMenu extends AppCompatActivity {
                 ((TextView)findViewById(R.id.textView2)).setText("Map mode : " + new Integer(Map.map_code).toString());
             }
         });
-
-        CheckBox checkbox = findViewById(R.id.checkbox);
-        checkbox.setChecked(false);
-        /**checkbox.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                if(((CompoundButton) view).isChecked()){
-                    TechTree.techIsEnabled = true;
-                } else {
-                    TechTree.techIsEnabled = false;
-                }
-
-            }
-        });*/
     }
 
     @Override

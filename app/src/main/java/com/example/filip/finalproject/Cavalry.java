@@ -13,6 +13,7 @@ public class Cavalry extends Units{
     public static int GreenHP = 6; // HP value of Green's Cavalry, this value can be changed
     public static int GreenMovement = 3; // Movement value of Green's Cavalry, this value can be changed
     public static int GreenVisibility = 7; // Movement value of Green's Infantry, this value can be changed
+    public static int greenFuelConsumption = 0;
 
     //cost of Cavalry unit
     public static int greenFoodPrice = 1;
@@ -22,6 +23,8 @@ public class Cavalry extends Units{
     public static int redFoodPrice = 1;
     public static int redIronPrice = 0;
     public static int redOilPrice = 0;
+
+
 
     //How much health will the unit gain if healed
     public static int healedBy = 2;
@@ -34,14 +37,15 @@ public class Cavalry extends Units{
     public static int RedHP = 6; // HP value of Red's Cavalry, this value can be changed
     public static int RedMovement = 3; // Movement value of Red's Cavalry, this value can be changed
     public static int RedVisibility = 7; // Movement value of Green's Infantry, this value can be changed
+    public static int redFuelConsumption = 0;
 
 
     Cavalry(Context context, int x, int y, Player player) {
         super(context, x, y, player, "Cavalry");
         if (player.color.equals("green")) {
-            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement,GreenVisibility, healedBy);
+            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement,GreenVisibility, healedBy, greenFuelConsumption);
         } else {
-            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility, healedBy);
+            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility, healedBy, redFuelConsumption);
         }
 
     }
@@ -58,8 +62,10 @@ public class Cavalry extends Units{
                 Cavalry.GreenAttack1 += 20 * factor;
             }
             if (number == 2) {
-                Cavalry.greenFoodPrice += 1 * factor;
-                Cavalry.GreenAttack2 += 1 * factor;
+                Cavalry.greenOilPrice += 1 * factor;
+
+                Cavalry.greenFuelConsumption += 1 * factor;
+                Cavalry.GreenMovement += 1 * factor;
             }
         } else if (player == GameEngine.red) {
             if (number == 0) {
@@ -72,8 +78,10 @@ public class Cavalry extends Units{
                 Cavalry.RedAttack1 += 20 * factor;
             }
             if (number == 2) {
-                Cavalry.redFoodPrice += 1 * factor;
-                Cavalry.RedAttack2 += 1 * factor;
+                Cavalry.redOilPrice += 1 * factor;
+
+                Cavalry.redFuelConsumption += 1 * factor;
+                Cavalry.RedMovement += 1 * factor;
             }
         }
     }
@@ -87,6 +95,7 @@ public class Cavalry extends Units{
         GreenHP = 6; // HP value of Green's Cavalry, this value can be changed
         GreenMovement = 3; // Movement value of Green's Cavalry, this value can be changed
         GreenVisibility = 7; // Movement value of Green's Infantry, this value can be changed
+        greenFuelConsumption = 0;
 
         //cost of Cavalry unit
         greenFoodPrice = 1;
@@ -108,6 +117,7 @@ public class Cavalry extends Units{
         RedHP = 6; // HP value of Red's Cavalry, this value can be changed
         RedMovement = 3; // Movement value of Red's Cavalry, this value can be changed
         RedVisibility = 7; // Movement value of Green's Infantry, this value can be changed
+        redFuelConsumption = 0;
     }
 
 }
