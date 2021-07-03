@@ -52,6 +52,7 @@ public class Artillery extends Units {
             if (number == 0) {
                 Artillery.greenFoodPrice -= 2 * factor;
                 Artillery.greenIronPrice -= 2 * factor;
+
                 Artillery.GreenAttack2 -= 1 * factor;
                 Artillery.GreenSecondAttackRange -= 1 * factor;
             }
@@ -67,6 +68,7 @@ public class Artillery extends Units {
             if (number == 0) {
                 Artillery.redFoodPrice -= 2 * factor;
                 Artillery.redIronPrice -= 2 * factor;
+
                 Artillery.RedAttack2 -= 1 * factor;
                 Artillery.RedSecondAttackRange -= 1 * factor;
             }
@@ -76,6 +78,7 @@ public class Artillery extends Units {
             }
             if (number == 2) {
                 Artillery.redFoodPrice += 2 * factor;
+
                 Artillery.RedAttack2 += 1 * factor;
             }
         }

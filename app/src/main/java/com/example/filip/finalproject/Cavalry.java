@@ -24,8 +24,6 @@ public class Cavalry extends Units{
     public static int redIronPrice = 0;
     public static int redOilPrice = 0;
 
-
-
     //How much health will the unit gain if healed
     public static int healedBy = 2;
 

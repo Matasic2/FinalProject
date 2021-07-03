@@ -9,7 +9,7 @@ public class Headquaters extends Units{
     public static int GreenAttack2 = 5; //  Green HQ's second attack value, this value can be changed
     public static int GreenFirstAttackRange = 1; //  Green HQ's first attack range, this value can be changed
     public static int GreenSecondAttackRange = 5; //  Green HQ's second attack value, this value can be changed
-    public static int GreenDefence = 2; // Defence value of Green's HQ, this value can be changed
+    public static int GreenDefence = 0; // Defence value of Green's HQ, this value can be changed
     public static int GreenHP = 30; // HP value of Green's HQ, this value can be changed
     public static int GreenMovement = 0; // Movement value of Green's HQ, this value can be changed
     public static int GreenVisibility = 6; // Movement value of Green's Infantry, this value can be changed

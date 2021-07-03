@@ -52,6 +52,8 @@ public class Armor extends Units {
         if (player == GameEngine.green) {
             if (number == 0) {
                 Armor.greenFoodPrice += 1 * factor;
+                Armor.greenOilPrice -= 4 * factor;
+
                 Armor.GreenVisibility += 2 * factor;
             }
             if (number == 1) {
@@ -65,6 +67,8 @@ public class Armor extends Units {
         } else if (player == GameEngine.red) {
             if (number == 0) {
                 Armor.redFoodPrice += 1 * factor;
+                Armor.redOilPrice -= 4 * factor;
+
                 Armor.RedVisibility += 2 * factor;
             }
             if (number == 1) {
