@@ -2,8 +2,6 @@ package com.example.filip.finalproject;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -29,8 +27,8 @@ public class ExampleUnitTest {
         attacker.attack1Range = 1;
         attacker.attack1Range = 1;
 
-        GameEngine.BoardSprites[0][2] = attacker;
-        GameEngine.BoardSprites[0][0] = defender;
+        GameEngine.boardUnits[0][2] = attacker;
+        GameEngine.boardUnits[0][0] = defender;
 
         GameEngine.attackUnit(attacker, defender);
         assert (defender.HP == 3);

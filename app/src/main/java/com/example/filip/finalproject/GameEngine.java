@@ -1,16 +1,8 @@
 package com.example.filip.finalproject;
 
 
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.os.SystemClock;
-import java.util.concurrent.Semaphore;
-
-import static com.example.filip.finalproject.MainThread.canvas;
 
 // Class that will run the game and manage all the events.
 public class GameEngine extends Thread{
@@ -50,7 +42,7 @@ public class GameEngine extends Thread{
     public static SelectedUnit selected = null; // Selected unit, reference is not the same as the (selected) Unit itself.
     public static Units enemyTappedUnit = null; //same as above, but of opponent
     public static SelectedUnit enemySelected = null; // same as above, but for opponent
-    public static Units[][] BoardSprites = new Units[15][9]; //A 2D array of Units that stores the units for game engine and data processing, unlike GameView's Units[] this isn't involved in drawing units.
+    public static Units[][] boardUnits = new Units[15][9]; //A 2D array of Units that stores the units for game engine and data processing, unlike GameView's Units[] this isn't involved in drawing units.
     public static Player green; //stores the reference to a player that is in charge of Green units
     public static Player red;//stores the reference to a player that is in charge of Red units
     public static Player playing = null; //player that makes moves
@@ -85,7 +77,7 @@ public class GameEngine extends Thread{
         selected = null; // Selected unit, reference is not the same as the (selected) Unit itself.
         enemyTappedUnit = null; //same as above, but of opponent
         enemySelected = null; // same as above, but for opponent
-        BoardSprites = new Units[15][9]; //A 2D array of Units that stores the units for game engine and data processing, unlike GameView's Units[] this isn't involved in drawing units.
+        boardUnits = new Units[15][9]; //A 2D array of Units that stores the units for game engine and data processing, unlike GameView's Units[] this isn't involved in drawing units.
         playing = null; //player that makes moves
         BoardResources = new Resources[15][9]; //a 2D array of resources that stores the resources in the game
         showMarket = false; //shows market units which can be purchased
@@ -171,7 +163,7 @@ public class GameEngine extends Thread{
         emptySquare = square;
         this.width = input_width;
         this.height = input_heigth;
-        BoardSprites = new Units[width][height];
+        boardUnits = new Units[width][height];
         BoardResources = new Resources[width][height];
         smokeMap = new int[width][height];
         smokeFireActive = false;
@@ -298,7 +290,7 @@ public class GameEngine extends Thread{
                 int oldCoordinatex = theUnit.coordinates[0];
                 int oldCoordinatey = theUnit.coordinates[1];
                 unselectFriendly();
-                theUnit = BoardSprites[oldCoordinatex][oldCoordinatey];
+                theUnit = boardUnits[oldCoordinatex][oldCoordinatey];
                 theUnit.brightenIcon();
                 selected = new SelectedUnit(GameView.theContext, oldCoordinatex * squareLength, oldCoordinatey * squareLength, theUnit.owner, theUnit.unitType);
                 showMarket = false;
@@ -406,8 +398,8 @@ public class GameEngine extends Thread{
 
         /**deploy, not used atm
 
-         if (selected == null && (((x / squareLength == 2 && y / squareLength == 2) && (playing == green && BoardSprites[2][2] == null)) ||
-                (((x / squareLength == 12 && y / squareLength == 6) && (playing == red && BoardSprites[12][6] == null))))) {
+         if (selected == null && (((x / squareLength == 2 && y / squareLength == 2) && (playing == green && boardUnits[2][2] == null)) ||
+                (((x / squareLength == 12 && y / squareLength == 6) && (playing == red && boardUnits[12][6] == null))))) {
             GameEngine.showMarket = !GameEngine.showMarket;
             if (showFactory == true) {
                 showFactory = false;
@@ -419,20 +411,20 @@ public class GameEngine extends Thread{
         if (undoIsAllowed && x / squareLength == 18 && y / squareLength == 3 && prevoiusMove != PREV_MOVE.NONE && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
 
             if (prevoiusMove == PREV_MOVE.MOVE) {
-                BoardSprites[theUnit.coordinates[0]][theUnit.coordinates[1]] = null;
+                boardUnits[theUnit.coordinates[0]][theUnit.coordinates[1]] = null;
                 theUnit.coordinates[0] = lastCoordinates[0];
                 theUnit.coordinates[1] = lastCoordinates[1];
 
-                if (BoardSprites[lastCoordinates[0]][lastCoordinates[1]] != null) {
+                if (boardUnits[lastCoordinates[0]][lastCoordinates[1]] != null) {
                     Units[] newQueue = new Units[GameEngine.queue.length + 1];
                     for (int k = 0; k < GameEngine.queue.length; k++) {
                         newQueue[k] = GameEngine.queue[k];
                     }
-                    newQueue[newQueue.length - 1] = BoardSprites[lastCoordinates[0]][lastCoordinates[1]];
+                    newQueue[newQueue.length - 1] = boardUnits[lastCoordinates[0]][lastCoordinates[1]];
                     GameEngine.queue = newQueue;
                 }
 
-                BoardSprites[lastCoordinates[0]][lastCoordinates[1]] = theUnit;
+                boardUnits[lastCoordinates[0]][lastCoordinates[1]] = theUnit;
                 playing.oilStorage += theUnit.fuelConsumption;
                 theUnit.brightenIcon();
                 theUnit.hasMove = true;
@@ -445,16 +437,16 @@ public class GameEngine extends Thread{
                 estimateResources();
                 return;
             } else if (prevoiusMove == PREV_MOVE.ATTACK) {
-                Units u = BoardSprites[lastCoordinates[0]][lastCoordinates[1]];
-                Units u2 = BoardSprites[lastCoordinates[2]][lastCoordinates[3]];
+                Units u = boardUnits[lastCoordinates[0]][lastCoordinates[1]];
+                Units u2 = boardUnits[lastCoordinates[2]][lastCoordinates[3]];
                 GameView.removeSprite(u);
                 GameView.removeSprite(u2);
 
-                BoardSprites[lastCoordinates[0]][lastCoordinates[1]] = lastUnit;
+                boardUnits[lastCoordinates[0]][lastCoordinates[1]] = lastUnit;
                 lastUnit.coordinates[0] = lastCoordinates[0];
                 lastUnit.coordinates[1] = lastCoordinates[1];
 
-                BoardSprites[lastCoordinates[2]][lastCoordinates[3]] = lastEnemyUnit;
+                boardUnits[lastCoordinates[2]][lastCoordinates[3]] = lastEnemyUnit;
                 lastEnemyUnit.coordinates[0] = lastCoordinates[2];
                 lastEnemyUnit.coordinates[1] = lastCoordinates[3];
 
@@ -508,13 +500,13 @@ public class GameEngine extends Thread{
         //switch loadout to cavalry
         if (x / squareLength == 7 && y / squareLength == 10 && showMarket) {
                 if (playing == green) {
-                    if (GameEngine.BoardSprites[greenDeployX][greenDeployY] == null || (GameEngine.BoardSprites[greenDeployX][greenDeployY] != null && GameEngine.BoardSprites[greenDeployX][greenDeployY].owner == green)) {
+                    if (GameEngine.boardUnits[greenDeployX][greenDeployY] == null || (GameEngine.boardUnits[greenDeployX][greenDeployY] != null && GameEngine.boardUnits[greenDeployX][greenDeployY].owner == green)) {
                         loadoutMenu = true;
                         loadoutMenuUnit = "Cavalry";
                     }
                 }
                 if ((playing == red)) {
-                    if (GameEngine.BoardSprites[redDeployX][redDeployY] == null || (GameEngine.BoardSprites[redDeployX][redDeployY] != null && GameEngine.BoardSprites[redDeployX][redDeployY].owner == red)) {
+                    if (GameEngine.boardUnits[redDeployX][redDeployY] == null || (GameEngine.boardUnits[redDeployX][redDeployY] != null && GameEngine.boardUnits[redDeployX][redDeployY].owner == red)) {
                         loadoutMenu = true;
                         loadoutMenuUnit = "Cavalry";
                     }
@@ -529,13 +521,13 @@ public class GameEngine extends Thread{
         //switch loadout to infantry
         if (x / squareLength == 9 && y / squareLength == 10 && showMarket) {
                 if (playing == green) {
-                    if (GameEngine.BoardSprites[greenDeployX][greenDeployY] == null || (GameEngine.BoardSprites[greenDeployX][greenDeployY] != null && GameEngine.BoardSprites[greenDeployX][greenDeployY].owner == green)) {
+                    if (GameEngine.boardUnits[greenDeployX][greenDeployY] == null || (GameEngine.boardUnits[greenDeployX][greenDeployY] != null && GameEngine.boardUnits[greenDeployX][greenDeployY].owner == green)) {
                         loadoutMenu = true;
                         loadoutMenuUnit = "Infantry";
                     }
                 }
                 if (playing == red) {
-                    if (GameEngine.BoardSprites[redDeployX][redDeployY] == null || (GameEngine.BoardSprites[redDeployX][redDeployY] != null && GameEngine.BoardSprites[redDeployX][redDeployY].owner == red)) {
+                    if (GameEngine.boardUnits[redDeployX][redDeployY] == null || (GameEngine.boardUnits[redDeployX][redDeployY] != null && GameEngine.boardUnits[redDeployX][redDeployY].owner == red)) {
                         loadoutMenu = true;
                         loadoutMenuUnit = "Infantry";
                     }
@@ -549,13 +541,13 @@ public class GameEngine extends Thread{
         //switch loadout to Artillery
         if (x / squareLength == 11 && y / squareLength == 10 && showMarket) {
             if (playing == green) {
-                if (GameEngine.BoardSprites[greenDeployX][greenDeployY] == null || (GameEngine.BoardSprites[greenDeployX][greenDeployY] != null && GameEngine.BoardSprites[greenDeployX][greenDeployY].owner == green)) {
+                if (GameEngine.boardUnits[greenDeployX][greenDeployY] == null || (GameEngine.boardUnits[greenDeployX][greenDeployY] != null && GameEngine.boardUnits[greenDeployX][greenDeployY].owner == green)) {
                     loadoutMenu = true;
                     loadoutMenuUnit = "Artillery";
                 }
             }
             if ((playing == red)) {
-                if (GameEngine.BoardSprites[redDeployX][redDeployY] == null || (GameEngine.BoardSprites[redDeployX][redDeployY] != null && GameEngine.BoardSprites[redDeployX][redDeployY].owner == red)) {
+                if (GameEngine.boardUnits[redDeployX][redDeployY] == null || (GameEngine.boardUnits[redDeployX][redDeployY] != null && GameEngine.boardUnits[redDeployX][redDeployY].owner == red)) {
                     loadoutMenu = true;
                     loadoutMenuUnit = "Artillery";
                 }
@@ -569,13 +561,13 @@ public class GameEngine extends Thread{
         //switch loadout to armor
         if (x / squareLength == 13 && y / squareLength == 10 && showMarket) {
             if (playing == green) {
-                if (GameEngine.BoardSprites[greenDeployX][greenDeployY] == null || (GameEngine.BoardSprites[greenDeployX][greenDeployY] != null && GameEngine.BoardSprites[greenDeployX][greenDeployY].owner == green)) {
+                if (GameEngine.boardUnits[greenDeployX][greenDeployY] == null || (GameEngine.boardUnits[greenDeployX][greenDeployY] != null && GameEngine.boardUnits[greenDeployX][greenDeployY].owner == green)) {
                     loadoutMenu = true;
                     loadoutMenuUnit = "Armor";
                 }
             }
             if ((playing == red)) {
-                if (GameEngine.BoardSprites[redDeployX][redDeployY] == null || (GameEngine.BoardSprites[redDeployX][redDeployY] != null && GameEngine.BoardSprites[redDeployX][redDeployY].owner == red)) {
+                if (GameEngine.boardUnits[redDeployX][redDeployY] == null || (GameEngine.boardUnits[redDeployX][redDeployY] != null && GameEngine.boardUnits[redDeployX][redDeployY].owner == red)) {
                     loadoutMenu = true;
                     loadoutMenuUnit = "Armor";
                 }
@@ -603,7 +595,7 @@ public class GameEngine extends Thread{
         //}
 
         //if user taps on empty square with no units selected, do nothing
-        if (selected == null && enemySelected == null && BoardSprites[x / squareLength][y / squareLength] == null) {
+        if (selected == null && enemySelected == null && boardUnits[x / squareLength][y / squareLength] == null) {
             message = "Coordinates: " + (x / squareLength) + ", " + (y / squareLength);
             return;
         }
@@ -630,9 +622,9 @@ public class GameEngine extends Thread{
         }
 
         //If user taps on a unit, select it, or display info on enemy unit.
-        if (BoardSprites[x / squareLength][y / squareLength] != null) {
-            if (BoardSprites[x / squareLength][y / squareLength].owner == playing) {
-                theUnit = BoardSprites[x / squareLength][y / squareLength];
+        if (boardUnits[x / squareLength][y / squareLength] != null) {
+            if (boardUnits[x / squareLength][y / squareLength].owner == playing) {
+                theUnit = boardUnits[x / squareLength][y / squareLength];
                 selected = new SelectedUnit(GameView.theContext, x, y, theUnit.owner, theUnit.unitType);
                 message = theUnit.unitType + " at " + ((x / squareLength) + c) + ", " + ((y / squareLength) + c);
                 showMarket = false;
@@ -642,9 +634,9 @@ public class GameEngine extends Thread{
                 lastEnemyUnit = null;
                 prevoiusMove = PREV_MOVE.NONE;
                 return;
-            } else if (BoardSprites[x / squareLength][y / squareLength].owner != playing && getFogOfWar(playing)[x / squareLength][y / squareLength]) {
-                enemyTappedUnit = BoardSprites[x / squareLength][y / squareLength];
-                enemySelected = new SelectedUnit(GameView.theContext, x, y, BoardSprites[x / squareLength][y / squareLength].owner, BoardSprites[x / squareLength][y / squareLength].unitType);
+            } else if (boardUnits[x / squareLength][y / squareLength].owner != playing && getFogOfWar(playing)[x / squareLength][y / squareLength]) {
+                enemyTappedUnit = boardUnits[x / squareLength][y / squareLength];
+                enemySelected = new SelectedUnit(GameView.theContext, x, y, boardUnits[x / squareLength][y / squareLength].owner, boardUnits[x / squareLength][y / squareLength].unitType);
                 lastCoordinates[0] = 125;
                 lastCoordinates[1] = 125;
                 lastUnit = null;
@@ -660,10 +652,10 @@ public class GameEngine extends Thread{
                             (getCoordinates(theUnit)[0], x / squareLength,
                                     getCoordinates(theUnit)[1], y / squareLength))
                     && theUnit.hasAttack == true) {
-                if (BoardSprites[x / squareLength][y / squareLength] != null && BoardSprites[x / squareLength][y / squareLength].owner != theUnit.owner) {
-                    attackUnit(theUnit, BoardSprites[x / squareLength][y / squareLength]);
+                if (boardUnits[x / squareLength][y / squareLength] != null && boardUnits[x / squareLength][y / squareLength].owner != theUnit.owner) {
+                    attackUnit(theUnit, boardUnits[x / squareLength][y / squareLength]);
                 }
-                //DamageUnit(theUnit.attack1, BoardSprites[x / squareLength][y / squareLength], x / squareLength, y / squareLength); //and then move the unit, and un-select it.
+                //DamageUnit(theUnit.attack1, boardUnits[x / squareLength][y / squareLength], x / squareLength, y / squareLength); //and then move the unit, and un-select it.
                 message = "Fired on " + (x / squareLength) + ", " + (y / squareLength);
                 //if unit has a move, don't un-select it yet.
                 if (theUnit == null) {
@@ -691,7 +683,7 @@ public class GameEngine extends Thread{
         }
 
         //if user taps with unit selected on an empty square, move it TODO : make sure unit cannot move over another unit
-        if (theUnit != null && BoardSprites[x / squareLength][y / squareLength] == null
+        if (theUnit != null && boardUnits[x / squareLength][y / squareLength] == null
                 && getReachableTiles(getCoordinates(theUnit)[0],getCoordinates(theUnit)[1], theUnit.movement)[x / squareLength][y / squareLength]
                 && theUnit.hasMove == true) {
             moveTo(theUnit, x / squareLength, y / squareLength); //and then move the unit, and un-select it.
@@ -709,14 +701,14 @@ public class GameEngine extends Thread{
         }
 
         //if player taps with unit selected on an opponent's unit, attack it
-        if (theUnit != null && BoardSprites[x / squareLength][y / squareLength] != null &&
-                BoardSprites[x / squareLength][y / squareLength].owner != theUnit.owner &&
+        if (theUnit != null && boardUnits[x / squareLength][y / squareLength] != null &&
+                boardUnits[x / squareLength][y / squareLength].owner != theUnit.owner &&
                 (theUnit.attack1Range >= getSquareDistance           //and check if unit is in range of first (stronger) attack.
                         (getCoordinates(theUnit)[0], x / squareLength,
                                 getCoordinates(theUnit)[1], y / squareLength))
                 && theUnit.hasAttack == true) {
-            attackUnit(theUnit, BoardSprites[x / squareLength][y / squareLength]);
-            //DamageUnit(theUnit.attack1, BoardSprites[x / squareLength][y / squareLength], x / squareLength, y / squareLength); //and then move the unit, and un-select it.
+            attackUnit(theUnit, boardUnits[x / squareLength][y / squareLength]);
+            //DamageUnit(theUnit.attack1, boardUnits[x / squareLength][y / squareLength], x / squareLength, y / squareLength); //and then move the unit, and un-select it.
 
             //if unit has a move, don't un-select it yet.
             if (theUnit == null) {
@@ -735,14 +727,14 @@ public class GameEngine extends Thread{
         }
 
         //if user taps with unit selected on an opponent's unit, attack it
-        if (theUnit != null && BoardSprites[x / squareLength][y / squareLength] != null &&
-                BoardSprites[x / squareLength][y / squareLength].owner != theUnit.owner &&
+        if (theUnit != null && boardUnits[x / squareLength][y / squareLength] != null &&
+                boardUnits[x / squareLength][y / squareLength].owner != theUnit.owner &&
                 (theUnit.attack2Range >= getSquareDistance           //and check if unit is in range of second (weaker) attack.
                         (getCoordinates(theUnit)[0], x / squareLength,
                                 getCoordinates(theUnit)[1], y / squareLength))
                 && theUnit.hasAttack == true) {
-            attackUnit(theUnit, BoardSprites[x / squareLength][y / squareLength]);
-            //DamageUnit(theUnit.attack2, BoardSprites[x / squareLength][y / squareLength], x / squareLength, y / squareLength);
+            attackUnit(theUnit, boardUnits[x / squareLength][y / squareLength]);
+            //DamageUnit(theUnit.attack2, boardUnits[x / squareLength][y / squareLength], x / squareLength, y / squareLength);
             if (theUnit != null && theUnit.hasMove) {
                 theUnit.hasAttack = false;
                 checkAction(theUnit);
@@ -756,7 +748,7 @@ public class GameEngine extends Thread{
         }
 
         //If user taps on a square that is out of range while some unit is selected, unselect it
-        if (BoardSprites[x / squareLength][y / squareLength] == null) {
+        if (boardUnits[x / squareLength][y / squareLength] == null) {
             //if (!FullscreenActivity.hasScrolled) {
             unselectAll();
             //}
@@ -958,9 +950,9 @@ public class GameEngine extends Thread{
 
     //gets the coordinates of the unit.
     public static int[] getCoordinates (Units u) {
-        for (int i = 0; i < BoardSprites.length; i++) {
-            for (int j = 0; j < BoardSprites[i].length; j++) {
-                if (BoardSprites[i][j] == u) {
+        for (int i = 0; i < boardUnits.length; i++) {
+            for (int j = 0; j < boardUnits[i].length; j++) {
+                if (boardUnits[i][j] == u) {
                     return new int[] {i,j};
                 }
             }
@@ -990,9 +982,9 @@ public class GameEngine extends Thread{
             isAtStartingPosition = true;
         }
         int a = 0, b = 0;
-        for (int i = 0; i < BoardSprites.length; i++) {
-            for (int j = 0; j < BoardSprites[i].length; j++) {
-                if (BoardSprites[i][j] == u) {
+        for (int i = 0; i < boardUnits.length; i++) {
+            for (int j = 0; j < boardUnits[i].length; j++) {
+                if (boardUnits[i][j] == u) {
                     a = i;
                     b = j;
                     break;
@@ -1007,11 +999,11 @@ public class GameEngine extends Thread{
             prevoiusMove = PREV_MOVE.MOVE;
         }
         u.moveTo(x,y);
-        BoardSprites[x][y] = u;
+        boardUnits[x][y] = u;
         if (playing.isHuman) {
             selected = new SelectedUnit(GameView.theContext, x * squareLength, y * squareLength, theUnit.owner, theUnit.unitType);
         }
-        BoardSprites[a][b] = null;
+        boardUnits[a][b] = null;
         estimateResources();
         showMarket = false;
         message = u.unitType + " moved to " + (x + c) + ", " + (y + c);
@@ -1132,7 +1124,7 @@ public class GameEngine extends Thread{
         //lastCoordinates[0] = u.coordinates[0];
         //lastCoordinates[1] = u.coordinates[1];
 
-        if (damage <= BoardSprites[x][y].defence) {
+        if (damage <= boardUnits[x][y].defence) {
             showMarket = false;
             if (messageCode == 0) {
                 message = u.unitType + " at " + (x + c) + ", " + (y + c) + " was not damaged";
@@ -1144,18 +1136,18 @@ public class GameEngine extends Thread{
             return;
         }
 
-        BoardSprites[x][y].HP = BoardSprites[x][y].HP - (damage - BoardSprites[x][y].defence);
+        boardUnits[x][y].HP = boardUnits[x][y].HP - (damage - boardUnits[x][y].defence);
         //if unit has less than 1HP, remove it
         showMarket = false;
         if (messageCode == 0) {
-            message = u.unitType + " at " + (x + c) + ", " + (y + c) + " damaged by " + (damage - BoardSprites[x][y].defence);
+            message = u.unitType + " at " + (x + c) + ", " + (y + c) + " damaged by " + (damage - boardUnits[x][y].defence);
         } else if (messageCode == 1) {
-            message = "Damage given: " + (damage - BoardSprites[x][y].defence);
+            message = "Damage given: " + (damage - boardUnits[x][y].defence);
         } else if (messageCode == 2) {
-            message += " received: " + (damage - BoardSprites[x][y].defence);
+            message += " received: " + (damage - boardUnits[x][y].defence);
         }
-        if (BoardSprites[x][y].HP <= 0) {
-            BoardSprites[x][y] = null;
+        if (boardUnits[x][y].HP <= 0) {
+            boardUnits[x][y] = null;
             if (u.owner == GameEngine.playing) {
                 unselectFriendly();
             } else {
@@ -1213,12 +1205,12 @@ public class GameEngine extends Thread{
             return;
         }
         if (playing == green) {
-            BoardSprites[greenDeployX][greenDeployY] = GameEngine.queue[0];
+            boardUnits[greenDeployX][greenDeployY] = GameEngine.queue[0];
             GameEngine.queue[0].coordinates[0] = greenDeployX;
             GameEngine.queue[0].coordinates[1] = greenDeployY;
         }
         if (playing == red) {
-            BoardSprites[redDeployX][redDeployY] = GameEngine.queue[0];
+            boardUnits[redDeployX][redDeployY] = GameEngine.queue[0];
             GameEngine.queue[0].coordinates[0] = redDeployX;
             GameEngine.queue[0].coordinates[1] = redDeployY;
         }
@@ -1239,9 +1231,9 @@ public class GameEngine extends Thread{
     public static boolean checkIfAnyInRange(Units u) {
         boolean InRange = false;
         if (u != null && u.hasAttack == true) {
-            for (int i = 0; i < GameEngine.BoardSprites.length; i++) { // TODO : optimize this
-                for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
-                    if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != GameEngine.playing &&
+            for (int i = 0; i < GameEngine.boardUnits.length; i++) { // TODO : optimize this
+                for (int j = 0; j < GameEngine.boardUnits[i].length; j++) {
+                    if (GameEngine.boardUnits[i][j] != null && GameEngine.boardUnits[i][j].owner != GameEngine.playing &&
                             (u.attack2Range >= GameEngine.getSquareDistance
                                     (GameEngine.getCoordinates(u)[0], i,
                                             GameEngine.getCoordinates(u)[1], j))) {
@@ -1283,16 +1275,16 @@ public class GameEngine extends Thread{
         }
 
         //autoheals player's units if unit has move and attack left
-        for (int i = 0; i < BoardSprites.length; i++) {
-            for (int j = 0; j < BoardSprites[i].length; j++) {
-                if (BoardSprites[i][j] != null && BoardSprites[i][j].owner == playing) {
-                    if (BoardSprites[i][j].hasAttack && BoardSprites[i][j].hasMove) {
-                        BoardSprites[i][j].HP += BoardSprites[i][j].healRate;
-                        if (BoardSprites[i][j].HP > BoardSprites[i][j].maxHP) {
-                            BoardSprites[i][j].HP = BoardSprites[i][j].maxHP;
+        for (int i = 0; i < boardUnits.length; i++) {
+            for (int j = 0; j < boardUnits[i].length; j++) {
+                if (boardUnits[i][j] != null && boardUnits[i][j].owner == playing) {
+                    if (boardUnits[i][j].hasAttack && boardUnits[i][j].hasMove) {
+                        boardUnits[i][j].HP += boardUnits[i][j].healRate;
+                        if (boardUnits[i][j].HP > boardUnits[i][j].maxHP) {
+                            boardUnits[i][j].HP = boardUnits[i][j].maxHP;
                         }
-                        BoardSprites[i][j].hasAttack = false;
-                        BoardSprites[i][j].hasMove = false;
+                        boardUnits[i][j].hasAttack = false;
+                        boardUnits[i][j].hasMove = false;
                     }
                 }
             }
@@ -1316,13 +1308,13 @@ public class GameEngine extends Thread{
         }
 
         // gives movement and attack to next player's units
-        for (int i = 0; i < BoardSprites.length; i++) {
-            for (int j = 0; j < BoardSprites[i].length; j++) {
-                if (BoardSprites[i][j] != null && BoardSprites[i][j].owner == playing) {
-                    BoardSprites[i][j].hasMove = true;
-                    BoardSprites[i][j].hasAttack = true;
-                    BoardSprites[i][j].specialIsActivated = false;
-                    BoardSprites[i][j].brightenIcon();
+        for (int i = 0; i < boardUnits.length; i++) {
+            for (int j = 0; j < boardUnits[i].length; j++) {
+                if (boardUnits[i][j] != null && boardUnits[i][j].owner == playing) {
+                    boardUnits[i][j].hasMove = true;
+                    boardUnits[i][j].hasAttack = true;
+                    boardUnits[i][j].specialIsActivated = false;
+                    boardUnits[i][j].brightenIcon();
                 }
             }
         }
@@ -1331,8 +1323,8 @@ public class GameEngine extends Thread{
             for (int j = 0; j < BoardResources[i].length; j++) {
                 //this long if statement checks if BoardResource[i][j] should yield a resource to the player.
                 if (BoardResources[i][j]!= null &&
-                        BoardSprites[BoardResources[i][j].collectorCoordinates[0]][BoardResources[i][j].collectorCoordinates[1]] != null &&
-                        BoardSprites[BoardResources[i][j].collectorCoordinates[0]][BoardResources[i][j].collectorCoordinates[1]].owner == playing) {
+                        boardUnits[BoardResources[i][j].collectorCoordinates[0]][BoardResources[i][j].collectorCoordinates[1]] != null &&
+                        boardUnits[BoardResources[i][j].collectorCoordinates[0]][BoardResources[i][j].collectorCoordinates[1]].owner == playing) {
                     if (BoardResources[i][j].resourceType.equals("oil")) {
                         playing.oilStorage++;
                     }
@@ -1370,8 +1362,8 @@ public class GameEngine extends Thread{
             for (int j = 0; j < BoardResources[i].length; j++) {
                 //this long if statement checks if BoardResource[i][j] should yield a resource to the player.
                 if (BoardResources[i][j]!= null &&
-                        BoardSprites[BoardResources[i][j].collectorCoordinates[0]][BoardResources[i][j].collectorCoordinates[1]] != null &&
-                        BoardSprites[BoardResources[i][j].collectorCoordinates[0]][BoardResources[i][j].collectorCoordinates[1]].owner == playing) {
+                        boardUnits[BoardResources[i][j].collectorCoordinates[0]][BoardResources[i][j].collectorCoordinates[1]] != null &&
+                        boardUnits[BoardResources[i][j].collectorCoordinates[0]][BoardResources[i][j].collectorCoordinates[1]].owner == playing) {
                     if (BoardResources[i][j].resourceType.equals("oil")) {
                         addedoil++;
                     }
@@ -1414,12 +1406,12 @@ public class GameEngine extends Thread{
         }
         //green player
         if (player == green) {
-            for (int i = 0; i < BoardSprites.length; i++) {
-                for (int j = 0; j < BoardSprites[i].length; j++) {
-                    if (BoardSprites[i][j] != null && BoardSprites[i][j].owner.color.equals("green")) {
-                        for (int a = 0; a < BoardSprites.length; a++) {
-                            for (int b = 0; b < BoardSprites[a].length; b++) {
-                                if (!tile_is_visible[a][b] && BoardSprites[i][j].getDistanceToPoint(a,b) <= BoardSprites[i][j].getVisibilityRange()
+            for (int i = 0; i < boardUnits.length; i++) {
+                for (int j = 0; j < boardUnits[i].length; j++) {
+                    if (boardUnits[i][j] != null && boardUnits[i][j].owner.color.equals("green")) {
+                        for (int a = 0; a < boardUnits.length; a++) {
+                            for (int b = 0; b < boardUnits[a].length; b++) {
+                                if (!tile_is_visible[a][b] && boardUnits[i][j].getDistanceToPoint(a,b) <= boardUnits[i][j].getVisibilityRange()
                                     && unitCanSeeTile(i,j,a,b)) {
                                     tile_is_visible[a][b] = true;
                                 }
@@ -1432,12 +1424,12 @@ public class GameEngine extends Thread{
 
         //red player
         if (player == red) {
-            for (int i = 0; i < BoardSprites.length; i++) {
-                for (int j = 0; j < BoardSprites[i].length; j++) {
-                    if (BoardSprites[i][j] != null && BoardSprites[i][j].owner.color.equals("red")) {
-                        for (int a = 0; a < BoardSprites.length; a++) {
-                            for (int b = 0; b < BoardSprites[a].length; b++) {
-                                if (!tile_is_visible[a][b] && BoardSprites[i][j].getDistanceToPoint(a,b) <= BoardSprites[i][j].getVisibilityRange()
+            for (int i = 0; i < boardUnits.length; i++) {
+                for (int j = 0; j < boardUnits[i].length; j++) {
+                    if (boardUnits[i][j] != null && boardUnits[i][j].owner.color.equals("red")) {
+                        for (int a = 0; a < boardUnits.length; a++) {
+                            for (int b = 0; b < boardUnits[a].length; b++) {
+                                if (!tile_is_visible[a][b] && boardUnits[i][j].getDistanceToPoint(a,b) <= boardUnits[i][j].getVisibilityRange()
                                         && unitCanSeeTile(i,j,a,b)) {
                                     tile_is_visible[a][b] = true;
                                 }
@@ -1452,7 +1444,7 @@ public class GameEngine extends Thread{
         if (player == green) {
             for (int a = 0; a < fogOfWarIsRevealedForGreen.length; a++) {
                 if (fogOfWarIsRevealedForGreen[a]) {
-                    for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                    for (int i = 0; i < GameEngine.boardUnits.length; i++) {
                         for (int j = a * 3; j < (a+1)*3; j++) {
                             tile_is_visible[i][j] = true;
                         }
@@ -1464,7 +1456,7 @@ public class GameEngine extends Thread{
 
             for (int a = 0; a < fogOfWarIsRevealedForRed.length; a++) {
                 if (fogOfWarIsRevealedForRed[a]) {
-                    for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                    for (int i = 0; i < GameEngine.boardUnits.length; i++) {
                         for (int j = a * 3; j < (a+1)*3; j++) {
                             tile_is_visible[i][j] = true;
                         }
@@ -1486,10 +1478,10 @@ public class GameEngine extends Thread{
     public static void getReachableTilesRecursive(int xCoord, int yCoord, int currentDistance, boolean[][] map) {
         if (currentDistance < 0
                 || xCoord < 0 || yCoord < 0 || xCoord > width - 1 || yCoord > height - 1
-                || (BoardSprites[xCoord][yCoord] != null && BoardSprites[xCoord][yCoord].owner != playing)) {
+                || (boardUnits[xCoord][yCoord] != null && boardUnits[xCoord][yCoord].owner != playing)) {
             return;
         }
-        if (BoardSprites[xCoord][yCoord] == null) {
+        if (boardUnits[xCoord][yCoord] == null) {
             map[xCoord][yCoord] = true;
         }
         getReachableTilesRecursive(xCoord-1,yCoord,currentDistance - 1, map);

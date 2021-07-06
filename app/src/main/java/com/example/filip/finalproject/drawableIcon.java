@@ -9,13 +9,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
-public class movableLocation {
+public class drawableIcon {
 
     public Bitmap icon; //adds icon
     public int displacement = 0; //displacement of the icon, used if the icon has to be centered
     public boolean isHUDelement = false; // HUD elements should not move when camera moves
 
-    public movableLocation(Context context) {
+    public drawableIcon(Context context) {
 
         BitmapFactory.Options o = new Options(); //get resource
         o.inScaled = false;
@@ -80,7 +80,7 @@ public class movableLocation {
     }
 
     //adds texture to the object, icon depends on number input
-    public movableLocation(Context context, int number, boolean isHUD) {
+    public drawableIcon(Context context, int number, boolean isHUD) {
         this.isHUDelement = isHUD;
 
 
@@ -168,30 +168,8 @@ public class movableLocation {
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.armr2, o);
             icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
-        if (number == 20) {
-            BitmapFactory.Options o = new Options(); //get resource
-            o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.aag, o);
-            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
-        }
-        if (number == 21) {
-            BitmapFactory.Options o = new Options(); //get resource
-            o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.aar, o);
-            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
-        }
-        if (number == 23) {
-            BitmapFactory.Options o = new Options(); //get resource
-            o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.htankg2, o);
-            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
-        }
-        if (number == 24) {
-            BitmapFactory.Options o = new Options(); //get resource
-            o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.htankr2, o);
-            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
-        }
+
+
         if (number == 14) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
@@ -235,10 +213,22 @@ public class movableLocation {
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.upgrade, o);
             icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
+        if (number == 20) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.targetbw, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
+        if (number == 21) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.point, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
         if (number == 22) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.produce, o);
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.gear, o);
             icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
         if (number == 25) {
@@ -265,30 +255,7 @@ public class movableLocation {
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.airlinepositionr, o);
             icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
         }
-        if (number == 29) {
-            BitmapFactory.Options o = new Options(); //get resource
-            o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.fitg, o);
-            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
-        }
-        if (number == 30) {
-            BitmapFactory.Options o = new Options(); //get resource
-            o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.fitr, o);
-            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
-        }
-        if (number == 31) {
-            BitmapFactory.Options o = new Options(); //get resource
-            o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.bomg, o);
-            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
-        }
-        if (number == 32) {
-            BitmapFactory.Options o = new Options(); //get resource
-            o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.bomr, o);
-            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
-        }
+
         if (number == 33) {
             BitmapFactory.Options o = new Options(); //get resource
             o.inScaled = false;

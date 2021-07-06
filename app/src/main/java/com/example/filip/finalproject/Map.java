@@ -1,7 +1,6 @@
 package com.example.filip.finalproject;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 public class Map {
@@ -222,21 +221,21 @@ public class Map {
 
     public static void drawMapFeatures(Canvas canvas) {
         if (map_code == 2) {
-            GameView.pointers.draw(canvas, 1, 6);
-            GameView.pointers.draw(canvas, 18, 5);
-            GameView.pointers1.draw(canvas, 7, 1);
-            GameView.pointers1.draw(canvas, 3, 10);
-            GameView.pointers2.draw(canvas, 12, 10);
-            GameView.pointers2.draw(canvas, 17, 1);
+            GameView.harvesterMid.draw(canvas, 1, 6);
+            GameView.harvesterMid.draw(canvas, 18, 5);
+            GameView.harvesterLeft.draw(canvas, 7, 1);
+            GameView.harvesterLeft.draw(canvas, 3, 10);
+            GameView.harvesterRight.draw(canvas, 12, 10);
+            GameView.harvesterRight.draw(canvas, 17, 1);
 
-            //GameView.pointers.draw(canvas, 10, 5);
+            //GameView.harvesterMid.draw(canvas, 10, 5);
         } else if (map_code == 1) {
             return;
         } else if (map_code == 0) {
-            GameView.pointers.draw(canvas, 1, 7);
-            GameView.pointers.draw(canvas, 13, 1);
-            GameView.pointers1.draw(canvas, 6, 1);
-            GameView.pointers2.draw(canvas, 8, 7);
+            GameView.harvesterMid.draw(canvas, 1, 7);
+            GameView.harvesterMid.draw(canvas, 13, 1);
+            GameView.harvesterLeft.draw(canvas, 6, 1);
+            GameView.harvesterRight.draw(canvas, 8, 7);
         }
     }
 

@@ -4,8 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Paint;
-import android.opengl.Visibility;
-import android.util.EventLog;
 import android.content.Context;
 import android.graphics.Canvas;
 
@@ -66,7 +64,7 @@ public class Units {
         }
         toReturn[toReturn.length - 1] = this;
        GameView.units = toReturn;
-       GameEngine.BoardSprites[coordinates[0]][coordinates[1]] = this;
+       GameEngine.boardUnits[coordinates[0]][coordinates[1]] = this;
    }*/
     //see above for meaning of these values
     public void setParameters(int atc1, int atc2, int atc1r, int atc2r, int def, int hp, int maxhp, int mov, int visibility, int healRate, int fuelConsumption) {
@@ -209,8 +207,8 @@ public class Units {
         toReturn[toReturn.length - 1] = this;
         GameView.units = toReturn;
         //if the spawn point is empty, put it there
-        if (GameEngine.BoardSprites[coordinates[0]][coordinates[1]] == null) {
-            GameEngine.BoardSprites[coordinates[0]][coordinates[1]] = this;
+        if (GameEngine.boardUnits[coordinates[0]][coordinates[1]] == null) {
+            GameEngine.boardUnits[coordinates[0]][coordinates[1]] = this;
         }
         //if not, add the unit to the queue
         else {
@@ -560,7 +558,7 @@ public class Units {
     public void draw(Canvas canvas) {
         if (coordinates[0] != 125) {
             Bitmap toDraw = icon;
-            toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
+            toDraw = drawableIcon.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
             canvas.drawBitmap(toDraw, coordinates[0] * GameEngine.squareLength + GameView.cameraX, coordinates[1] * GameEngine.squareLength + GameView.cameraY, null);
         }
         drawUpgrades(canvas, coordinates[0] * GameEngine.squareLength + GameView.cameraX, coordinates[1] * GameEngine.squareLength + GameView.cameraY);
@@ -568,7 +566,7 @@ public class Units {
     public void draw(Canvas canvas, Paint paint, float displacement) {
         if (coordinates[0] != 125) {
             Bitmap toDraw = icon;
-            toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
+            toDraw = drawableIcon.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
             canvas.drawBitmap(toDraw, coordinates[0] * GameEngine.squareLength + GameView.cameraX + displacement, coordinates[1] * GameEngine.squareLength, paint);
         }
         drawUpgrades(canvas, coordinates[0] * GameEngine.squareLength + GameView.cameraX + (int) displacement, coordinates[1] * GameEngine.squareLength + GameView.cameraY);
@@ -576,7 +574,7 @@ public class Units {
     //Same as above, but draw then on given coordinates instead of unit's current coordinates.
     public void draw(Canvas canvas, Paint paint,double  x, double y) {
         Bitmap toDraw = icon;
-        toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
+        toDraw = drawableIcon.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
         canvas.drawBitmap(toDraw, (int) x * FullscreenActivity.scaleFactor, (int) y * FullscreenActivity.scaleFactor, paint);
         drawUpgrades(canvas, (int) (x - iconUpgradeScale),
                 (int) (y - iconUpgradeScale));
@@ -584,7 +582,7 @@ public class Units {
 
     public void draw(Canvas canvas, double xx, double yy) {
         Bitmap toDraw = icon;
-        toDraw = movableLocation.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
+        toDraw = drawableIcon.cutIconTransparency(toDraw, (double) this.HP / (double) this.maxHP);
         canvas.drawBitmap(toDraw, (int) xx * FullscreenActivity.scaleFactor, (int) yy * FullscreenActivity.scaleFactor, null);
         drawUpgrades(canvas, (int) (xx * FullscreenActivity.scaleFactor - FullscreenActivity.scaleFactor * iconUpgradeScale),
                 (int) (yy * FullscreenActivity.scaleFactor - FullscreenActivity.scaleFactor * iconUpgradeScale));
@@ -639,7 +637,7 @@ public class Units {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
                         GameView.binoc.icon, (int) (GameView.binoc.icon.getWidth() * iconUpgradeScale),
                         (int) (GameView.binoc.icon.getHeight() * iconUpgradeScale), true);
-                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
 
@@ -647,7 +645,7 @@ public class Units {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
                         GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
                         (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
-                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
 
@@ -655,7 +653,7 @@ public class Units {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
                         GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
                         (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
-                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
         }
@@ -665,7 +663,7 @@ public class Units {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
                         GameView.binoc.icon, (int) (GameView.binoc.icon.getWidth() * iconUpgradeScale),
                         (int) (GameView.binoc.icon.getHeight() * iconUpgradeScale), true);
-                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
 
@@ -673,7 +671,7 @@ public class Units {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
                         GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
                         (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
-                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
 
@@ -681,7 +679,7 @@ public class Units {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
                         GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
                         (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
-                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
         }
@@ -691,7 +689,7 @@ public class Units {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
                         GameView.binoc.icon, (int) (GameView.binoc.icon.getWidth() * iconUpgradeScale),
                         (int) (GameView.binoc.icon.getHeight() * iconUpgradeScale), true);
-                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
 
@@ -699,7 +697,7 @@ public class Units {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
                         GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
                         (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
-                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
 
@@ -707,7 +705,7 @@ public class Units {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
                         GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
                         (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
-                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
         }
@@ -717,7 +715,7 @@ public class Units {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
                         GameView.binoc.icon, (int) (GameView.binoc.icon.getWidth() * iconUpgradeScale),
                         (int) (GameView.binoc.icon.getHeight() * iconUpgradeScale), true);
-                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
 
@@ -725,7 +723,7 @@ public class Units {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
                         GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
                         (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
-                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
 
@@ -733,7 +731,7 @@ public class Units {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
                         GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
                         (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
-                iconUpgrade = movableLocation.replaceBlackWithTransparent(iconUpgrade);
+                iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
         }

@@ -27,7 +27,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static GameEngine grid = null; // Grid of the game
     public static SelectedUnit selected = null; //Player's selected unit
     public static SelectedUnit enemySelected = null; //opponent's selected unit
-    public static Units[] units = new Units[0]; // Array of units that will be drawn, they don't have the physical location on board (In GameEngine class, BoardSprites does that).
+    public static Units[] units = new Units[0]; // Array of units that will be drawn, they don't have the physical location on board (In GameEngine class, boardUnits does that).
     public static Resources[] resources = new Resources[0]; // Array of resources that will be drawn, they don't have the physical location on board (In GameEngine class, BoardResources does that).
     public static boolean showendTurnScreen = false;
 
@@ -40,48 +40,43 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static boolean removeFogOfWar = false; //removing fog of war
 
     //UI elements TODO : cleanup
-    public static movableLocation pointers;
-    public static movableLocation pointers1;
-    public static movableLocation pointers2;
-    public static movableLocation pointers7;
-    public static movableLocation pointers8;
-    public static movableLocation pointers12;
-    public static movableLocation airline;
-    public static movableLocation airliner;
-    public static movableLocation hangar;
-    public static movableLocation pointers9;
-    public static movableLocation temp;
-    public static movableLocation temp2;
-    public static movableLocation pointers3;
-    public static movableLocation pointers35;
-    public static movableLocation pointers4;
-    public static movableLocation pointers5;
-    public static movableLocation pointers6;
-    public static movableLocation smoke;
-    public static movableLocation techSquare;
-    public static movableLocation techIcon;
+    public static drawableIcon harvesterMid;
+    public static drawableIcon harvesterLeft;
+    public static drawableIcon harvesterRight;
+    public static drawableIcon deployGreenIcon;
+    public static drawableIcon deployRedIcon;
+    public static drawableIcon doorsIcon;
+    public static drawableIcon airline;
+    public static drawableIcon airliner;
+    public static drawableIcon hangar;
+    public static drawableIcon arrowUpIcon;
+    public static drawableIcon movableLocation;
+    public static drawableIcon targetColored;
+    public static drawableIcon unselect;
+    public static drawableIcon healIcon;
+    public static drawableIcon endTurn;
+    public static drawableIcon buy;
+    public static drawableIcon undoIcon;
+    public static drawableIcon smoke;
+    public static drawableIcon techSquare;
+    public static drawableIcon techIcon;
 
-    public static movableLocation gearIcon;
+    public static drawableIcon gearIcon;
 
-    public static movableLocation infr;
-    public static movableLocation cavr;
-    public static movableLocation artr;
-    public static movableLocation mgr;
-    public static movableLocation inf;
-    public static movableLocation cav;
-    public static movableLocation art;
-    public static movableLocation mg;
-    public static movableLocation arm;
-    public static movableLocation fit;
-    public static movableLocation bom;
-    public static movableLocation armr;
-    public static movableLocation fitr;
-    public static movableLocation bomr;
+    public static drawableIcon infr;
+    public static drawableIcon cavr;
+    public static drawableIcon artr;
+    public static drawableIcon inf;
+    public static drawableIcon cav;
+    public static drawableIcon art;
+    public static drawableIcon arm;
+    public static drawableIcon armr;
 
-    public static movableLocation shield;
-    public static movableLocation binoc;
-    public static movableLocation shieldDark;
-    public static movableLocation binocDark;
+
+    public static drawableIcon shield;
+    public static drawableIcon binoc;
+    public static drawableIcon shieldDark;
+    public static drawableIcon binocDark;
 
     //Starts the game thread
     public GameView(Context context) {
@@ -116,49 +111,49 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         targetCameraX = 0;
         targetCameraY = 0;
 
-        pointers = new movableLocation(theContext, 0, false);
-        pointers1 = new movableLocation(theContext, 1, false);
-        pointers2 = new movableLocation(theContext, 2, false);
-        pointers7 = new movableLocation(theContext, 17, false);
-        pointers8 = new movableLocation(theContext, 18, false);
-        pointers12 = new movableLocation(theContext, 25, true);
-        airline = new movableLocation(theContext, 27, true);
-        airliner = new movableLocation(theContext, 28, true);
-        hangar = new movableLocation(theContext, 26, true);
-        pointers9 = new movableLocation(theContext, 19, true);
-        temp = new movableLocation(theContext);
-        temp2 = new movableLocation(theContext, 15, false);
-        pointers3 = new movableLocation(theContext, 3, true);
-        pointers35 = new movableLocation(theContext, 14, true);
-        pointers4 = new movableLocation(theContext, 4, true);
-        pointers5 = new movableLocation(theContext, 5, true);
-        pointers6 = new movableLocation(theContext, 16, true);
+        harvesterMid = new drawableIcon(theContext, 0, false);
+        harvesterLeft = new drawableIcon(theContext, 1, false);
+        harvesterRight = new drawableIcon(theContext, 2, false);
 
-        gearIcon = new movableLocation(theContext, 22, true);
+        unselect = new drawableIcon(theContext, 3, true);
+        endTurn = new drawableIcon(theContext, 4, true);
+        buy = new drawableIcon(theContext, 5, true);
+        inf = new drawableIcon(theContext, 6, true);
+        cav = new drawableIcon(theContext, 7, true);
+        art = new drawableIcon(theContext, 8, true);
+        infr = new drawableIcon(theContext, 9, true);
+        cavr = new drawableIcon(theContext, 10, true);
+        artr = new drawableIcon(theContext, 11, true);
+        arm = new drawableIcon(theContext, 12, true);
+        armr = new drawableIcon(theContext, 13, true);
+        healIcon = new drawableIcon(theContext, 14, true);
+        targetColored = new drawableIcon(theContext, 15, false);
+        undoIcon = new drawableIcon(theContext, 16, true);
+        deployGreenIcon = new drawableIcon(theContext, 17, false);
+        deployRedIcon = new drawableIcon(theContext, 18, false);
+        arrowUpIcon = new drawableIcon(theContext, 19, true);
 
-        infr = new movableLocation(theContext, 9, true);
-        cavr = new movableLocation(theContext, 10, true);
-        artr = new movableLocation(theContext, 11, true);
-        mgr = new movableLocation(theContext, 21, true);
-        inf = new movableLocation(theContext, 6, true);
-        cav = new movableLocation(theContext, 7, true);
-        art = new movableLocation(theContext, 8, true);
-        mg = new movableLocation(theContext, 20, true);
-        arm = new movableLocation(theContext, 12, true);
-        fit = new movableLocation(theContext, 29, true);
-        bom = new movableLocation(theContext, 31, true);
-        armr = new movableLocation(theContext, 13, true);
-        fitr = new movableLocation(theContext, 30, true);
-        bomr = new movableLocation(theContext, 32, true);
 
-        binoc = new movableLocation(theContext, 33, true);
-        shield = new movableLocation(theContext, 34, true);
-        binocDark = new movableLocation(theContext, 35, true);
-        shieldDark = new movableLocation(theContext, 36, true);
-        smoke = new movableLocation(theContext,37, false);
-        smoke.icon = movableLocation.cutIconTransparency(smoke.icon, 0);
-        techSquare = new movableLocation(theContext, 38, true);
-        techIcon = new movableLocation(theContext, 39, true);
+        gearIcon = new drawableIcon(theContext, 22, true);
+
+
+        doorsIcon = new drawableIcon(theContext, 25, true);
+        hangar = new drawableIcon(theContext, 26, true);
+        airline = new drawableIcon(theContext, 27, true);
+        airliner = new drawableIcon(theContext, 28, true);
+
+
+
+        binoc = new drawableIcon(theContext, 33, true);
+        shield = new drawableIcon(theContext, 34, true);
+        binocDark = new drawableIcon(theContext, 35, true);
+        shieldDark = new drawableIcon(theContext, 36, true);
+        smoke = new drawableIcon(theContext,37, false);
+        smoke.icon = drawableIcon.cutIconTransparency(smoke.icon, 0);
+        techSquare = new drawableIcon(theContext, 38, true);
+        techIcon = new drawableIcon(theContext, 39, true);
+
+        movableLocation = new drawableIcon(theContext);
         //smoke.displacement = (int) ((double) GameEngine.squareLength * 0.5);
 
 
@@ -334,8 +329,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 //draws markers
 
                 Map.drawMapFeatures(canvas);
-                pointers7.draw(canvas, GameEngine.greenDeployX, GameEngine.greenDeployY);
-                pointers8.draw(canvas, GameEngine.redDeployX, GameEngine.redDeployY);
+                deployGreenIcon.draw(canvas, GameEngine.greenDeployX, GameEngine.greenDeployY);
+                deployRedIcon.draw(canvas, GameEngine.redDeployX, GameEngine.redDeployY);
             }
 
             Paint newPaint = new Paint();
@@ -375,10 +370,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             if (GameEngine.theUnit != null && GameEngine.theUnit.hasMove == true) {
                 int[] coordinates = GameEngine.getCoordinates(GameEngine.theUnit);
                 boolean[][] reachableTiles = GameEngine.getReachableTiles(coordinates[0], coordinates[1], GameEngine.theUnit.movement);
-                for (int i = 0; i < GameEngine.BoardSprites.length; i++) { // TODO : optimize this
-                    for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
+                for (int i = 0; i < GameEngine.boardUnits.length; i++) { // TODO : optimize this
+                    for (int j = 0; j < GameEngine.boardUnits[i].length; j++) {
                         if (reachableTiles[i][j]) {
-                            temp.draw(canvas, i, j);
+                            movableLocation.draw(canvas, i, j);
                         }
                     }
                 }
@@ -386,14 +381,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             //draws targets.
             if (GameEngine.theUnit != null && GameEngine.theUnit.hasAttack == true) {
-                for (int i = 0; i < GameEngine.BoardSprites.length; i++) { // TODO : optimize this
-                    for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
-                        if (GameEngine.BoardSprites[i][j] != null && GameEngine.BoardSprites[i][j].owner != GameEngine.playing &&
+                for (int i = 0; i < GameEngine.boardUnits.length; i++) { // TODO : optimize this
+                    for (int j = 0; j < GameEngine.boardUnits[i].length; j++) {
+                        if (GameEngine.boardUnits[i][j] != null && GameEngine.boardUnits[i][j].owner != GameEngine.playing &&
                                 (GameEngine.theUnit.attack2Range >= GameEngine.getSquareDistance
                                         (GameEngine.getCoordinates(GameEngine.theUnit)[0], i,
                                                 GameEngine.getCoordinates(GameEngine.theUnit)[1], j))) {
 
-                            temp2.draw(canvas, i, j);
+                            targetColored.draw(canvas, i, j);
                         }
                     }
                 }
@@ -401,12 +396,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             //draws targets if unit is firing smoke
             if (GameEngine.smokeFireActive && GameEngine.theUnit != null && GameEngine.theUnit.unitType.equals("Artillery")) {
-                for (int i = 0; i < GameEngine.BoardSprites.length; i++) { // TODO : optimize this
-                    for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
+                for (int i = 0; i < GameEngine.boardUnits.length; i++) { // TODO : optimize this
+                    for (int j = 0; j < GameEngine.boardUnits[i].length; j++) {
                         if ((GameEngine.theUnit.attack2Range >= GameEngine.getSquareDistance
                                                                 (GameEngine.getCoordinates(GameEngine.theUnit)[0], i,
                                                                 GameEngine.getCoordinates(GameEngine.theUnit)[1], j))) {
-                            temp2.draw(canvas, i, j);
+                            targetColored.draw(canvas, i, j);
                         }
                     }
                 }
@@ -453,12 +448,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             canvas.drawRect(rectangle,newPaint);
 
             //draws HUD elements
-            pointers3.draw(canvas, 16, 1);
-            pointers35.draw(canvas, 18, 1);
-            pointers4.draw(canvas, 16, 3);
-            pointers5.draw(canvas, 5, 10);
-            pointers6.draw(canvas, 18, 3);
-            pointers12.draw(canvas, 18, 5);
+            unselect.draw(canvas, 16, 1);
+            healIcon.draw(canvas, 18, 1);
+            endTurn.draw(canvas, 16, 3);
+            buy.draw(canvas, 5, 10);
+            undoIcon.draw(canvas, 18, 3);
+            doorsIcon.draw(canvas, 18, 5);
 
             //if (TechTree.techIsEnabled) {
             //    techIcon.draw(canvas, 16, 5);
@@ -620,6 +615,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 canvas.drawText("Ranged attack damage : " + unitInfo[2] + "  Range : " + unitInfo[3], 1950 * FullscreenActivity.scaleFactor, 1050 * FullscreenActivity.scaleFactor, paint);
                 canvas.drawText("Health : " + unitInfo[4] + " / " + unitInfo[5], 2100 * FullscreenActivity.scaleFactor, 890 * FullscreenActivity.scaleFactor, paint);
                 canvas.drawText("Unit's defence : " + unitInfo[6], 2100 * FullscreenActivity.scaleFactor, 930 * FullscreenActivity.scaleFactor, paint);
+                canvas.drawText("Unit's movement : " + unitInfo[7], 2100 * FullscreenActivity.scaleFactor, 970 * FullscreenActivity.scaleFactor, paint);
                 if (GameEngine.enemyTappedUnit.movement != 0) {
                     canvas.drawText("This unit " + canMoveAndAttack[0], 1950 * FullscreenActivity.scaleFactor, 1090 * FullscreenActivity.scaleFactor, paint);
                 } else {
@@ -654,8 +650,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 canvas.drawRect(rectangle,newPaint);
 
                 //buy and cancel
-                pointers5.draw(canvas, 8,8);
-                pointers3.draw(canvas, 10,8);
+                buy.draw(canvas, 8,8);
+                unselect.draw(canvas, 10,8);
 
 
                 //display info about unit TODO: add just icon instead of a new unit
@@ -803,7 +799,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public static void drawTech(Canvas canvas) {
         //TechTree.draw(canvas);
-        pointers12.draw(canvas, 18, 10);
+        doorsIcon.draw(canvas, 18, 10);
 
         Paint thePaint = new Paint();
         thePaint.setTextSize(60 * FullscreenActivity.scaleFactor);
