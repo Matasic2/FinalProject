@@ -12,7 +12,7 @@ public class Armor extends Units {
     public static int GreenDefence = 2; // Defence value of Green's Armor, this value can be changed
     public static int GreenHP = 25; // HP value of Green's Armor, this value can be changed
     public static int GreenMovement = 2; // Movement value of Green's Armor, this value can be changed
-    public static int GreenVisibility = 4; // Movement value of Green's Infantry, this value can be changed
+    public static int GreenVisibility = 2; // Movement value of Green's Infantry, this value can be changed
     public static int greenFuelConsumption = 1;
 
     //cost of Armor unit
@@ -36,7 +36,7 @@ public class Armor extends Units {
     public static int RedDefence = 2; // Defence value of Red's Armor, this value can be changed
     public static int RedHP = 25; // HP value of Red's Armor, this value can be changed
     public static int RedMovement = 2; // Movement value of Red's Armor, this value can be changed
-    public static int RedVisibility = 4; // Movement value of Green's Infantry, this value can be changed
+    public static int RedVisibility = 2; // Movement value of Green's Infantry, this value can be changed
     public static int redFuelConsumption = 1;
 
     Armor(Context context, int x, int y, Player player) {
@@ -52,9 +52,10 @@ public class Armor extends Units {
         if (player == GameEngine.green) {
             if (number == 0) {
                 Armor.greenFoodPrice += 1 * factor;
-                Armor.greenOilPrice -= 4 * factor;
+                Armor.greenOilPrice -= 3 * factor;
 
-                Armor.GreenVisibility += 2 * factor;
+                Armor.GreenVisibility += 3 * factor;
+                Armor.GreenHP -= 5 * factor;
             }
             if (number == 1) {
                 Armor.greenIronPrice += 2 * factor;
@@ -67,9 +68,10 @@ public class Armor extends Units {
         } else if (player == GameEngine.red) {
             if (number == 0) {
                 Armor.redFoodPrice += 1 * factor;
-                Armor.redOilPrice -= 4 * factor;
+                Armor.redOilPrice -= 3 * factor;
 
-                Armor.RedVisibility += 2 * factor;
+                Armor.RedVisibility += 3 * factor;
+                Armor.RedHP -= 5 * factor;
             }
             if (number == 1) {
                 Armor.redIronPrice += 3 * factor;

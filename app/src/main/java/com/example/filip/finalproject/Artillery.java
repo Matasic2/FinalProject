@@ -50,11 +50,10 @@ public class Artillery extends Units {
     public static void adjustUpgrade(Player player, int factor, int number) {
         if (player == GameEngine.green) {
             if (number == 0) {
-                Artillery.greenFoodPrice -= 2 * factor;
-                Artillery.greenIronPrice -= 2 * factor;
+                Artillery.greenOilPrice += 8 * factor;
+                Artillery.greenFuelConsumption += 1 * factor;
 
-                Artillery.GreenAttack2 -= 1 * factor;
-                Artillery.GreenSecondAttackRange -= 1 * factor;
+                Artillery.GreenMovement += 1 * factor;
             }
             if (number == 1) {
                 Artillery.greenIronPrice += 1 * factor;
@@ -62,15 +61,16 @@ public class Artillery extends Units {
             }
             if (number == 2) {
                 Artillery.greenFoodPrice += 2 * factor;
+                Artillery.greenIronPrice += 1 * factor;
+
                 Artillery.GreenAttack2 += 1 * factor;
             }
         } else if (player == GameEngine.red) {
             if (number == 0) {
-                Artillery.redFoodPrice -= 2 * factor;
-                Artillery.redIronPrice -= 2 * factor;
+                Artillery.redOilPrice += 8 * factor;
+                Artillery.redFuelConsumption += 1 * factor;
 
-                Artillery.RedAttack2 -= 1 * factor;
-                Artillery.RedSecondAttackRange -= 1 * factor;
+                Artillery.RedMovement += 1 * factor;
             }
             if (number == 1) {
                 Artillery.redIronPrice += 1 * factor;
@@ -78,6 +78,7 @@ public class Artillery extends Units {
             }
             if (number == 2) {
                 Artillery.redFoodPrice += 2 * factor;
+                Artillery.redIronPrice += 1 * factor;
 
                 Artillery.RedAttack2 += 1 * factor;
             }
