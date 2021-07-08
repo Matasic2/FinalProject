@@ -83,6 +83,12 @@ public class drawableIcon {
     public drawableIcon(Context context, int number, boolean isHUD) {
         this.isHUDelement = isHUD;
 
+        if (number == -1) {
+            BitmapFactory.Options o = new Options(); //get resource
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.nulll, o);
+            icon = Bitmap.createScaledBitmap(icon,(int)(icon.getWidth() * FullscreenActivity.scaleFactor), (int)(icon.getHeight() * FullscreenActivity.scaleFactor), true);
+        }
 
         if (number == 0) {
             BitmapFactory.Options o = new Options(); //get resource

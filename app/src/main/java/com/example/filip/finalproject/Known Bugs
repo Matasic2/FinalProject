@@ -2,3 +2,4 @@
 - players can fire blindly then undo the action if no damage was taken (meaning no unit is present on that tile) until their unit was damaged(combat occured so an enemy unit is present)
 - loading replay can be undeterministic, especially when playing vs Ai
 - Add options for: (1) using 1 or 2 threads (2) show or hide fog of war (3)
+- when destroying HQ, game message displays info about received damage

@@ -42,6 +42,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static boolean removeFogOfWar = false; //removing fog of war
 
     //UI elements TODO : cleanup
+    public static drawableIcon nullIcon;
+
     public static drawableIcon harvesterMid;
     public static drawableIcon harvesterLeft;
     public static drawableIcon harvesterRight;
@@ -117,6 +119,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         cameraY = 0;
         targetCameraX = 0;
         targetCameraY = 0;
+
+        nullIcon = new drawableIcon(theContext, -1, false);
 
         harvesterMid = new drawableIcon(theContext, 0, false);
         harvesterLeft = new drawableIcon(theContext, 1, false);
