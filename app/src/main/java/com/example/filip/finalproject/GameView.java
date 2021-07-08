@@ -31,6 +31,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static Resources[] resources = new Resources[0]; // Array of resources that will be drawn, they don't have the physical location on board (In GameEngine class, BoardResources does that).
     public static boolean showendTurnScreen = false;
 
+    public static boolean useTwoThreads = false;
+
     public static int cameraX = 0;
     public static int cameraY = 0;
     public static int targetCameraX = 0;
@@ -243,7 +245,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             enemySelected = new SelectedUnit(theContext);
             GameEngine.playing = GameEngine.green;
             GameEngine.estimateResources();
-            thread.start(); // starts the tread
+            if (useTwoThreads) {
+                thread.start(); // starts the tread
+            } else {
+                thread.renderFrame();
+            }
+
 
 
         if (!GameEngine.replayMode) {

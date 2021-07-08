@@ -31,50 +31,27 @@ public class MainThread extends Thread {
     @Override
     public void run() {
         while (run) {
-            if (shouldPause) {
-                try {
-                    Thread.sleep(100);
-                } catch (Exception e) {
-
-                }
-                continue;
-            }
-
-            adjustCamera();
-            //GameEngine.message = GameView.cameraX + " " + GameView.cameraY;
-
-            boolean drawSucceeded = false;
-            synchronized (surfaceHolder) {
-                this.gameView.update();
-                isRendering = true;
-                canvas = surfaceHolder.lockCanvas();
-                while (!drawSucceeded) {
-                    try {
-                        this.gameView.draw(canvas);
-                        drawSucceeded = true;
-                    } catch (Exception e) {
-
-                    }
-                }
-            }
-
-            if (this.canvas != null && drawSucceeded && !shouldCancelDrawing) {
-                surfaceHolder.unlockCanvasAndPost(canvas);
-                previousTime = System.currentTimeMillis();
-            } else if (shouldCancelDrawing) {
-                shouldCancelDrawing = false;
-            }
-            isRendering = false;
+            renderFrame();
         }
     }
 
     public void renderFrame() {
+        if (shouldPause) {
+            try {
+                Thread.sleep(100);
+            } catch (Exception e) {
+
+            }
+        }
+
         adjustCamera();
+        //GameEngine.message = GameView.cameraX + " " + GameView.cameraY;
+
         boolean drawSucceeded = false;
         synchronized (surfaceHolder) {
             this.gameView.update();
-            canvas = surfaceHolder.lockCanvas();
             isRendering = true;
+            canvas = surfaceHolder.lockCanvas();
             while (!drawSucceeded) {
                 try {
                     this.gameView.draw(canvas);
@@ -85,12 +62,13 @@ public class MainThread extends Thread {
             }
         }
 
-        if (this.canvas != null && drawSucceeded) {
+        if (this.canvas != null && drawSucceeded && !shouldCancelDrawing) {
             surfaceHolder.unlockCanvasAndPost(canvas);
             previousTime = System.currentTimeMillis();
+        } else if (shouldCancelDrawing) {
+            shouldCancelDrawing = false;
         }
         isRendering = false;
-        surfaceHolder.unlockCanvasAndPost(canvas);
     }
 
     public void adjustCamera() {

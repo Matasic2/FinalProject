@@ -119,6 +119,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     @Override
     public boolean onTouch (View view, MotionEvent event) {
 
+        long start = System.currentTimeMillis();
         if (GameEngine.replayMode) {
             if (!replayIsRunning) {
                 replayIsRunning = true;
@@ -129,7 +130,6 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
                 //GameView.thread.run();
             }
             replayIsRunning = false;
-            return true;
         }
 
         if ((GameEngine.gameIsMultiplayer) && ((GameEngine.isHostPhone && GameEngine.playing.equals(GameEngine.red))
@@ -155,7 +155,6 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
             GameView.targetCameraY = (currentY - lastDownY) + GameView.cameraY;
             lastDownX = currentX;
             lastDownY = currentY;
-            return true;
         }
 
         else if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -170,12 +169,15 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
             lastDownX = -1;
             lastDownY = -1;
             hasScrolled = false;
-            return true;
         }
 
         else if (event.getAction() == MotionEvent.ACTION_DOWN) {
             lastDownX = (int) event.getX();
             lastDownY = (int) event.getY();
+        }
+
+        if (!GameView.useTwoThreads) {
+            GameView.thread.renderFrame();
         }
         return true;
     }
