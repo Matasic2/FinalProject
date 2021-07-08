@@ -51,7 +51,6 @@ public class Armor extends Units {
     public static void adjustUpgrade(Player player, int factor, int number) {
         if (player == GameEngine.green) {
             if (number == 0) {
-                Armor.greenFoodPrice += 1 * factor;
                 Armor.greenOilPrice -= 3 * factor;
 
                 Armor.GreenVisibility += 3 * factor;
@@ -67,7 +66,6 @@ public class Armor extends Units {
             }
         } else if (player == GameEngine.red) {
             if (number == 0) {
-                Armor.redFoodPrice += 1 * factor;
                 Armor.redOilPrice -= 3 * factor;
 
                 Armor.RedVisibility += 3 * factor;

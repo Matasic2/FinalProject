@@ -79,6 +79,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static drawableIcon binoc;
     public static drawableIcon shieldDark;
     public static drawableIcon binocDark;
+    public static drawableIcon bolt;
+    public static drawableIcon boltDark;
+    public static drawableIcon point;
+    public static drawableIcon pointDark;
+    public static drawableIcon gearIconDark;
 
     //Starts the game thread
     public GameView(Context context) {
@@ -137,7 +142,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 
         gearIcon = new drawableIcon(theContext, 22, true);
-
+        gearIconDark = new drawableIcon(theContext, 23, true);
 
         doorsIcon = new drawableIcon(theContext, 25, true);
         hangar = new drawableIcon(theContext, 26, true);
@@ -145,11 +150,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         airliner = new drawableIcon(theContext, 28, true);
 
 
-
+        bolt = new drawableIcon(theContext, 29, true);
+        boltDark = new drawableIcon(theContext, 30, true);
+        point = new drawableIcon(theContext, 31, true);
+        pointDark = new drawableIcon(theContext, 32, true);
         binoc = new drawableIcon(theContext, 33, true);
         shield = new drawableIcon(theContext, 34, true);
         binocDark = new drawableIcon(theContext, 35, true);
         shieldDark = new drawableIcon(theContext, 36, true);
+
+
+
         smoke = new drawableIcon(theContext,37, false);
         smoke.icon = drawableIcon.cutIconTransparency(smoke.icon, 0);
         techSquare = new drawableIcon(theContext, 38, true);
@@ -712,23 +723,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     }
 
                     if (GameEngine.playing.upgrades[0][1]) {
-                        shield.draw(canvas, 12 ,6);
+                        bolt.draw(canvas, 12 ,6);
                     } else {
-                        shieldDark.draw(canvas,12,6);
+                        boltDark.draw(canvas,12,6);
                     }
 
                     if (GameEngine.playing.upgrades[0][2]) {
-                        shield.draw(canvas, 12 ,8);
+                        gearIcon.draw(canvas, 12 ,8);
                     } else {
-                        shieldDark.draw(canvas,12,8);
+                        gearIconDark.draw(canvas,12,8);
                     }
                 }
 
                     if (GameEngine.loadoutMenuUnit == "Infantry") {
                         if (GameEngine.playing.upgrades[1][0]) {
-                            binoc.draw(canvas, 12 ,4);
+                            bolt.draw(canvas, 12 ,4);
                         } else {
-                            binocDark.draw(canvas,12,4);
+                            boltDark.draw(canvas,12,4);
                         }
 
                         if (GameEngine.playing.upgrades[1][1]) {
@@ -738,17 +749,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         }
 
                         if (GameEngine.playing.upgrades[1][2]) {
-                            shield.draw(canvas, 12 ,8);
+                            point.draw(canvas, 12 ,8);
                         } else {
-                            shieldDark.draw(canvas,12,8);
+                            pointDark.draw(canvas,12,8);
                         }
                     }
 
                     if (GameEngine.loadoutMenuUnit == "Artillery") {
                         if (GameEngine.playing.upgrades[2][0]) {
-                            binoc.draw(canvas, 12 ,4);
+                            gearIcon.draw(canvas, 12 ,4);
                         } else {
-                            binocDark.draw(canvas,12,4);
+                            gearIconDark.draw(canvas,12,4);
                         }
 
                         if (GameEngine.playing.upgrades[2][1]) {
@@ -758,9 +769,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         }
 
                         if (GameEngine.playing.upgrades[2][2]) {
-                            shield.draw(canvas, 12 ,8);
+                            point.draw(canvas, 12 ,8);
                         } else {
-                            shieldDark.draw(canvas,12,8);
+                            pointDark.draw(canvas,12,8);
                         }
                     }
 
@@ -778,9 +789,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         }
 
                         if (GameEngine.playing.upgrades[3][2]) {
-                            shield.draw(canvas, 12, 8);
+                            point.draw(canvas, 12, 8);
                         } else {
-                            shieldDark.draw(canvas, 12, 8);
+                            pointDark.draw(canvas, 12, 8);
                         }
                     }
             }

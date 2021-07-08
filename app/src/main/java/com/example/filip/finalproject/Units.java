@@ -643,16 +643,16 @@ public class Units {
 
             if (GameEngine.playing.upgrades[0][1]) {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
-                        GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
-                        (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
+                        GameView.bolt.icon, (int) (GameView.bolt.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.bolt.icon.getHeight() * iconUpgradeScale), true);
                 iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
 
             if (GameEngine.playing.upgrades[0][2]) {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
-                        GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
-                        (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
+                        GameView.gearIcon.icon, (int) (GameView.gearIcon.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.gearIcon.icon.getHeight() * iconUpgradeScale), true);
                 iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
@@ -661,8 +661,8 @@ public class Units {
         if (GameEngine.loadoutMenuUnit == "Infantry") {
             if (GameEngine.playing.upgrades[1][0]) {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
-                        GameView.binoc.icon, (int) (GameView.binoc.icon.getWidth() * iconUpgradeScale),
-                        (int) (GameView.binoc.icon.getHeight() * iconUpgradeScale), true);
+                        GameView.bolt.icon, (int) (GameView.bolt.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.bolt.icon.getHeight() * iconUpgradeScale), true);
                 iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
@@ -677,8 +677,8 @@ public class Units {
 
             if (GameEngine.playing.upgrades[1][2]) {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
-                        GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
-                        (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
+                        GameView.point.icon, (int) (GameView.point.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.point.icon.getHeight() * iconUpgradeScale), true);
                 iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
@@ -687,8 +687,8 @@ public class Units {
         if (GameEngine.loadoutMenuUnit == "Artillery") {
             if (GameEngine.playing.upgrades[2][0]) {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
-                        GameView.binoc.icon, (int) (GameView.binoc.icon.getWidth() * iconUpgradeScale),
-                        (int) (GameView.binoc.icon.getHeight() * iconUpgradeScale), true);
+                        GameView.gearIcon.icon, (int) (GameView.gearIcon.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.gearIcon.icon.getHeight() * iconUpgradeScale), true);
                 iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
@@ -703,8 +703,8 @@ public class Units {
 
             if (GameEngine.playing.upgrades[2][2]) {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
-                        GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
-                        (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
+                        GameView.point.icon, (int) (GameView.point.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.point.icon.getHeight() * iconUpgradeScale), true);
                 iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
@@ -729,8 +729,8 @@ public class Units {
 
             if (GameEngine.playing.upgrades[3][2]) {
                 Bitmap iconUpgrade = Bitmap.createScaledBitmap(
-                        GameView.shield.icon, (int) (GameView.shield.icon.getWidth() * iconUpgradeScale),
-                        (int) (GameView.shield.icon.getHeight() * iconUpgradeScale), true);
+                        GameView.point.icon, (int) (GameView.point.icon.getWidth() * iconUpgradeScale),
+                        (int) (GameView.point.icon.getHeight() * iconUpgradeScale), true);
                 iconUpgrade = drawableIcon.replaceBlackWithTransparent(iconUpgrade);
                 upgrades.add(iconUpgrade);
             }
