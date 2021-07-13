@@ -12,7 +12,7 @@ public class Armor extends Units {
     public static int GreenDefence = 2; // Defence value of Green's Armor, this value can be changed
     public static int GreenHP = 25; // HP value of Green's Armor, this value can be changed
     public static int GreenMovement = 2; // Movement value of Green's Armor, this value can be changed
-    public static int GreenVisibility = 2; // Movement value of Green's Infantry, this value can be changed
+    public static int GreenVisibility = 3; // Movement value of Green's Infantry, this value can be changed
     public static int greenFuelConsumption = 1;
 
     //cost of Armor unit
@@ -36,7 +36,7 @@ public class Armor extends Units {
     public static int RedDefence = 2; // Defence value of Red's Armor, this value can be changed
     public static int RedHP = 25; // HP value of Red's Armor, this value can be changed
     public static int RedMovement = 2; // Movement value of Red's Armor, this value can be changed
-    public static int RedVisibility = 2; // Movement value of Green's Infantry, this value can be changed
+    public static int RedVisibility = 3; // Movement value of Green's Infantry, this value can be changed
     public static int redFuelConsumption = 1;
 
     Armor(Context context, int x, int y, Player player) {
@@ -90,7 +90,7 @@ public class Armor extends Units {
         GreenDefence = 2; // Defence value of Green's Armor, this value can be changed
         GreenHP = 25; // HP value of Green's Armor, this value can be changed
         GreenMovement = 2; // Movement value of Green's Armor, this value can be changed
-        GreenVisibility = 4; // Movement value of Green's Infantry, this value can be changed
+        GreenVisibility = 3; // Movement value of Green's Infantry, this value can be changed
         greenFuelConsumption = 1;
 
         //cost of Armor unit
@@ -112,7 +112,7 @@ public class Armor extends Units {
         RedDefence = 2; // Defence value of Red's Armor, this value can be changed
         RedHP = 25; // HP value of Red's Armor, this value can be changed
         RedMovement = 2; // Movement value of Red's Armor, this value can be changed
-        RedVisibility = 4; // Movement value of Green's Infantry, this value can be changed
+        RedVisibility = 3; // Movement value of Green's Infantry, this value can be changed
         redFuelConsumption = 1;
     }
 

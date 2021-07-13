@@ -56,12 +56,18 @@ public class Cavalry extends Units{
             }
             if (number == 1) {
                 Cavalry.greenFoodPrice += 1 * factor;
+                Cavalry.greenIronPrice += 1 * factor;
+
+                Cavalry.GreenDefence += 1;
+                Cavalry.GreenHP += 1;
                 Cavalry.GreenAttack2 += 1 * factor;
                 Cavalry.GreenAttack1 += 20 * factor;
             }
             if (number == 2) {
                 Cavalry.greenOilPrice += 1 * factor;
+                Cavalry.greenIronPrice += 1 * factor;
 
+                Cavalry.GreenDefence += 1;
                 Cavalry.greenFuelConsumption += 1 * factor;
                 Cavalry.GreenMovement += 1 * factor;
             }
@@ -72,12 +78,18 @@ public class Cavalry extends Units{
             }
             if (number == 1) {
                 Cavalry.redFoodPrice += 1 * factor;
+                Cavalry.redIronPrice += 1 * factor;
+
+                Cavalry.RedDefence += 1;
+                Cavalry.RedHP += 1;
                 Cavalry.RedAttack2 += 1 * factor;
                 Cavalry.RedAttack1 += 20 * factor;
             }
             if (number == 2) {
                 Cavalry.redOilPrice += 1 * factor;
+                Cavalry.redIronPrice += 1 * factor;
 
+                Cavalry.RedDefence += 1;
                 Cavalry.redFuelConsumption += 1 * factor;
                 Cavalry.RedMovement += 1 * factor;
             }
