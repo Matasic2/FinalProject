@@ -58,8 +58,8 @@ public class Cavalry extends Units{
                 Cavalry.greenFoodPrice += 1 * factor;
                 Cavalry.greenIronPrice += 1 * factor;
 
-                Cavalry.GreenDefence += 1;
-                Cavalry.GreenHP += 1;
+                Cavalry.GreenDefence += 1 * factor;
+                Cavalry.GreenHP += 1 * factor;
                 Cavalry.GreenAttack2 += 1 * factor;
                 Cavalry.GreenAttack1 += 20 * factor;
             }
@@ -80,8 +80,8 @@ public class Cavalry extends Units{
                 Cavalry.redFoodPrice += 1 * factor;
                 Cavalry.redIronPrice += 1 * factor;
 
-                Cavalry.RedDefence += 1;
-                Cavalry.RedHP += 1;
+                Cavalry.RedDefence += 1 * factor;
+                Cavalry.RedHP += 1 * factor;
                 Cavalry.RedAttack2 += 1 * factor;
                 Cavalry.RedAttack1 += 20 * factor;
             }
