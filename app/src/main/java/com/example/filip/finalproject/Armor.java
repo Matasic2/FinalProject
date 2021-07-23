@@ -57,11 +57,15 @@ public class Armor extends Units {
                 Armor.GreenHP -= 5 * factor;
             }
             if (number == 1) {
-                Armor.greenIronPrice += 2 * factor;
+                Armor.greenIronPrice += 3 * factor;
+                Armor.greenOilPrice += 3 * factor;
+
                 Armor.GreenDefence += 1 * factor;
             }
             if (number == 2) {
                 Armor.greenFoodPrice += 1 * factor;
+                Armor.greenOilPrice += 3 * factor;
+
                 Armor.GreenAttack2 += 1 * factor;
             }
         } else if (player == GameEngine.red) {
@@ -73,10 +77,14 @@ public class Armor extends Units {
             }
             if (number == 1) {
                 Armor.redIronPrice += 3 * factor;
+                Armor.redOilPrice += 3 * factor;
+
                 Armor.RedDefence += 1 * factor;
             }
             if (number == 2) {
                 Armor.redFoodPrice += 1 * factor;
+                Armor.redOilPrice += 3 * factor;
+
                 Armor.RedAttack2 += 1 * factor;
             }
         }
