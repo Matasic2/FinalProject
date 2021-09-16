@@ -276,8 +276,20 @@ public class GameEngine extends Thread{
 
     public static void ProcessGroundUITap(int x, int y) {
 
+        int[] unselectUnits = new int[] {16,1};
+        int[] healUnit = new int[] {16,3};
+        int[] specialAbility = new int[] {18,3};
+        int[] undoMove = new int[] {18,1};
+        int[] nextPlayer = new int[] {16,5};
+        int[] leaveGame = new int[] {18,5};
+
         //unit special action TODO: some of these should be in Units class
-        if (x / squareLength == 16 && y / squareLength == 1 && (selected != null)) {
+        if (x / squareLength == unselectUnits[0] && y / squareLength == unselectUnits[1] && (selected != null || enemySelected != null)) {
+            unselectAll();
+        }
+
+        //special ability
+        if (x / squareLength == specialAbility[0] && y / squareLength ==  specialAbility[1] && (selected != null)) {
 
             if (theUnit.unitType.equals("Fort") && !theUnit.specialIsActivated) {
                 message = "Fort abandoned.";
@@ -286,6 +298,7 @@ public class GameEngine extends Thread{
                 theUnit.defence -= 1;
 
                 theUnit.movement = 2;
+                theUnit.specialIsActivated = true;
 
                 int oldCoordinatex = theUnit.coordinates[0];
                 int oldCoordinatey = theUnit.coordinates[1];
@@ -302,6 +315,16 @@ public class GameEngine extends Thread{
                 theUnit.hasAttack = true;
                 theUnit.hasMove = true;
                 playing.oilStorage -= 2;
+                showMarket = false;
+                theUnit.specialIsActivated = true;
+                checkAction(theUnit);
+                return;
+            }
+
+            if (theUnit.unitType.equals("Headquarters") && !theUnit.specialIsActivated && playing.oilStorage >= 1) {
+                message = "Extra move activated.";
+                theUnit.hasAttack = true;
+                playing.oilStorage -= 1;
                 showMarket = false;
                 theUnit.specialIsActivated = true;
                 checkAction(theUnit);
@@ -349,7 +372,7 @@ public class GameEngine extends Thread{
         }
 
         //heal the unit if the button is pressed
-        if (x / squareLength == 18 && y / squareLength == 1 && selected != null && !theUnit.specialIsActivated) {
+        if (x / squareLength == healUnit[0] && y / squareLength == healUnit[1] && selected != null && !theUnit.specialIsActivated) {
             if (theUnit.HP != theUnit.maxHP) {
                 if (theUnit.hasAttack && theUnit.hasMove) {
                     theUnit.HP += theUnit.healRate;
@@ -369,7 +392,7 @@ public class GameEngine extends Thread{
         }
 
         //switches active player if the button is pressed.
-        if (x / squareLength == 16 && y / squareLength == 3) {
+        if (x / squareLength == nextPlayer[0] && y / squareLength == nextPlayer[1]) {
             if (queue.length != 0 && message != "Any undeployed unit will be removed, tap again to continue") {
                 message = "Any undeployed unit will be removed, tap again to continue";
                 showMarket = false;
@@ -408,7 +431,7 @@ public class GameEngine extends Thread{
         }*/
 
         //Undo
-        if (undoIsAllowed && x / squareLength == 18 && y / squareLength == 3 && prevoiusMove != PREV_MOVE.NONE && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
+        if (undoIsAllowed && x / squareLength == undoMove[0] && y / squareLength == undoMove[1] && prevoiusMove != PREV_MOVE.NONE && lastCoordinates[0] != 125 && lastCoordinates[1] != 125) {
 
             if (prevoiusMove == PREV_MOVE.MOVE) {
                 boardUnits[theUnit.coordinates[0]][theUnit.coordinates[1]] = null;
@@ -483,7 +506,7 @@ public class GameEngine extends Thread{
 
 
         //exit
-        if (x / squareLength  == 18 && y / squareLength  == 5){
+        if (x / squareLength  == leaveGame[0] && y / squareLength  == leaveGame[1]){
             if (message == "You are about to leave the battle, tap again to continue") {
                 FullscreenActivity.theActivity.backToMenu();
             }

@@ -87,6 +87,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static drawableIcon pointDark;
     public static drawableIcon gearIconDark;
 
+    public static drawableIcon scoutAbility;
+    public static drawableIcon fortifyAbility;
+    public static drawableIcon smokeAbility;
+    public static drawableIcon doubleMoveAbility;
+    public static drawableIcon deFortifyAbility;
+
     //Starts the game thread
     public GameView(Context context) {
         super(context);
@@ -144,7 +150,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         deployRedIcon = new drawableIcon(theContext, 18, false);
         arrowUpIcon = new drawableIcon(theContext, 19, true);
 
-
         gearIcon = new drawableIcon(theContext, 22, true);
         gearIconDark = new drawableIcon(theContext, 23, true);
 
@@ -152,7 +157,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         hangar = new drawableIcon(theContext, 26, true);
         airline = new drawableIcon(theContext, 27, true);
         airliner = new drawableIcon(theContext, 28, true);
-
 
         bolt = new drawableIcon(theContext, 29, true);
         boltDark = new drawableIcon(theContext, 30, true);
@@ -169,6 +173,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         smoke.icon = drawableIcon.cutIconTransparency(smoke.icon, 0);
         techSquare = new drawableIcon(theContext, 38, true);
         techIcon = new drawableIcon(theContext, 39, true);
+
+        scoutAbility = new drawableIcon(theContext, 40, true);
+        fortifyAbility = new drawableIcon(theContext, 41, true);
+        smokeAbility = new drawableIcon(theContext, 42, true);
+        doubleMoveAbility = new drawableIcon(theContext, 43, true);
+        deFortifyAbility= new drawableIcon(theContext, 44, true);
 
         movableLocation = new drawableIcon(theContext);
         //smoke.displacement = (int) ((double) GameEngine.squareLength * 0.5);
@@ -470,11 +480,43 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             canvas.drawRect(rectangle,newPaint);
 
             //draws HUD elements
-            unselect.draw(canvas, 16, 1);
-            healIcon.draw(canvas, 18, 1);
-            endTurn.draw(canvas, 16, 3);
+            if (GameEngine.selected != null) {
+                unselect.draw(canvas, 16, 1);
+                healIcon.draw(canvas, 16, 3);
+                Paint currentPaint = new Paint();
+                currentPaint.setTextSize(120);
+
+                if (!GameEngine.theUnit.specialIsActivated && (!((GameEngine.theUnit.unitType.equals("Infantry")) || (GameEngine.theUnit.unitType.equals("Cavalry"))) || (GameEngine.theUnit.hasAttack && GameEngine.theUnit.hasMove))) {
+
+
+                    if (GameEngine.theUnit.unitType.equals("Cavalry")) {
+                        scoutAbility.draw(canvas, 18, 3);
+                    } else if (GameEngine.theUnit.unitType.equals("Infantry")) {
+                        fortifyAbility.draw(canvas, 18, 3);
+                        currentPaint.setColor(Color.argb(255, 204, 102, 0));
+                        canvas.drawText("1", 2430 * FullscreenActivity.scaleFactor, 500 * FullscreenActivity.scaleFactor, currentPaint);
+                    } else if (GameEngine.theUnit.unitType.equals("Fort")) {
+                        deFortifyAbility.draw(canvas, 18, 3);
+                    } else if (GameEngine.theUnit.unitType.equals("Artillery")) {
+                        smokeAbility.draw(canvas, 18, 3);
+                    } else if (GameEngine.theUnit.unitType.equals("Armor")) {
+                        doubleMoveAbility.draw(canvas, 18, 3);
+                        currentPaint.setColor(Color.GRAY);
+                        canvas.drawText("2", 2430 * FullscreenActivity.scaleFactor, 500 * FullscreenActivity.scaleFactor, currentPaint);
+                    } else if (GameEngine.theUnit.unitType.equals("Headquarters")) {
+                        doubleMoveAbility.draw(canvas, 18, 3);
+                        currentPaint.setColor(Color.GRAY);
+                        canvas.drawText("1", 2430 * FullscreenActivity.scaleFactor, 500 * FullscreenActivity.scaleFactor, currentPaint);
+                    }
+                }
+
+            } else if (GameEngine.enemySelected != null) {
+                unselect.draw(canvas, 16, 1);
+            }
+
+            endTurn.draw(canvas, 16, 5);
             buy.draw(canvas, 5, 10);
-            undoIcon.draw(canvas, 18, 3);
+            undoIcon.draw(canvas, 18, 1);
             doorsIcon.draw(canvas, 18, 5);
 
             //if (TechTree.techIsEnabled) {
