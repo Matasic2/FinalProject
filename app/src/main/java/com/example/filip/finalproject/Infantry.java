@@ -39,12 +39,15 @@ public class Infantry extends Units {
     public static int RedVisibility = 4; // Movement value of Green's Infantry, this value can be changed
     public static int redFuelConsumption = 0;
 
+    public static double greenAIValue = 3;
+    public static double redAIValue = 3;
+
     Infantry(Context context, int x, int y, Player player) {
         super(context, x, y, player, "Infantry");
         if (player.color.equals("green")) {
-            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement, GreenVisibility, healedBy, greenFuelConsumption);
+            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement, GreenVisibility, healedBy, greenFuelConsumption, greenAIValue);
         } else {
-            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement, RedVisibility, healedBy, redFuelConsumption);
+            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement, RedVisibility, healedBy, redFuelConsumption, redAIValue);
         }
     }
 
@@ -56,18 +59,23 @@ public class Infantry extends Units {
                 Infantry.GreenFirstAttackRange += 1 * factor;
                 Infantry.GreenHP += 2 * factor;
                 Infantry.GreenAttack1 += 15 * factor;
+
+                Infantry.greenAIValue += 1.5 * factor;
             }
             if (number == 1) {
                 Infantry.greenFoodPrice += 1 * factor;
                 Infantry.greenIronPrice += 1 * factor;
 
                 Infantry.GreenDefence += 1 * factor;
+
+                Infantry.greenAIValue += 1.5 * factor;
             }
             if (number == 2) {
                 Infantry.greenFoodPrice += 1 * factor;
                 Infantry.greenIronPrice += 1 * factor;
 
                 Infantry.GreenAttack2 += 1 * factor;
+                Infantry.greenAIValue += 1.5 * factor;
             }
         } else if (player == GameEngine.red) {
             if (number == 0) {
@@ -76,18 +84,22 @@ public class Infantry extends Units {
                 Infantry.RedFirstAttackRange += 1 * factor;
                 Infantry.RedHP += 2 * factor;
                 Infantry.RedAttack1 += 15 * factor;
+
+                Infantry.redAIValue += 1.5 * factor;
             }
             if (number == 1) {
                 Infantry.redFoodPrice += 1 * factor;
                 Infantry.redIronPrice += 1 * factor;
 
                 Infantry.RedDefence += 1 * factor;
+                Infantry.redAIValue += 1.5 * factor;
             }
             if (number == 2) {
                 Infantry.redFoodPrice += 1 * factor;
                 Infantry.redIronPrice += 1 * factor;
 
                 Infantry.RedAttack2 += 1 * factor;
+                Infantry.redAIValue += 1.5 * factor;
             }
         }
     }

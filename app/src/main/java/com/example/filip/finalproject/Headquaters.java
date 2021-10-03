@@ -28,12 +28,15 @@ public class Headquaters extends Units{
 
     public static int fuelConsumption = 0;
 
+    public static double greenAIValue = 5;
+    public static double redAIValue = 5;
+
     Headquaters(Context context, int x, int y, Player player) {
         super(context, x, y, player, "Headquarters");
         if (player.color.equals("green")) {
-            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement,GreenVisibility, healedBy, fuelConsumption);
+            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement,GreenVisibility, healedBy, fuelConsumption, greenAIValue);
         } else {
-            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility, healedBy, fuelConsumption);
+            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility, healedBy, fuelConsumption, redAIValue);
         }
 
     }

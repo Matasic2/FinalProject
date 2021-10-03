@@ -19,7 +19,7 @@ public class Units {
 
     private Bitmap icon; // Unit's icon
     public String unitType; // type of unit, for example if this unit is infantry, string will equal "Infantry"
-    public int[] coordinates = new int[]{14, 8}; //Unit's coordinates, because this is the coordinates of the image value must be multiplied by GameEngine.squareLength to display on board properly.
+    public int[] coordinates = new int[]{14, 8}; //Unit's coordinates, this is the coordinates of the image value must be multiplied by GameEngine.squareLength to display on board properly.
     public Player owner; //Player that owns the figure
     public boolean hasMove = true; // can unit move this turn
     public boolean hasAttack = true; // can unit attack this turn
@@ -39,6 +39,8 @@ public class Units {
 
     public List<Bitmap> upgrades = new LinkedList<>();
     public double iconUpgradeScale = 0.4;
+
+    public double AI_value = 0; // AI estimate of how valuable this unit is
 
     //Two methods below are from previous versions of the code, I might need them again later.
      /*public Units(Bitmap bmp) {
@@ -67,7 +69,7 @@ public class Units {
        GameEngine.boardUnits[coordinates[0]][coordinates[1]] = this;
    }*/
     //see above for meaning of these values
-    public void setParameters(int atc1, int atc2, int atc1r, int atc2r, int def, int hp, int maxhp, int mov, int visibility, int healRate, int fuelConsumption) {
+    public void setParameters(int atc1, int atc2, int atc1r, int atc2r, int def, int hp, int maxhp, int mov, int visibility, int healRate, int fuelConsumption, double AI_value) {
         this.attack1 = atc1;
         this.attack2 = atc2;
         this.attack1Range = atc1r;

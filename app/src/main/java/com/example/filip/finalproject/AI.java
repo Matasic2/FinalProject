@@ -20,6 +20,7 @@ public class AI {
     public static int aiStartingY = GameEngine.redDeployY;
     public static int opponentStartingX = GameEngine.greenDeployX;
     public static int opponentStartingY = GameEngine.greenDeployY;
+
     public static boolean hasContestedPoint = false;
 
 
@@ -80,32 +81,6 @@ public class AI {
                     }
                 }
             }
-           /** if (GameEngine.boardUnits[13][1] == null || GameEngine.boardUnits[13][1].owner != GameEngine.AIPlayer) {
-                Units closest = closestUnitTo(13, 1, true);
-                if (closest == null) {
-                    makeUnitFor13_1 = true;
-                } else {
-                    for (int ij = 0; ij < units.length; ij++) {
-                        if (closest == units[ij]) {
-                            unitOrders[ij] = "moveTo_13_1";
-                            break;
-                        }
-                    }
-                }
-            }
-            if (GameEngine.boardUnits[8][7] == null || GameEngine.boardUnits[8][7].owner != GameEngine.AIPlayer) {
-                Units closest = closestUnitTo(8, 7, true);
-                if (closest == null) {
-                    makeUnitFor8_7 = true;
-                } else {
-                    for (int ij = 0; ij < units.length; ij++) {
-                        if (closest == units[ij]) {
-                            unitOrders[ij] = "moveTo_8_7";
-                            break;
-                        }
-                    }
-                }
-            }*/
         }
 
         //plays all units
@@ -168,13 +143,14 @@ public class AI {
                 buyArtillery(AIPlayer, "moveTo_2_2");
             }
 
-            //mass inf, cav if enemy has 2 cannons
+            //mass inf
             else if (AIPlayer.foodStorage >= Infantry.redFoodPrice && turn != 1 && GameEngine.boardUnits[12][6] == null && rng < 50 && viableUnits[0]) {
                 buyInfantry(AIPlayer, "moveTo_2_2");
                 if (AIPlayer.foodStorage < 2) {
                     hasEnoughFood = false;
                 }
             }
+
             else if (AIPlayer.foodStorage >= Cavalry.redFoodPrice && turn != 1 && GameEngine.boardUnits[12][6] == null && rng < 50 && viableUnits[1]) {
                 if (GameEngine.boardUnits[6][1] == null || GameEngine.boardUnits[6][1].owner != AIPlayer) {
                     buyCavalry(AIPlayer, "moveTo_6_1");
@@ -288,17 +264,16 @@ public class AI {
             float bestDamageValue = -999;
             int bestX = 125;
             int bestY = 125;
+            int x = u.coordinates[0];
+            int y = u.coordinates[1];
+
             for (int i = 0; i < GameEngine.boardUnits.length; i++) {
                 for (int j = 0; j < GameEngine.boardUnits[i].length; j++) {
-                    if (GameEngine.boardUnits[i][j] != null && GameEngine.boardUnits[i][j].owner != u.owner
-                            && (u.movement + u.attack1Range >= GameEngine.getSquareDistance(u.coordinates[0], i, u.coordinates[1], j))) {
-                        float willDie = 1.0f;
-                        if (GameEngine.boardUnits[i][j].HP <= u.attack1 - GameEngine.boardUnits[i][j].defence) {
-                            willDie = 2.5f;
-                        }
-                        float damageValue = getDamageValue(GameEngine.boardUnits[i][j], u.attack1) * willDie;
-                        if (damageValue > bestDamageValue) {
-                            bestDamageValue = damageValue;
+                    if (GameEngine.getSquareDistance(i,x,j,y) <= u.movement) {
+                        double[] bestIJ = bestAttack(u);
+
+                        if (bestIJ[2] > bestDamageValue) {
+                            bestDamageValue = (float) bestIJ[2];
                             bestX = i;
                             bestY = j;
                         }
@@ -314,7 +289,7 @@ public class AI {
             if (orderCoordinates[0] != u.coordinates[0] || orderCoordinates[1] != u.coordinates[1]) {
                 moveTowards(u, orderCoordinates[0], orderCoordinates[1]);
             } else {
-                attackNearest(u);
+                attackTarget(u, bestX, bestY);
             }
         }
         else if (orders.startsWith("Garrison")) {
@@ -324,9 +299,41 @@ public class AI {
             if (orderCoordinates[0] != u.coordinates[0] || orderCoordinates[1] != u.coordinates[1]) {
                 moveTowards(u, orderCoordinates[0], orderCoordinates[1]);
             } else {
-                attackNearest(u);
+                attackBest(u);
             }
         }
+    }
+
+    //find which target is the most valuable to attack
+    public static double[] bestAttack(Units u) {
+        int x = u.coordinates[0];
+        int y = u.coordinates[1];
+
+        int bestX = -1;
+        int bestY = -1;
+        double bestVal = 0;
+
+        for (int i = 0; i < GameEngine.boardUnits.length; i++) {
+            for (int j = 0; j < GameEngine.boardUnits[i].length; j++) {
+                if (GameEngine.boardUnits[i][j] == null || GameEngine.boardUnits[i][j].owner == u.owner) continue;
+
+                int distToIJ = GameEngine.getSquareDistance(i,x,j,y);
+                Units enemy = GameEngine.boardUnits[i][j];
+                if (distToIJ <= u.attack2Range) {
+                    int[] damages = GameEngine.assertDamage(u, enemy);
+
+                    if (damages[1] == 0) continue;
+                    double damageValuediff = (damages[0]*enemy.AI_value) - (damages[1]*u.AI_value)*getLocationFactor(i,j);
+                    if (bestVal < damageValuediff) {
+                        bestX = i;
+                        bestY = j;
+                        bestVal = damageValuediff;
+                    }
+                }
+            }
+        }
+
+        return new double[]{bestX,bestY, bestVal};
     }
 
     //adds unit to the list of units and order to list of orders
@@ -346,7 +353,7 @@ public class AI {
         unitOrders = toReturn2;
     }
 
-    //move towards the given coordinates
+    //move towards the given coordinates, but don't get too close to enemy units
     public static void moveTowards(Units u, int x, int y) {
         int currentX = u.coordinates[0];
         int currentY = u.coordinates[1];
@@ -410,13 +417,16 @@ public class AI {
 
         // if the unit can attack, use the attack
         if (u.hasAttack) {
-            attackNearest(u, moveAndDestroy, targetToDestroyX, targetToDestroyY);//estimate which attack is most valuable
-
+            attackBest(u, moveAndDestroy, targetToDestroyX, targetToDestroyY);//estimate which attack is most valuable
         }
     }
 
+    public static void attackTarget(Units u, int x, int y) {
+        GameEngine.attackUnit(u,GameEngine.boardUnits[x][y]);
+    }
+
     //attack nearest unit
-    public static void attackNearest(Units u, boolean targetedAttack, int targetX, int targetY) {
+    public static void attackBest(Units u, boolean targetedAttack, int targetX, int targetY) {
         if (!u.hasAttack) {
             return;
         }
@@ -435,7 +445,7 @@ public class AI {
                 attackType = 2;
             }
         } else {
-            attackNearest(u);
+            attackBest(u);
             return;
         }
         //if best attack is melee attack, use melee attack
@@ -450,7 +460,7 @@ public class AI {
         }
     }
 
-    public static void attackNearest(Units u) {
+    public static void attackBest(Units u) {
         if (!u.hasAttack) {
             return;
         }
@@ -553,39 +563,14 @@ public class AI {
         return null;
     }
 
-    public static float getUnitValue(Units u) {
-        if (u.unitType == "Infantry") {
-            return 1.6f;
-        }
-        if (u.unitType == "Cavalry") {
-            return 1.0f;
-        }
-        if (u.unitType == "Artillery") {
-            return 3.0f;
-        }
-        if (u.unitType == "Mech Infantry") {
-            return 2.0f;
-        }
-        if (u.unitType == "Headquarters") {
-            return 2.0f;
-        }
-        if (u.unitType == "Armor") {
-            return 8.0f;
-        }
-        if (u.unitType == "Heavy Tank") {
-            return 15.0f;
-        }
-        return 1.0f;
-    }
-
     public static float getDamageValue(Units u, int damage) {
         if (damage < u.defence) {
             return 0;
         }
         if (u.HP <= damage - u.defence) {
-            return getUnitValue(u);
+            return (float) u.AI_value;
         }
-        return (Math.min(u.maxHP, damage - u.defence) / u.maxHP) * getUnitValue(u) * getLocationFactor(u.coordinates[0], u.coordinates[1]);
+        return (Math.min(u.maxHP, damage - u.defence) / u.maxHP) * ((float) u.AI_value) * getLocationFactor(u.coordinates[0], u.coordinates[1]);
     }
 
     public static float getLocationFactor(int x, int y) {

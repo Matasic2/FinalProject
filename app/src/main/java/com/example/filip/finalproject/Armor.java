@@ -39,12 +39,15 @@ public class Armor extends Units {
     public static int RedVisibility = 3; // Movement value of Green's Infantry, this value can be changed
     public static int redFuelConsumption = 1;
 
+    public static double greenAIValue = 12;
+    public static double redAIValue = 12;
+
     Armor(Context context, int x, int y, Player player) {
         super(context, x, y, player, "Armor");
         if (player.color.equals("green")) {
-            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement, GreenVisibility, healedBy, greenFuelConsumption);
+            this.setParameters(GreenAttack1, GreenAttack2, GreenFirstAttackRange, GreenSecondAttackRange, GreenDefence, GreenHP, GreenHP, GreenMovement, GreenVisibility, healedBy, greenFuelConsumption, greenAIValue);
         } else {
-            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility, healedBy, redFuelConsumption);
+            this.setParameters(RedAttack1, RedAttack2, RedFirstAttackRange, RedSecondAttackRange, RedDefence, RedHP, RedHP, RedMovement,RedVisibility, healedBy, redFuelConsumption, redAIValue);
         }
     }
 
@@ -55,18 +58,21 @@ public class Armor extends Units {
 
                 Armor.GreenVisibility += 3 * factor;
                 Armor.GreenHP -= 5 * factor;
+                Armor.greenAIValue -= 2 * factor;
             }
             if (number == 1) {
                 Armor.greenIronPrice += 3 * factor;
                 Armor.greenOilPrice += 3 * factor;
 
                 Armor.GreenDefence += 1 * factor;
+                Armor.greenAIValue += 3 * factor;
             }
             if (number == 2) {
                 Armor.greenFoodPrice += 1 * factor;
                 Armor.greenOilPrice += 3 * factor;
 
                 Armor.GreenAttack2 += 1 * factor;
+                Armor.greenAIValue += 1 * factor;
             }
         } else if (player == GameEngine.red) {
             if (number == 0) {
@@ -74,18 +80,21 @@ public class Armor extends Units {
 
                 Armor.RedVisibility += 3 * factor;
                 Armor.RedHP -= 5 * factor;
+                Armor.redAIValue -= 2 * factor;
             }
             if (number == 1) {
                 Armor.redIronPrice += 3 * factor;
                 Armor.redOilPrice += 3 * factor;
 
                 Armor.RedDefence += 1 * factor;
+                Armor.redAIValue -= 3 * factor;
             }
             if (number == 2) {
                 Armor.redFoodPrice += 1 * factor;
                 Armor.redOilPrice += 3 * factor;
 
                 Armor.RedAttack2 += 1 * factor;
+                Armor.redAIValue -= 1 * factor;
             }
         }
     }
