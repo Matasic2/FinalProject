@@ -50,9 +50,10 @@ public class AI {
             makeUnitForResourcePoints[0] = false;
             Random rand = new Random();
             AI.rng = 30;
+            AIPlayer.adjustUpgrades("Armor", 1);
         }
         resetOrders(); //at the start of the every turn, decide what to do with all units
-        turn++; //add turn to turn counter
+
 
         //if AI is cheating, give free resources
         if (isCheating) {
@@ -139,7 +140,7 @@ public class AI {
             if (AIPlayer.oilStorage >= Armor.redOilPrice && AIPlayer.ironStorage >= Armor.redIronPrice && AIPlayer.foodStorage >= Armor.redFoodPrice && viableUnits[4]) {
                 buyArmor(AIPlayer, "moveTo_2_2");
             }
-            else if (AIPlayer.ironStorage >= Artillery.redIronPrice && AIPlayer.foodStorage >= Artillery.redFoodPrice && viableUnits[2]) {
+            else if (turn > 8 && AIPlayer.ironStorage >= Artillery.redIronPrice && AIPlayer.foodStorage >= Artillery.redFoodPrice && viableUnits[2]) {
                 buyArtillery(AIPlayer, "moveTo_2_2");
             }
 
@@ -202,6 +203,7 @@ public class AI {
            // AIPlayer.foodStorage +=1;
         }
         //end turn at the end
+        turn++; //add turn to turn counter
         GameEngine.switchPlayer();
     }
     //buys and plays Infantry
@@ -261,21 +263,25 @@ public class AI {
             int[] orderCoordinates = {Integer.parseInt(moveCoordinates[1]), Integer.parseInt(moveCoordinates[2])};
 
             //if enemy unit can be attacked, prioritize the attack
-            float bestDamageValue = -999;
+            float bestDamageValue = 0;
             int bestX = 125;
             int bestY = 125;
+            int bestXTarget = 125;
+            int bestYTarget = 125;
             int x = u.coordinates[0];
             int y = u.coordinates[1];
 
             for (int i = 0; i < GameEngine.boardUnits.length; i++) {
                 for (int j = 0; j < GameEngine.boardUnits[i].length; j++) {
-                    if (GameEngine.getSquareDistance(i,x,j,y) <= u.movement) {
+                    if (GameEngine.getSquareDistance(i,x,j,y) <= u.movement && GameEngine.boardUnits[i][j] == null) {
                         double[] bestIJ = bestAttack(u);
 
-                        if (bestIJ[2] > bestDamageValue) {
+                        if (bestIJ[2] > bestDamageValue && !checkDangerInRange(u,i,j)) {
                             bestDamageValue = (float) bestIJ[2];
                             bestX = i;
                             bestY = j;
+                            bestXTarget = (int) bestIJ[0];
+                            bestYTarget = (int) bestIJ[1];
                         }
                     }
                 }
@@ -287,9 +293,13 @@ public class AI {
 
             //move towards coordinates
             if (orderCoordinates[0] != u.coordinates[0] || orderCoordinates[1] != u.coordinates[1]) {
-                moveTowards(u, orderCoordinates[0], orderCoordinates[1]);
+                if (bestXTarget == 125) {
+                    moveTowards(u, orderCoordinates[0], orderCoordinates[1]);
+                } else {
+                    moveToAndAttack(u, orderCoordinates[0], orderCoordinates[1], bestXTarget, bestYTarget);
+                }
             } else {
-                attackTarget(u, bestX, bestY);
+                moveTowards(u, bestX, bestY);
             }
         }
         else if (orders.startsWith("Garrison")) {
@@ -318,16 +328,16 @@ public class AI {
                 if (GameEngine.boardUnits[i][j] == null || GameEngine.boardUnits[i][j].owner == u.owner) continue;
 
                 int distToIJ = GameEngine.getSquareDistance(i,x,j,y);
-                Units enemy = GameEngine.boardUnits[i][j];
                 if (distToIJ <= u.attack2Range) {
+                    Units enemy = GameEngine.boardUnits[i][j];
                     int[] damages = GameEngine.assertDamage(u, enemy);
 
-                    if (damages[1] == 0) continue;
-                    double damageValuediff = (damages[0]*enemy.AI_value) - (damages[1]*u.AI_value)*getLocationFactor(i,j);
-                    if (bestVal < damageValuediff) {
+                    if (damages[0] == 0) continue;
+                    double damageValueDiff = ((double) damages[0]/enemy.maxHP*enemy.AI_value)*getLocationFactor(i,j) - ((double) damages[1]/enemy.maxHP*u.AI_value);
+                    if (bestVal < damageValueDiff) {
                         bestX = i;
                         bestY = j;
-                        bestVal = damageValuediff;
+                        bestVal = damageValueDiff;
                     }
                 }
             }
@@ -336,22 +346,33 @@ public class AI {
         return new double[]{bestX,bestY, bestVal};
     }
 
-    //adds unit to the list of units and order to list of orders
-    public static void addUnit(Units u, String order) {
-        Units[] toReturn = new Units[units.length + 1];
-        for (int k = 0; k < units.length; k++) {
-            toReturn[k] = units[k];
-        }
-        toReturn[toReturn.length - 1] = u;
-        units = toReturn;
+    //move towards the given coordinates, but don't get too close to enemy units
+    public static void moveToAndAttack(Units u, int x, int y, int targetX, int targetY) {
 
-        String[] toReturn2 = new String[unitOrders.length + 1];
-        for (int k = 0; k < unitOrders.length; k++) {
-            toReturn2[k] = unitOrders[k];
+        //move unit to best coordinates
+        GameEngine.moveTo(u, x, y);
+        u.hasMove = false;
+
+        // if the unit can attack, use the attack
+        if (u.hasAttack) {
+            u.hasAttack = false;
+            GameEngine.attackUnit(u,GameEngine.boardUnits[targetX][targetY]);
         }
-        toReturn2[toReturn2.length - 1] = order;
-        unitOrders = toReturn2;
     }
+
+    public static boolean checkDangerInRange(Units u, int i, int j) {
+        if ((u.unitType == "Armor") && (!(EnemyUnitIsInMeeleRange(i,j)))) { // if the unit is valuable, don't push with it.
+            return false;
+        } else if ((u.unitType == "Artillery" || u.unitType == "Cavalry") && !(EnemyUnitIsInRange(i,j))) {
+            return false;
+        } else if ((u.unitType == "Infantry" && !(EnemyUnitIsInMeeleRange(i,j)))) {
+            return false;
+        } else if (!(u.unitType == "Armor" || u.unitType == "Artillery")) {
+            return false;
+        }
+        return true;
+    }
+
 
     //move towards the given coordinates, but don't get too close to enemy units
     public static void moveTowards(Units u, int x, int y) {
@@ -372,19 +393,7 @@ public class AI {
                 if (GameEngine.boardUnits[i][j] == null && (u.movement >= GameEngine.getSquareDistance(currentX, i, currentY, j))) {
                     if (GameEngine.getSquareDistance(i, x, j, y) <= bestDistance) {
 
-                        if ((u.unitType == "Armor") && (!(EnemyUnitIsInMeeleRange(i,j)))) { // if the unit is valuable, don't push with it.
-                            bestDistance = GameEngine.getSquareDistance(i, x, j, y);
-                            bestX = i;
-                            bestY = j;
-                        } else if ((u.unitType == "Artillery") && !(EnemyUnitIsInRange(i,j))) {
-                            bestDistance = GameEngine.getSquareDistance(i, x, j, y);
-                            bestX = i;
-                            bestY = j;
-                        }else if ((u.unitType == "Infantry" && !(EnemyUnitIsInMeeleRange(i,j)))) {
-                            bestDistance = GameEngine.getSquareDistance(i, x, j, y);
-                            bestX = i;
-                            bestY = j;
-                        } else if (!(u.unitType == "Armor" || u.unitType == "Artillery")) {
+                        if (!checkDangerInRange(u,i,j)) { // if the unit is valuable, don't push with it.
                             bestDistance = GameEngine.getSquareDistance(i, x, j, y);
                             bestX = i;
                             bestY = j;
@@ -413,11 +422,12 @@ public class AI {
         //move unit to best coordinates
         if (bestX != 125 && bestY != 125) {
             GameEngine.moveTo(u, bestX, bestY);
+            u.hasMove = false;
         }
 
         // if the unit can attack, use the attack
         if (u.hasAttack) {
-            attackBest(u, moveAndDestroy, targetToDestroyX, targetToDestroyY);//estimate which attack is most valuable
+            attackBest(u);//estimate which attack is most valuable
         }
     }
 
@@ -425,95 +435,57 @@ public class AI {
         GameEngine.attackUnit(u,GameEngine.boardUnits[x][y]);
     }
 
-    //attack nearest unit
-    public static void attackBest(Units u, boolean targetedAttack, int targetX, int targetY) {
-        if (!u.hasAttack) {
-            return;
-        }
-
-        int attackType = 0;
-        float bestDamageValue = -999f;
-        int bestX = 125;
-        int bestY = 125;
-
-        if (targetedAttack) {
-            bestX = targetX;
-            bestY = targetY;
-            if ((u.attack1Range >= GameEngine.getSquareDistance(u.coordinates[0], targetX, u.coordinates[1], targetY))) {
-                attackType = 1;
-            } else {
-                attackType = 2;
-            }
-        } else {
-            attackBest(u);
-            return;
-        }
-        //if best attack is melee attack, use melee attack
-        if (attackType == 1) {
-            GameEngine.attackUnit(u,GameEngine.boardUnits[bestX][bestY]);
-            u.hasAttack = false;
-        }
-        //if best attack is ranged attack, damage it with ranged attack
-        else if (attackType == 2)  {
-            GameEngine.attackUnit(u,GameEngine.boardUnits[bestX][bestY]);
-            u.hasAttack = false;
-        }
-    }
-
     public static void attackBest(Units u) {
         if (!u.hasAttack) {
             return;
         }
 
-        int attackType = 0;
-        float bestDamageValue = -999f;
-        int bestX = 125;
-        int bestY = 125;
+        int x = u.coordinates[0];
+        int y = u.coordinates[1];
+        int bestX = -1;
+        int bestY = -1;
+        double bestVal = 0;
 
-            for (int i = 0; i < GameEngine.boardUnits.length; i++) {
-                for (int j = 0; j < GameEngine.boardUnits[i].length; j++) {
-                    if (GameEngine.boardUnits[i][j] != null && GameEngine.boardUnits[i][j].owner != u.owner
-                            && (u.attack2Range >= GameEngine.getSquareDistance(u.coordinates[0], i, u.coordinates[1], j))) {
-                        float willDie = 1.0f;
-                        int attackDamage;
-                        if ((u.attack1Range >= GameEngine.getSquareDistance(u.coordinates[0], i, u.coordinates[1], j)) && GameEngine.boardUnits[i][j].HP <= u.attack1 - GameEngine.boardUnits[i][j].defence) {
-                            willDie = 2.5f;
-                        } else if ((u.attack2Range >= GameEngine.getSquareDistance(u.coordinates[0], i, u.coordinates[1], j)) && GameEngine.boardUnits[i][j].HP <= u.attack2 - GameEngine.boardUnits[i][j].defence) {
-                            willDie = 2.5f;
-                        }
-                        if (u.attack1Range >= GameEngine.getSquareDistance(u.coordinates[0], i, u.coordinates[1], j)) {
-                            attackDamage = u.attack1;
-                        } else {
-                            attackDamage = u.attack2;
-                        }
-                        float damageValue = getDamageValue(GameEngine.boardUnits[i][j], attackDamage) * willDie;
-                        if ((u.attack1Range >= GameEngine.getSquareDistance(u.coordinates[0], i, u.coordinates[1], j))
-                                && damageValue > bestDamageValue) {
-                            attackType = 1;
-                            bestDamageValue = damageValue; //estimates the most valuable attack
-                            bestX = i;
-                            bestY = j;
-                        } else if (damageValue > bestDamageValue) {
-                            attackType = 2;
-                            bestDamageValue = damageValue; //estimates the most valuable attack
-                            bestX = i;
-                            bestY = j;
-                        }
+        for (int i = 0; i < GameEngine.boardUnits.length; i++) {
+            for (int j = 0; j < GameEngine.boardUnits[i].length; j++) {
+                if (GameEngine.boardUnits[i][j] == null || GameEngine.boardUnits[i][j].owner == u.owner) continue;
+
+                int distToIJ = GameEngine.getSquareDistance(i,x,j,y);
+                Units enemy = GameEngine.boardUnits[i][j];
+                if (distToIJ <= u.attack2Range) {
+                    int[] damages = GameEngine.assertDamage(u, enemy);
+
+                    if (damages[1] == 0) continue;
+                    double damageValueDiff = (damages[0]*enemy.AI_value) - (damages[1]*u.AI_value)*getLocationFactor(i,j);
+                    if (bestVal < damageValueDiff) {
+                        bestX = i;
+                        bestY = j;
+                        bestVal = damageValueDiff;
                     }
                 }
             }
-        //if best attack is melee attack, use melee attack
-        if (attackType == 1) {
-            GameEngine.attackUnit(u,GameEngine.boardUnits[bestX][bestY]);
-            u.hasAttack = false;
         }
-        //if best attack is ranged attack, damage it with ranged attack
-        else if (attackType == 2)  {
-            GameEngine.attackUnit(u,GameEngine.boardUnits[bestX][bestY]);
-            u.hasAttack = false;
+        if (bestVal > 0) {
+            GameEngine.attackUnit(u, GameEngine.boardUnits[bestX][bestY]);
         }
     }
 
+    //adds unit to the list of units and order to list of orders
+    public static void addUnit(Units u, String order) {
+        Units[] toReturn = new Units[units.length + 1];
+        for (int k = 0; k < units.length; k++) {
+            toReturn[k] = units[k];
+        }
+        toReturn[toReturn.length - 1] = u;
+        units = toReturn;
+
+        String[] toReturn2 = new String[unitOrders.length + 1];
+        for (int k = 0; k < unitOrders.length; k++) {
+            toReturn2[k] = unitOrders[k];
+        }
+        toReturn2[toReturn2.length - 1] = order;
+        unitOrders = toReturn2;
+    }
 
     //re-asserts orders
     public static void resetOrders(){
@@ -575,19 +547,19 @@ public class AI {
 
     public static float getLocationFactor(int x, int y) {
         if (x == 6 && y == 1) {
-            return 1.1f;
+            return 1.8f;
         }
 
         if (x == 13 && y == 1) {
-            return 1.1f;
+            return 1.8f;
         }
 
         if (x == 8 && y == 7) {
-            return 1.1f;
+            return 1.8f;
         }
 
         if (x == 1 && y == 7) {
-            return 1.1f;
+            return 1.8f;
         }
         return 1.0f;
     }

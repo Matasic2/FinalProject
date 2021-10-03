@@ -81,6 +81,7 @@ public class Units {
         this.visibilityRange = visibility;
         this.healRate = healRate;
         this.fuelConsumption = fuelConsumption;
+        this.AI_value = AI_value;
     }
 
     public Units() {
