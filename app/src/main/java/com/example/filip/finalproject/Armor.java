@@ -131,6 +131,9 @@ public class Armor extends Units {
         RedMovement = 2; // Movement value of Red's Armor, this value can be changed
         RedVisibility = 3; // Movement value of Green's Infantry, this value can be changed
         redFuelConsumption = 1;
+
+        greenAIValue = 12;
+        redAIValue = 12;
     }
 
 }

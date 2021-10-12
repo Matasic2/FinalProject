@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class AI {
 
-    public static int aggresionLevel = 3; // 5 is desperate attack, 4 is attack, 3 is hold, 2 is defend, 1 is desperate defense
+    //public static int aggresionLevel = 3; // 5 is desperate attack, 4 is attack, 3 is hold, 2 is defend, 1 is desperate defense
     public static int turn = 0; //keeps track of the current turn
     public static String[] resourcePointCoordinates = new String[0];
     public static boolean[] makeUnitForResourcePoints = new boolean[0];
@@ -31,7 +31,10 @@ public class AI {
         for (int i = 0; i < makeUnitForResourcePoints.length; i++) {
             makeUnitForResourcePoints[i] = true;
         }
-
+        turn = 0;
+        AI.rng = 30;
+        units = new Units[0];
+        unitOrders = new String[0];
         aiStartingX = GameEngine.redDeployX;
         aiStartingY = GameEngine.redDeployY;
         opponentStartingX = GameEngine.greenDeployX;
@@ -41,7 +44,7 @@ public class AI {
 //plays AI's turn
     public static void playTurn(Player AIPlayer) {
         //Takes AI's initial units and adds them to Units list
-        if (turn == 0) {
+        if (turn == 0 && resourcePointCoordinates.length > 0) {
             String[] substring = resourcePointCoordinates[0].split(",");
             int x = Integer.parseInt(substring[0]);
             int y = Integer.parseInt(substring[1]);
@@ -49,7 +52,7 @@ public class AI {
             addUnit(GameEngine.boardUnits[aiStartingX + 1][aiStartingY + 1], "Garrison_" + aiStartingX + "_" + aiStartingY);
             makeUnitForResourcePoints[0] = false;
             Random rand = new Random();
-            AI.rng = 30;
+
             AIPlayer.adjustUpgrades("Armor", 1);
         }
         resetOrders(); //at the start of the every turn, decide what to do with all units
@@ -105,7 +108,7 @@ public class AI {
         boolean[] viableUnits = determineUnitToProduce();
 
         boolean hasEnoughFood = true;
-        while (AIPlayer.foodStorage >= 2 && GameEngine.boardUnits[aiStartingX][aiStartingY]== null) {
+        while (AIPlayer.foodStorage >= 2 && GameEngine.boardUnits[aiStartingX][aiStartingY]== null && hasEnoughFood) {
 
             //filling resources is highest priority
             for (int i = 0; i < resourcePointCoordinates.length; i++) {
@@ -271,21 +274,31 @@ public class AI {
             int x = u.coordinates[0];
             int y = u.coordinates[1];
 
+            int[] oldCoords = new int[]{u.coordinates[0],u.coordinates[1]};
             for (int i = 0; i < GameEngine.boardUnits.length; i++) {
                 for (int j = 0; j < GameEngine.boardUnits[i].length; j++) {
+
                     if (GameEngine.getSquareDistance(i,x,j,y) <= u.movement && GameEngine.boardUnits[i][j] == null) {
+                        u.coordinates = new int[]{i,j};
+                        GameEngine.boardUnits[i][j] = u;
+                        GameEngine.boardUnits[oldCoords[0]][oldCoords[1]] = null;
                         double[] bestIJ = bestAttack(u);
 
-                        if (bestIJ[2] > bestDamageValue && !checkDangerInRange(u,i,j)) {
+                        if (bestIJ[2] > bestDamageValue) {
                             bestDamageValue = (float) bestIJ[2];
                             bestX = i;
                             bestY = j;
                             bestXTarget = (int) bestIJ[0];
                             bestYTarget = (int) bestIJ[1];
                         }
+
+                        GameEngine.boardUnits[i][j] = null;
+                        GameEngine.boardUnits[oldCoords[0]][oldCoords[1]] = u;
                     }
                 }
             }
+
+            u.coordinates = oldCoords;
             if (bestX != 125 && bestY != 125) {
                 orderCoordinates[0] = bestX;
                 orderCoordinates[1] = bestY;
@@ -333,8 +346,15 @@ public class AI {
                     int[] damages = GameEngine.assertDamage(u, enemy);
 
                     if (damages[0] == 0) continue;
-                    double damageValueDiff = ((double) damages[0]/enemy.maxHP*enemy.AI_value)*getLocationFactor(i,j) - ((double) damages[1]/enemy.maxHP*u.AI_value);
-                    if (bestVal < damageValueDiff) {
+                    double damageValueGiven = (double) damages[0]/enemy.maxHP*enemy.AI_value*getLocationFactor(i,j);
+                    double damageValueReceived =  (double) damages[1]/u.maxHP*u.AI_value;
+                    double damageValueDiff = damageValueGiven - damageValueReceived;
+                    if (damageValueGiven > u.AI_value && bestVal < damageValueGiven - u.AI_value) {
+                        bestX = i;
+                        bestY = j;
+                        bestVal = damageValueGiven - u.AI_value;
+                    }
+                    if (bestVal < damageValueDiff && !checkDangerInRange(u,i,j)) {
                         bestX = i;
                         bestY = j;
                         bestVal = damageValueDiff;

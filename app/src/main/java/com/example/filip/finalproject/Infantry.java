@@ -136,5 +136,8 @@ public class Infantry extends Units {
         RedMovement = 2; // Movement value of Red's Infantry, this value can be changed
         RedVisibility = 4; // Movement value of Green's Infantry, this value can be changed
         redFuelConsumption = 0;
+
+        greenAIValue = 3;
+        redAIValue = 3;
     }
 }

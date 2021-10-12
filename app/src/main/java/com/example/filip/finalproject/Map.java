@@ -5,12 +5,39 @@ import android.graphics.Canvas;
 
 public class Map {
 
-    public static int map_code = 0;
-    public static int number_of_maps_available = 3;
+    public static int map_code = 0; //default
+    public static int number_of_maps_available = 4;
 
     public static void generateMap(Bitmap map, Bitmap square) {
 
         //TechTree.initializeTechTree("skirmish");
+        if (map_code == 3) {
+
+            GameView.grid = new GameEngine(map, square, 15, 9); // these lines create the board.
+            GameEngine.redDeployX = 12;
+            GameEngine.redDeployY = 6;
+            GameEngine.playing = GameEngine.green;
+
+            if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
+
+                if (MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
+                    AI.initializeAI();
+                }
+
+                new Headquaters(GameView.theContext, 13, 7, GameEngine.red);
+
+                // These for loops create starting units.
+
+                for (int i = 0; i < 1; i++) {
+                    new Infantry(GameView.theContext, 3, 0, GameEngine.red);
+                }
+                AI.addUnit(GameEngine.boardUnits[3][0], "moveTo_" + 0 + "_" + 0);
+                for (int i = 0; i < 1; i++) {
+                    new Armor(GameView.theContext, 0, 0, GameEngine.green);
+                }
+
+            }
+        }
         if (map_code == 2) {
 
             GameView.grid = new GameEngine(map, square, 21, 12); // these lines create the board.
@@ -98,6 +125,10 @@ public class Map {
                 for (int i = 0; i < 0; i++) {
                     new Artillery(GameView.theContext, 13, i, GameEngine.red);
                 }
+
+                if (MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
+                    AI.initializeAI();
+                }
             }
         } else if (map_code == 1) {
             GameView.grid = new GameEngine(map, square, 15, 3); // these lines create the board.
@@ -146,6 +177,10 @@ public class Map {
                 }
                 for (int i = 0; i < 0; i++) {
                     new Artillery(GameView.theContext, 13, i, GameEngine.red);
+                }
+
+                if (MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
+                    AI.initializeAI();
                 }
             }
         } else if (map_code == 0) {
@@ -215,6 +250,10 @@ public class Map {
                 for (int i = 0; i < 0; i++) {
                     new Artillery(GameView.theContext, 13, i, GameEngine.red);
                 }
+            }
+
+            if (MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
+                AI.initializeAI();
             }
         }
     }

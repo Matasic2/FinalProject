@@ -142,6 +142,9 @@ public class Cavalry extends Units{
         RedMovement = 3; // Movement value of Red's Cavalry, this value can be changed
         RedVisibility = 7; // Movement value of Green's Infantry, this value can be changed
         redFuelConsumption = 0;
+
+        greenAIValue = 1;
+        redAIValue = 1;
     }
 
 }

@@ -128,5 +128,8 @@ public class Artillery extends Units {
         RedMovement = 1; // Movement value of Red's artillery, this value can be changed
         RedVisibility = 3; // Movement value of Green's Infantry, this value can be changed
         redFuelConsumption = 0;
+
+        greenAIValue = 9;
+        redAIValue = 9;
     }
 }

@@ -94,10 +94,6 @@ public class GameEngine extends Thread{
         lastCoordinates = new int[4]; //coordinates of last action
         queue = new Units[0]; // stores all units that will be deployed
         c = 0;
-        AI.unitOrders = new String[0];
-        AI.units = new Units[0];
-        AI.turn = 0;
-        AI.aggresionLevel = 3;
         turnCount = 0;
         loadoutMenu = false;
         loadoutMenuUnit = "";
@@ -296,7 +292,7 @@ public class GameEngine extends Thread{
                 theUnit.unitType = "Infantry";
 
                 theUnit.defence -= 1;
-
+                theUnit.AI_value -= 0.5;
                 theUnit.movement = 2;
                 theUnit.specialIsActivated = true;
 
@@ -354,7 +350,7 @@ public class GameEngine extends Thread{
 
                     theUnit.defence += 1;
                     theUnit.movement = 0;
-
+                    theUnit.AI_value += 0.5;
                     playing.ironStorage -= 1;
                     showMarket = false;
                     theUnit.hasAttack = false;
