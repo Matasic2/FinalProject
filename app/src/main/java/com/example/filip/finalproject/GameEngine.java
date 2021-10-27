@@ -93,7 +93,7 @@ public class GameEngine extends Thread{
 
         lastCoordinates = new int[4]; //coordinates of last action
         queue = new Units[0]; // stores all units that will be deployed
-        c = 0;
+        c= 0;
         turnCount = 0;
         loadoutMenu = false;
         loadoutMenuUnit = "";
@@ -103,7 +103,7 @@ public class GameEngine extends Thread{
         Artillery.restoreDefaultValues();
         Armor.restoreDefaultValues();
 
-        ReplayMenu.replayMapMode = Map.map_code; //store map for replay
+        ReplayMenu.replayMapMode = MapSkirmish.map_code; //store map for replay
         //ReplayMenu.replayTechEnabled = TechTree.techIsEnabled;
 
     }
@@ -1155,6 +1155,7 @@ public class GameEngine extends Thread{
 
             if (u.unitType.equals("Headquarters")) {
                 message = "HQ has been destroyed, " + playing.color + " player wins!";
+                unselectAll();
                 FullscreenActivity.theActivity.vibrate();
                 showMarket = false;
             }

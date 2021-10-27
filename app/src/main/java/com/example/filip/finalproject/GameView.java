@@ -201,75 +201,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         //TechNode.icon = techSquare.icon;
 
             //skirmish
-            if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") ||  MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
-                Map.generateMap(map, square);
-
-            }  else if (MainMenu.scenario.equals("dev_mode")){
-                AI.addUnit(new Cavalry(theContext, 10, 3, GameEngine.red),"moveTo_6_1");
-
-                //AI.addUnit(new Armor(theContext, 6, 2, GameEngine.red),"moveTo_2_2");
-                new Cavalry(theContext, 5, 4, GameEngine.green);
-                new Cavalry(theContext, 6, 3, GameEngine.green);
-                AI.turn = 18;
-                AI.rng = 40;
-                GameEngine.red.foodStorage = 0;
-                GameEngine.red.ironStorage = 0;
-                GameEngine.red.oilStorage = 0;
-                GameEngine.message = Integer.toString(AI.turn);
-            }
-
-            //Somme mission
-            else if (MainMenu.scenario.equals("Somme")) {
-                grid = new GameEngine(map,square, 15, 9); // these lines create the board.
-                new Food(theContext, 1, 1, 1, 2);
-                new Food(theContext, 0, 2, 1, 2);
-                new Food(theContext, 1, 3, 1, 2);
-
-                new Food(theContext, 1, 5, 1, 6);
-                new Food(theContext, 2, 6, 1, 6);
-                new Iron(theContext, 0, 6, 1, 6);
-                new Iron(theContext, 1, 7, 1, 6);
-
-                new Food(theContext, 13, 1, 13, 2);
-                new Food(theContext, 12, 2, 13, 2);
-                new Food(theContext, 14, 2, 13, 2);
-                new Food(theContext, 13, 3, 13, 2);
-
-                new Food(theContext, 13, 5, 13, 6);
-                new Iron(theContext, 14, 6, 13, 6);
-                new Iron(theContext, 13, 7, 13, 6);
-
-
-                new Headquaters(theContext, 1, 2, GameEngine.green);
-                new Headquaters(theContext, 1, 6, GameEngine.green);
-
-                new Headquaters(theContext, 13, 2, GameEngine.red);
-                new Headquaters(theContext, 13, 6, GameEngine.red);
-
-                // These for loops create starting units.
-                for (int i = 0; i < 9; i++) {
-                    new Infantry(theContext, 4, i, GameEngine.green);
-                }
-
-                for (int i = 0; i < 9; i++) {
-                    new Infantry(theContext, 10, i, GameEngine.red);
-                }
-                for (int i = 0; i < 4; i++) {
-                    new Infantry(theContext, 11, 1 + i * 2, GameEngine.red);
-                }
-
-                for (int i = 0; i < 9; i++) {
-                    new Cavalry(theContext, 3, i, GameEngine.green);
-                }
-
-                for (int i = 0; i < 2; i++) {
-                    new Artillery(theContext, 11, 2 + 4 * i, GameEngine.red);
+            if (MainMenu.scenario.startsWith("Skirmish")) {
+                if ( MainMenu.scenario.equals("Skirmish vs AI") ||  MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
+                    MapSkirmish.generateMap(map, square, true);
+                } else {
+                    MapSkirmish.generateMap(map, square, false);
                 }
             }
+            //scenario
+            else if (MainMenu.scenario.startsWith("Sc")) {
+                MapScenario.generateMap(map, square);
+            }
+
+
             selected = new SelectedUnit(theContext); // adds selected unit to the board, but doesn't show it until it has to.
             enemySelected = new SelectedUnit(theContext);
             GameEngine.playing = GameEngine.green;
             GameEngine.estimateResources();
+
             if (useTwoThreads) {
                 thread.start(); // starts the tread
             } else {
@@ -353,13 +302,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             //}
 
             grid.draw(canvas);  //draws the grid first, because that is the bottom layer.
-            if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("dev_mode") || MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
-                //draws markers
+            //draws markers
 
-                Map.drawMapFeatures(canvas);
-                deployGreenIcon.draw(canvas, GameEngine.greenDeployX, GameEngine.greenDeployY);
-                deployRedIcon.draw(canvas, GameEngine.redDeployX, GameEngine.redDeployY);
+            if (MapSkirmish.map_code == -1) {
+                MapScenario.drawMapFeatures(canvas);
+            } else {
+                MapSkirmish.drawMapFeatures(canvas);
             }
+
+            deployGreenIcon.draw(canvas, GameEngine.greenDeployX, GameEngine.greenDeployY);
+            deployRedIcon.draw(canvas, GameEngine.redDeployX, GameEngine.redDeployY);
 
             Paint newPaint = new Paint();
             newPaint.setTextSize(65 * FullscreenActivity.scaleFactor);

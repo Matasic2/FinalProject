@@ -638,7 +638,7 @@ public class Units {
         Bitmap iconUpgrade = null;
 
 
-        if (GameEngine.loadoutMenuUnit == "Cavalry") {
+        if (u.unitType == "Cavalry") {
             if (GameEngine.playing.upgrades[0][0]) {
                 iconUpgrade = Bitmap.createScaledBitmap(
                         GameView.binoc.icon, (int) (GameView.binoc.icon.getWidth() * iconUpgradeScale),
@@ -658,7 +658,7 @@ public class Units {
             }
         }
 
-        if (GameEngine.loadoutMenuUnit == "Infantry") {
+        if (u.unitType == "Infantry") {
             if (GameEngine.playing.upgrades[1][0]) {
                 iconUpgrade = Bitmap.createScaledBitmap(
                         GameView.bolt.icon, (int) (GameView.bolt.icon.getWidth() * iconUpgradeScale),
@@ -678,7 +678,7 @@ public class Units {
             }
         }
 
-        if (GameEngine.loadoutMenuUnit == "Artillery") {
+        if (u.unitType == "Artillery") {
             if (GameEngine.playing.upgrades[2][0]) {
                 iconUpgrade = Bitmap.createScaledBitmap(
                         GameView.gearIcon.icon, (int) (GameView.gearIcon.icon.getWidth() * iconUpgradeScale),
@@ -698,7 +698,7 @@ public class Units {
             }
         }
 
-        if (GameEngine.loadoutMenuUnit == "Armor") {
+        if (u.unitType == "Armor") {
             if (GameEngine.playing.upgrades[3][0]) {
                 iconUpgrade = Bitmap.createScaledBitmap(
                         GameView.binoc.icon, (int) (GameView.binoc.icon.getWidth() * iconUpgradeScale),

@@ -22,15 +22,9 @@ public class AI {
     public static int opponentStartingY = GameEngine.greenDeployY;
 
     public static boolean hasContestedPoint = false;
-
+    public static boolean ignoreFOW = true;
 
     public static void initializeAI() {
-        resourcePointCoordinates = Map.getAIResourcePoints();
-        makeUnitForResourcePoints = new boolean[resourcePointCoordinates.length];
-
-        for (int i = 0; i < makeUnitForResourcePoints.length; i++) {
-            makeUnitForResourcePoints[i] = true;
-        }
         turn = 0;
         AI.rng = 30;
         units = new Units[0];
@@ -39,21 +33,21 @@ public class AI {
         aiStartingY = GameEngine.redDeployY;
         opponentStartingX = GameEngine.greenDeployX;
         opponentStartingY = GameEngine.greenDeployY;
+        ignoreFOW = true;
+        if (MapSkirmish.map_code == -1) {
+            MapScenario.initializeMapAI();
+        } else {
+            MapSkirmish.initializeMapAI();
+        }
     }
 
 //plays AI's turn
     public static void playTurn(Player AIPlayer) {
         //Takes AI's initial units and adds them to Units list
         if (turn == 0 && resourcePointCoordinates.length > 0) {
-            String[] substring = resourcePointCoordinates[0].split(",");
-            int x = Integer.parseInt(substring[0]);
-            int y = Integer.parseInt(substring[1]);
-            addUnit(GameEngine.boardUnits[aiStartingX][aiStartingY], "moveTo_" + x + "_" + y);
-            addUnit(GameEngine.boardUnits[aiStartingX + 1][aiStartingY + 1], "Garrison_" + aiStartingX + "_" + aiStartingY);
-            makeUnitForResourcePoints[0] = false;
-            Random rand = new Random();
-
+            GameEngine.loadoutMenuUnit = "Armor";
             AIPlayer.adjustUpgrades("Armor", 1);
+            GameEngine.loadoutMenuUnit = "";
         }
         resetOrders(); //at the start of the every turn, decide what to do with all units
 
@@ -335,10 +329,11 @@ public class AI {
         int bestX = -1;
         int bestY = -1;
         double bestVal = 0;
+        boolean[][] visibleTiles = GameEngine.getFogOfWar(GameEngine.red);
 
         for (int i = 0; i < GameEngine.boardUnits.length; i++) {
             for (int j = 0; j < GameEngine.boardUnits[i].length; j++) {
-                if (GameEngine.boardUnits[i][j] == null || GameEngine.boardUnits[i][j].owner == u.owner) continue;
+                if (!(ignoreFOW || visibleTiles[i][j]) || (GameEngine.boardUnits[i][j] == null || GameEngine.boardUnits[i][j].owner == u.owner)) continue;
 
                 int distToIJ = GameEngine.getSquareDistance(i,x,j,y);
                 if (distToIJ <= u.attack2Range) {
@@ -460,33 +455,10 @@ public class AI {
             return;
         }
 
-        int x = u.coordinates[0];
-        int y = u.coordinates[1];
-        int bestX = -1;
-        int bestY = -1;
-        double bestVal = 0;
+        double[] best = bestAttack(u);
 
-        for (int i = 0; i < GameEngine.boardUnits.length; i++) {
-            for (int j = 0; j < GameEngine.boardUnits[i].length; j++) {
-                if (GameEngine.boardUnits[i][j] == null || GameEngine.boardUnits[i][j].owner == u.owner) continue;
-
-                int distToIJ = GameEngine.getSquareDistance(i,x,j,y);
-                Units enemy = GameEngine.boardUnits[i][j];
-                if (distToIJ <= u.attack2Range) {
-                    int[] damages = GameEngine.assertDamage(u, enemy);
-
-                    if (damages[1] == 0) continue;
-                    double damageValueDiff = (damages[0]*enemy.AI_value) - (damages[1]*u.AI_value)*getLocationFactor(i,j);
-                    if (bestVal < damageValueDiff) {
-                        bestX = i;
-                        bestY = j;
-                        bestVal = damageValueDiff;
-                    }
-                }
-            }
-        }
-        if (bestVal > 0) {
-            GameEngine.attackUnit(u, GameEngine.boardUnits[bestX][bestY]);
+        if (best[2] > 0) {
+            GameEngine.attackUnit(u, GameEngine.boardUnits[(int)(best[0])][(int)(best[1])]);
         }
     }
 

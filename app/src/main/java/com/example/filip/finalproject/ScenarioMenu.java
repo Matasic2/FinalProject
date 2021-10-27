@@ -17,9 +17,12 @@ public class ScenarioMenu extends AppCompatActivity {
         Button button3 = (Button) findViewById(R.id.button3);
         button3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                MainMenu.scenario = "Somme";
-                startActivity(new Intent(ScenarioMenu.this, FullscreenActivity.class)); //creates new scenario "Somme"
+                MainMenu.scenario = "Scenario 1";
+                startActivity(new Intent(ScenarioMenu.this, FullscreenActivity.class)); //creates new scenario
                 FullscreenActivity.memory = new ArrayList<>();
+                GameEngine.replayMode = false;
+                MainThread.run = true;
+                MapSkirmish.map_code = -1;
             }
         });
 

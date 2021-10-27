@@ -5,8 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -50,29 +48,29 @@ public class SkirmishMenu extends AppCompatActivity {
         Button button7 = (Button) findViewById(R.id.button7);
         button7.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (Map.map_code == 0) {
+                if (MapSkirmish.map_code == 0) {
                     return;
                 }
-                else if (Map.map_code >= Map.number_of_maps_available) {
-                    Map.map_code = Map.number_of_maps_available - 1;
+                else if (MapSkirmish.map_code >= MapSkirmish.number_of_maps_available) {
+                    MapSkirmish.map_code = MapSkirmish.number_of_maps_available - 1;
                 } else {
-                    Map.map_code--;
+                    MapSkirmish.map_code--;
                 }
-                ((TextView)findViewById(R.id.textView2)).setText("Map mode : " + new Integer(Map.map_code).toString());
+                ((TextView)findViewById(R.id.textView2)).setText("Map mode : " + new Integer(MapSkirmish.map_code).toString());
             }
         });
         Button button8 = (Button) findViewById(R.id.button8);
         button8.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (Map.map_code < 0) {
-                    Map.map_code = 0;
+                if (MapSkirmish.map_code < 0) {
+                    MapSkirmish.map_code = 0;
                 }
-                else if (Map.map_code >= Map.number_of_maps_available - 1) {
-                    Map.map_code = Map.number_of_maps_available - 1;
+                else if (MapSkirmish.map_code >= MapSkirmish.number_of_maps_available - 1) {
+                    MapSkirmish.map_code = MapSkirmish.number_of_maps_available - 1;
                 } else {
-                    Map.map_code++;
+                    MapSkirmish.map_code++;
                 }
-                ((TextView)findViewById(R.id.textView2)).setText("Map mode : " + new Integer(Map.map_code).toString());
+                ((TextView)findViewById(R.id.textView2)).setText("Map mode : " + new Integer(MapSkirmish.map_code).toString());
             }
         });
     }
@@ -80,12 +78,12 @@ public class SkirmishMenu extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        ((TextView)findViewById(R.id.textView2)).setText("Map mode : " + new Integer(Map.map_code).toString());
+        ((TextView)findViewById(R.id.textView2)).setText("MapSkirmish mode : " + new Integer(MapSkirmish.map_code).toString());
     }
     @Override
     protected void onResume() {
         super.onResume();
-        ((TextView)findViewById(R.id.textView2)).setText("Map mode : " + new Integer(Map.map_code).toString());
+        ((TextView)findViewById(R.id.textView2)).setText("MapSkirmish mode : " + new Integer(MapSkirmish.map_code).toString());
     }
 
     @Override

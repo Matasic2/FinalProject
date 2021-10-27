@@ -3,14 +3,15 @@ package com.example.filip.finalproject;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-public class Map {
+public class MapSkirmish {
 
     public static int map_code = 0; //default
     public static int number_of_maps_available = 4;
 
-    public static void generateMap(Bitmap map, Bitmap square) {
+    public static void generateMap(Bitmap map, Bitmap square, Boolean aiOpponent) {
 
         //TechTree.initializeTechTree("skirmish");
+
         if (map_code == 3) {
 
             GameView.grid = new GameEngine(map, square, 15, 9); // these lines create the board.
@@ -18,25 +19,17 @@ public class Map {
             GameEngine.redDeployY = 6;
             GameEngine.playing = GameEngine.green;
 
-            if (MainMenu.scenario.equals("Skirmish") || MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
+            new Headquaters(GameView.theContext, 13, 7, GameEngine.red);
 
-                if (MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
-                    AI.initializeAI();
-                }
 
-                new Headquaters(GameView.theContext, 13, 7, GameEngine.red);
-
-                // These for loops create starting units.
-
-                for (int i = 0; i < 1; i++) {
-                    new Infantry(GameView.theContext, 3, 0, GameEngine.red);
-                }
-                AI.addUnit(GameEngine.boardUnits[3][0], "moveTo_" + 0 + "_" + 0);
-                for (int i = 0; i < 1; i++) {
-                    new Armor(GameView.theContext, 0, 0, GameEngine.green);
-                }
-
+            // These for loops create starting units.
+            for (int i = 0; i < 1; i++) {
+                new Infantry(GameView.theContext, 3, 0, GameEngine.red);
             }
+            for (int i = 0; i < 1; i++) {
+                new Armor(GameView.theContext, 0, 0, GameEngine.green);
+            }
+
         }
         if (map_code == 2) {
 
@@ -100,35 +93,17 @@ public class Map {
                 new Headquaters(GameView.theContext, 18, 10, GameEngine.red);
 
                 // These for loops create starting units.
-                for (int i = 0; i < 0; i++) {
-                    new Infantry(GameView.theContext, 2, i * 2, GameEngine.green);
-                }
-
-                for (int i = 0; i < 0; i++) {
-                    new Infantry(GameView.theContext, 12, 6, GameEngine.red);
-                }
-
-                GameEngine.loadoutMenuUnit = "Cavalry";
+                
                 for (int i = 0; i < 2; i++) {
                     GameEngine.green.adjustUpgrades("Cavalry",1);  //enable for first unit, disable for second
                     new Cavalry(GameView.theContext, 2, i*2, GameEngine.green);
                 }
-                GameEngine.loadoutMenuUnit = "";
+
 
                 for (int i = 0; i < 1; i++) {
                     new Cavalry(GameView.theContext, 17, 9, GameEngine.red);
                 }
 
-                for (int i = 0; i < 0; i++) {
-                    new Artillery(GameView.theContext, 14, 8, GameEngine.green);
-                }
-                for (int i = 0; i < 0; i++) {
-                    new Artillery(GameView.theContext, 13, i, GameEngine.red);
-                }
-
-                if (MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
-                    AI.initializeAI();
-                }
             }
         } else if (map_code == 1) {
             GameView.grid = new GameEngine(map, square, 15, 3); // these lines create the board.
@@ -156,31 +131,12 @@ public class Map {
                 new Headquaters(GameView.theContext, 1, 1, GameEngine.green);
                 new Headquaters(GameView.theContext, 13, 1, GameEngine.red);
 
-                // These for loops create starting units.
-                for (int i = 0; i < 0; i++) {
-                    new Infantry(GameView.theContext, 2, i * 2, GameEngine.green);
-                }
-
-                for (int i = 0; i < 0; i++) {
-                    new Infantry(GameView.theContext, 12, 6, GameEngine.red);
-                }
 
                 for (int i = 0; i < 1; i++) {
                     new Cavalry(GameView.theContext, 2, 2, GameEngine.green);
                 }
                 for (int i = 0; i < 1; i++) {
                     new Cavalry(GameView.theContext, 12, 2, GameEngine.red);
-                }
-
-                for (int i = 0; i < 0; i++) {
-                    new Artillery(GameView.theContext, 14, 8, GameEngine.green);
-                }
-                for (int i = 0; i < 0; i++) {
-                    new Artillery(GameView.theContext, 13, i, GameEngine.red);
-                }
-
-                if (MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
-                    AI.initializeAI();
                 }
             }
         } else if (map_code == 0) {
@@ -224,41 +180,25 @@ public class Map {
                 new Headquaters(GameView.theContext, 1, 1, GameEngine.green);
                 new Headquaters(GameView.theContext, 13, 7, GameEngine.red);
 
-                // These for loops create starting units.
-                for (int i = 0; i < 0; i++) {
-                    new Infantry(GameView.theContext, 2, i * 2, GameEngine.green);
-                }
-
-                for (int i = 0; i < 0; i++) {
-                    new Infantry(GameView.theContext, 12, 6, GameEngine.red);
-                }
 
                 GameEngine.loadoutMenuUnit = "Cavalry";
                 for (int i = 0; i < 2; i++) {
                     GameEngine.green.adjustUpgrades("Cavalry",1);  //enable for first unit, disable for second
                     new Cavalry(GameView.theContext, 2, i*2, GameEngine.green);
                 }
-                GameEngine.loadoutMenuUnit = "";
 
                 for (int i = 0; i < 1; i++) {
                     new Cavalry(GameView.theContext, 12, 6, GameEngine.red);
                 }
-
-                for (int i = 0; i < 0; i++) {
-                    new Artillery(GameView.theContext, 14, 8, GameEngine.green);
-                }
-                for (int i = 0; i < 0; i++) {
-                    new Artillery(GameView.theContext, 13, i, GameEngine.red);
-                }
             }
-
-            if (MainMenu.scenario.equals("Skirmish vs AI") || MainMenu.scenario.equals("Skirmish vs AI_cheating")) {
-                AI.initializeAI();
-            }
+        }
+        if (aiOpponent) {
+            AI.initializeAI();
         }
     }
 
     public static void drawMapFeatures(Canvas canvas) {
+        if (map_code == -1) return;
         if (map_code == 2) {
             GameView.harvesterMid.draw(canvas, 1, 6);
             GameView.harvesterMid.draw(canvas, 18, 5);
@@ -290,6 +230,31 @@ public class Map {
             toReturn = new String[]{"18,5", "12,10", "17,1"};
         }
         return toReturn;
+    }
+
+    public static void initializeMapAI() {
+        AI.ignoreFOW = true;
+
+        AI.resourcePointCoordinates = getAIResourcePoints();
+        AI.makeUnitForResourcePoints = new boolean[AI.resourcePointCoordinates.length];
+        for (int i = 0; i < AI.makeUnitForResourcePoints.length; i++) {
+            AI.makeUnitForResourcePoints[i] = true;
+        }
+
+        if (map_code == 0) {
+            AI.addUnit(GameEngine.boardUnits[12][6], "moveTo_13_1");
+            AI.addUnit(GameEngine.boardUnits[13][7], "Garrison_13_7");
+
+            AI.makeUnitForResourcePoints[0] = false;
+        } else if (map_code == 1) {
+            AI.addUnit(GameEngine.boardUnits[12][2], "moveTo_2_2");
+            AI.addUnit(GameEngine.boardUnits[13][1], "Garrison_13_1");
+        } else if (map_code == 2) {
+            AI.addUnit(GameEngine.boardUnits[17][9], "moveTo_18_5");
+            AI.addUnit(GameEngine.boardUnits[18][10], "Garrison_18_10");
+
+            AI.makeUnitForResourcePoints[0] = false;
+        }
     }
 
 }
