@@ -10,6 +10,7 @@ public class MapScenario {
 
     public static void generateMap(Bitmap map, Bitmap square) {
 
+        GameEngine.isSkirmish = false;
         //TechTree.initializeTechTree("skirmish");
         if (map_code == 0) {
 
@@ -109,15 +110,36 @@ public class MapScenario {
         }
 
         if (map_code == 0) {
-            AI.addUnit(GameEngine.boardUnits[7][4], "Garrison_7_4");
             AI.addUnit(GameEngine.boardUnits[8][2], "Garrison_8_2");
             AI.addUnit(GameEngine.boardUnits[8][3], "Garrison_8_3");
             AI.addUnit(GameEngine.boardUnits[8][4], "Garrison_8_4");
             AI.addUnit(GameEngine.boardUnits[7][2], "Garrison_7_2");
             AI.addUnit(GameEngine.boardUnits[7][3], "Garrison_7_3");
-
+            AI.addUnit(GameEngine.boardUnits[7][4], "Garrison_7_4");
 
             AI.ignoreFOW = false;
+        }
+    }
+
+    //how many turns are required for each level
+    public static int[] turnsForStars() {
+        int level = map_code;
+        switch (level) {
+            case 0: return new int[]{6,8,10};
+        }
+        return new int[]{0,0,0};
+    }
+
+    public static int[] starsAchieved(int turnCount) {
+        int[] starReq = turnsForStars();
+        if (turnCount <= starReq[0]) {
+            return new int[]{3,map_code};
+        } else if (turnCount <= starReq[1]) {
+            return new int[]{2,map_code};
+        } else if (turnCount <= starReq[2]) {
+            return new int[]{1,map_code};
+        } else {
+            return new int[]{0,map_code};
         }
     }
 }

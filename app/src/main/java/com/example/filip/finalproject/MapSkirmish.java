@@ -11,10 +11,12 @@ public class MapSkirmish {
     public static void generateMap(Bitmap map, Bitmap square, Boolean aiOpponent) {
 
         //TechTree.initializeTechTree("skirmish");
-
+        GameEngine.isSkirmish = true;
         if (map_code == 3) {
-
             GameView.grid = new GameEngine(map, square, 15, 9); // these lines create the board.
+
+            GameEngine.greenDeployX = 2;
+            GameEngine.greenDeployY = 2;
             GameEngine.redDeployX = 12;
             GameEngine.redDeployY = 6;
             GameEngine.playing = GameEngine.green;
@@ -37,6 +39,8 @@ public class MapSkirmish {
 
             GameEngine.redDeployX = 17;
             GameEngine.redDeployY = 9;
+            GameEngine.greenDeployX = 2;
+            GameEngine.greenDeployY = 2;
 
             GameEngine.fogOfWarIsRevealedForGreen = new boolean[4];
             GameEngine.fogOfWarIsRevealedForRed = new boolean[4];
@@ -93,7 +97,7 @@ public class MapSkirmish {
                 new Headquaters(GameView.theContext, 18, 10, GameEngine.red);
 
                 // These for loops create starting units.
-                
+
                 for (int i = 0; i < 2; i++) {
                     GameEngine.green.adjustUpgrades("Cavalry",1);  //enable for first unit, disable for second
                     new Cavalry(GameView.theContext, 2, i*2, GameEngine.green);
@@ -107,9 +111,11 @@ public class MapSkirmish {
             }
         } else if (map_code == 1) {
             GameView.grid = new GameEngine(map, square, 15, 3); // these lines create the board.
+
             GameEngine.redDeployX = 12;
             GameEngine.redDeployY = 2;
-
+            GameEngine.greenDeployX = 2;
+            GameEngine.greenDeployY = 2;
 
             // next lines generate green's "natural resources" (the resources which are expected to be controlled by green player).
             new Food(GameView.theContext, 1, 0, 1, 1);
@@ -142,8 +148,11 @@ public class MapSkirmish {
         } else if (map_code == 0) {
 
             GameView.grid = new GameEngine(map, square, 15, 9); // these lines create the board.
+
             GameEngine.redDeployX = 12;
             GameEngine.redDeployY = 6;
+            GameEngine.greenDeployX = 2;
+            GameEngine.greenDeployY = 2;
             GameEngine.playing = GameEngine.green;
 
             // next lines generate green's "natural resources" (the resources which are expected to be controlled by green player).

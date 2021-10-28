@@ -289,11 +289,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 paint2.setTextSize(80 * FullscreenActivity.scaleFactor);
                 if (GameEngine.playing.equals(GameEngine.red)) {
                     paint2.setColor(Color.RED);
-                    canvas.drawText(GameEngine.message, 500 * FullscreenActivity.scaleFactor, 800 * FullscreenActivity.scaleFactor, paint2);
+                    canvas.drawText(GameEngine.message, 500 * FullscreenActivity.scaleFactor, 500 * FullscreenActivity.scaleFactor, paint2);
                 } else {
                     paint2.setColor(Color.GREEN);
-                    canvas.drawText(GameEngine.message, 500 * FullscreenActivity.scaleFactor, 800 * FullscreenActivity.scaleFactor, paint2);
+                    canvas.drawText(GameEngine.message, 500 * FullscreenActivity.scaleFactor, 500 * FullscreenActivity.scaleFactor, paint2);
                 }
+
+                canvas.drawText("Turn : " + (GameEngine.turnCount/2), 500 * FullscreenActivity.scaleFactor, 620 * FullscreenActivity.scaleFactor, paint2);
+                if (!GameEngine.isSkirmish) {
+                    int[] turnsforStars = MapScenario.turnsForStars();
+                    canvas.drawText("3 star win : " + (turnsforStars[0]) + " turns", 500 * FullscreenActivity.scaleFactor, 740 * FullscreenActivity.scaleFactor, paint2);
+                    canvas.drawText("2 star win : " + (turnsforStars[1]) + " turns", 500 * FullscreenActivity.scaleFactor, 860 * FullscreenActivity.scaleFactor, paint2);
+                    canvas.drawText("1 star win : " + (turnsforStars[2]) + " turns", 500 * FullscreenActivity.scaleFactor, 980 * FullscreenActivity.scaleFactor, paint2);
+                }
+
                 return;
             }
             // else if (activeScreen == Screen.TECH_SCREEN) {
@@ -304,10 +313,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             grid.draw(canvas);  //draws the grid first, because that is the bottom layer.
             //draws markers
 
-            if (MapSkirmish.map_code == -1) {
-                MapScenario.drawMapFeatures(canvas);
-            } else {
+            if (GameEngine.isSkirmish) {
                 MapSkirmish.drawMapFeatures(canvas);
+            } else {
+                MapScenario.drawMapFeatures(canvas);
             }
 
             deployGreenIcon.draw(canvas, GameEngine.greenDeployX, GameEngine.greenDeployY);

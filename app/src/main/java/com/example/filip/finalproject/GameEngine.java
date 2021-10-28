@@ -31,7 +31,7 @@ public class GameEngine extends Thread{
     public static int redDeployX = 12;
     public static int redDeployY = 6;
 
-    public static int turnCount = 0;
+    public static int turnCount = 2;
     public static int squareLength = (int) (128  * FullscreenActivity.scaleFactor); //scales square length, dependent on scale factor
     public Bitmap image; // Image of the grid
     public Bitmap emptySquare;
@@ -66,6 +66,9 @@ public class GameEngine extends Thread{
     public static boolean replayMode = false;
     public static int replayActionDelay = 500;
 
+    public static boolean isSkirmish = true;
+    public static boolean gameFinished = false;
+
     //restarts board
     public static void restart(){
         fogOfWarIsRevealedForGreen = new boolean[fogOfWarIsRevealedForGreen.length];
@@ -86,6 +89,8 @@ public class GameEngine extends Thread{
         red = new Player("red", true);
         smokeMap = new int[width][height];
         smokeFireActive = false;
+        isSkirmish = true;
+        gameFinished = false;
 
         if (GameEngine.replayMode) {
             GameEngine.message = "Tap anywhere to start replay";
@@ -93,8 +98,8 @@ public class GameEngine extends Thread{
 
         lastCoordinates = new int[4]; //coordinates of last action
         queue = new Units[0]; // stores all units that will be deployed
-        c= 0;
-        turnCount = 0;
+        c = 0;
+        turnCount = 2;
         loadoutMenu = false;
         loadoutMenuUnit = "";
         lastAddedResources = new int[3];
@@ -183,6 +188,17 @@ public class GameEngine extends Thread{
     A method that will process what happens with user's input (click/tap).
      */
     public static void tapProcessor (int x, int y, int mode) {
+
+        if (gameFinished) {
+            if (isSkirmish) {
+                return;
+            } else {
+                int[] starsAchieved = MapScenario.starsAchieved(turnCount/2);
+                ScenarioMenu.adjustStarsAchieved(starsAchieved[1],starsAchieved[0]);
+                FullscreenActivity.theActivity.backToScenario();
+                return;
+            }
+        }
 
         if (mode == 0) {
             if (x < 0 || y < 0) {
@@ -1158,6 +1174,7 @@ public class GameEngine extends Thread{
                 unselectAll();
                 FullscreenActivity.theActivity.vibrate();
                 showMarket = false;
+                gameFinished = true;
             }
         }
 
@@ -1333,6 +1350,10 @@ public class GameEngine extends Thread{
 
         GameEngine.estimateResources();
         showMarket = false;
+
+        //increase turn count. Note that this increases for both players, so if each player plays 1 turn then turn count is increased by 2
+        turnCount++;
+
         if (playing == green) {
             message = "Green player's turn. Press anywhere to continue.";
         } else {

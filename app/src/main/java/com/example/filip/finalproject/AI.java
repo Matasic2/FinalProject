@@ -34,10 +34,10 @@ public class AI {
         opponentStartingX = GameEngine.greenDeployX;
         opponentStartingY = GameEngine.greenDeployY;
         ignoreFOW = true;
-        if (MapSkirmish.map_code == -1) {
-            MapScenario.initializeMapAI();
-        } else {
+        if (GameEngine.isSkirmish) {
             MapSkirmish.initializeMapAI();
+        } else {
+            MapScenario.initializeMapAI();
         }
     }
 

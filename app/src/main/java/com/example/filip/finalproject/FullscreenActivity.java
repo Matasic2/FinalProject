@@ -232,4 +232,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     public void backToMenu (){
         startActivity(new Intent(FullscreenActivity.this, MainMenu.class));
     }
+    public void backToScenario (){
+        startActivity(new Intent(FullscreenActivity.this, ScenarioMenu.class));
+    }
 }

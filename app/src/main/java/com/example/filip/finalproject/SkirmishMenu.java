@@ -78,12 +78,12 @@ public class SkirmishMenu extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        ((TextView)findViewById(R.id.textView2)).setText("MapSkirmish mode : " + new Integer(MapSkirmish.map_code).toString());
+        ((TextView)findViewById(R.id.textView2)).setText("Map mode : " + new Integer(MapSkirmish.map_code).toString());
     }
     @Override
     protected void onResume() {
         super.onResume();
-        ((TextView)findViewById(R.id.textView2)).setText("MapSkirmish mode : " + new Integer(MapSkirmish.map_code).toString());
+        ((TextView)findViewById(R.id.textView2)).setText("Map mode : " + new Integer(MapSkirmish.map_code).toString());
     }
 
     @Override
