@@ -31,7 +31,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static Resources[] resources = new Resources[0]; // Array of resources that will be drawn, they don't have the physical location on board (In GameEngine class, BoardResources does that).
     public static boolean showendTurnScreen = false;
 
-    public static boolean useTwoThreads = true;
+    public static boolean useTwoThreads = false;
 
     public static int cameraX = 0;
     public static int cameraY = 0;
@@ -296,7 +296,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }
 
                 canvas.drawText("Turn : " + (GameEngine.turnCount/2), 500 * FullscreenActivity.scaleFactor, 620 * FullscreenActivity.scaleFactor, paint2);
-                if (!GameEngine.isSkirmish) {
+                if (!GameEngine.isSkirmish && GameEngine.turnCount == 2) {
+                    canvas.drawText("Green player's turn. Press anywhere to continue.", 500 * FullscreenActivity.scaleFactor, 500 * FullscreenActivity.scaleFactor, paint2);
                     int[] turnsforStars = MapScenario.turnsForStars();
                     canvas.drawText("3 star win : " + (turnsforStars[0]) + " turns", 500 * FullscreenActivity.scaleFactor, 740 * FullscreenActivity.scaleFactor, paint2);
                     canvas.drawText("2 star win : " + (turnsforStars[1]) + " turns", 500 * FullscreenActivity.scaleFactor, 860 * FullscreenActivity.scaleFactor, paint2);

@@ -2,6 +2,7 @@
 - players can fire blindly then undo the action if no damage was taken (meaning no unit is present on that tile) until their unit was damaged(combat occured so an enemy unit is present)
 - Add options for: (1) using 1 or 2 threads (2) show or hide fog of war (3)
 - when destroying HQ, game message displays info about received damage
+- fullscreenActivity's onBackPressed is the same as clicking doors but the game engine will not register it as clicking doors, leading to potential inconsistencies between the replay and the actual game
 
 TODO:
 - in multiplayer, render map instead of "other player is playing" message

@@ -193,7 +193,7 @@ public class GameEngine extends Thread{
             if (isSkirmish) {
                 return;
             } else {
-                int[] starsAchieved = MapScenario.starsAchieved(turnCount/2);
+                byte[] starsAchieved = MapScenario.starsAchieved(turnCount/2);
                 ScenarioMenu.adjustStarsAchieved(starsAchieved[1],starsAchieved[0]);
                 FullscreenActivity.theActivity.backToScenario();
                 return;

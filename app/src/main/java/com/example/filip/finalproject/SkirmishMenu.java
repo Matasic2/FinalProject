@@ -98,4 +98,7 @@ public class SkirmishMenu extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
     }
+    public void onBackPressed() {
+        startActivity(new Intent(SkirmishMenu.this, MainMenu.class));
+    }
 }
