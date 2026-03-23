@@ -1,6 +1,5 @@
 package com.example.filip.finalproject;
 import android.content.Intent;
-import android.support.design.circularreveal.CircularRevealHelper;
 import android.util.Log;
 
 import com.google.android.gms.nearby.*;
